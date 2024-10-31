@@ -7,8 +7,8 @@ import App from './App.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {/* <div className='App'> */}
-    <App />
-    {/* </div> */}
+    <>
+      <App />
+    </>
   </StrictMode>
 );
