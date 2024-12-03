@@ -1,18 +1,55 @@
 import React, { useState } from 'react';
 import hanaLogo from '../../../assets/icons/hanaLogo.svg';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
+  const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('로그인 시도');
+
+    if (!id || !password) {
+      toast({
+        title: '로그인 실패',
+        description: '아이디와 비밀번호를 모두 입력해주세요.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.post('/api/login', { id, password });
+
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('accountname', id);
+
+      toast({
+        title: '로그인 성공',
+        description: `${id}님, 환영합니다!`,
+        variant: 'default',
+      });
+
+      navigate('/admin/online');
+    } catch (error: unknown) {
+      console.error('로그인 오류:', error);
+      toast({
+        title: '로그인 실패',
+        description: '아이디 또는 비밀번호가 올바르지 않습니다.',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (
-    <div className='flex items-center justify-center bg-[#FFFFFF]'>
-      <div className='shadow-[0_4px_20px_0_rgba(0,0,0,0.1) mx-auto flex h-full w-[40%] flex-col rounded-xl border-4 bg-[#008485] bg-opacity-5 p-[3.4375rem]'>
+    <div className='my-auto flex items-center justify-center bg-[#FFFFFF]'>
+      <div className='shadow-[0_4px_20px_0_rgba(0,0,0,0.1) mx-auto flex h-full w-[40%] flex-col rounded-xl border-4 bg-[#008485] bg-opacity-5 p-[3.4375rem] pb-[5rem]'>
         <div className='flex items-center justify-center'>
           <img
             src={hanaLogo}
@@ -31,11 +68,11 @@ export default function LoginPage() {
                 아이디
               </label>
               <input
-                id='email'
-                type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className='mt-1 w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+                id='id'
+                type='text'
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+                className='mt-1 w-full border-b-2 border-[#D9D9D9] bg-transparent p-2 focus:border-[#008485] focus:outline-none focus:ring-0'
               />
             </div>
             <div>
@@ -50,18 +87,19 @@ export default function LoginPage() {
                 type='password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className='mt-1 w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+                className='mt-1 w-full border-b-2 border-[#D9D9D9] bg-transparent p-2 focus:border-[#008485] focus:outline-none focus:ring-0'
               />
             </div>
             <button
               type='submit'
-              className='shadow-[0_4px_10px_0_rgba(0,0,0,0.1) h-[10%] w-full rounded-[1.25rem] bg-[#008485] p-[1.3125rem] text-[1.25rem] text-white hover:bg-[#00858570]'
+              className='shadow-[0_4px_10px_0_rgba(0,0,0,0.1) w-full rounded-[1.25rem] bg-[#008485] p-[1rem] text-[1.25rem] font-bold text-white hover:bg-[#008585a9]'
             >
               로그인
             </button>
           </form>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }
