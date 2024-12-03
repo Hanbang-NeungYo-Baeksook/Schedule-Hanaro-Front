@@ -1,4 +1,3 @@
-import Nav from '@/components/Nav/Nav';
 import { Button } from '@/components/ui/button';
 import { RESERVATION_TYPE } from '@/constants/reservation';
 import '@/index.css';
@@ -45,7 +44,6 @@ export function ReservationPage() {
           상담 유형 선택하기
         </Button>
       </div>
-      <Nav />
     </>
   );
 }
