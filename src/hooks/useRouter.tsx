@@ -44,6 +44,7 @@ import SigninPage from '@/pages/Signin';
 
 import { AdminMyPage } from '@/pages/Admin/online/mypage';
 import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
+import AdminLogin from '@/pages/Admin/Login';
 export const useRouter = () =>
   createBrowserRouter([
     {
@@ -162,6 +163,7 @@ export const useRouter = () =>
       element: <AdminLayout />,
       children: [
         { index: true, element: <VisitPage /> },
+        { path: '/admin/login', element: <AdminLogin /> },
         {
           path: '/admin/offline',
           element: <VisitPage />,
@@ -190,7 +192,6 @@ export const useRouter = () =>
           path: '/admin/online/inquiry/register/:id',
           element: <AnswerInput />,
         },
-        // { path: '/admin/inquiry/answerDetail', element: <AnswerDetail /> },
         { path: '/admin/online/call', element: <CallPage /> },
         { path: '/admin/online/call/:id', element: <CallAnswerDetail /> },
         { path: '/admin/online/mypage', element: <AdminMyPage /> },
