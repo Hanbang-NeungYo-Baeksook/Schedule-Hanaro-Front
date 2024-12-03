@@ -22,7 +22,7 @@ export default function BottomFloatingBox({
   return (
     <div
       className={cn(
-        'fixed bottom-[7rem] z-10 h-fit w-[70%] max-w-[30rem] cursor-pointer rounded-xl bg-white p-8 pt-5',
+        'fixed bottom-[7rem] z-10 h-fit min-h-[6rem] w-[70%] max-w-[30rem] cursor-pointer rounded-xl bg-white p-8 pt-5',
         type === 'map' && 'bottom-[4rem] pt-3'
       )}
     >
