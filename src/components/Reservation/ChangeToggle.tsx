@@ -26,7 +26,7 @@ export function ChangeToggle({
         {isOpen ? <UpButton /> : <DownButton />}
       </button>
       {isOpen && (
-        <div className='absolute z-50 mt-[2rem] w-[15.5rem] rounded-[.9375rem] drop-shadow'>
+        <div className='absolute z-50 mt-[2rem] w-[15.5rem] rounded-[.9375rem] bg-white drop-shadow'>
           <div className='py-[1rem]'>
             <ChangeToggleOption
               label='전화 상담 내역'

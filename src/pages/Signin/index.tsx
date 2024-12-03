@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import mainLogo from '@/assets/images/mainLogo.svg';
-import { AnswerCard } from '@/components/AI/AnswerCard';
 
 function SigninPage() {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -73,9 +72,6 @@ function SigninPage() {
           회원가입
         </button>
       </div>
-      <button className='w-full items-center justify-center'>
-        <AnswerCard title='대학생을 위한 통장이 있나요?' />
-      </button>
     </div>
   );
 }
