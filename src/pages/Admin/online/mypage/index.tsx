@@ -1,8 +1,11 @@
 import { ReactComponent as PersonIcon } from '@/assets/icons/Person.svg';
 import { ReactComponent as PhoneIcon } from '@/assets/icons/phone.svg';
 import InquiryCard from '@/components/Admin/Inquiry/InquiryCard';
+import { useNavigate } from 'react-router-dom';
 
 export function AdminMyPage() {
+  const navigate = useNavigate();
+
   const phoneStats = {
     inquiry: '전화문의',
     today: 10,
@@ -18,6 +21,13 @@ export function AdminMyPage() {
     reserved: 88,
     total: 888,
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('accountname');
+    navigate('/admin/login');
+  };
+
   return (
     <div className='relative mx-auto mt-[3rem] w-[85%] max-w-[1300px]'>
       <div className='mb-[2.125rem] flex items-center'>
@@ -45,7 +55,11 @@ export function AdminMyPage() {
           <InquiryCard stats={oneToOneStats} icon={PersonIcon} />
         </div>
       </div>
-      <div className='absolute bottom-[-22rem] right-[0] text-[1.5625rem] font-extrabold'>
+
+      <div
+        onClick={handleLogout}
+        className='absolute bottom-[-22rem] right-0 cursor-pointer text-[1.5625rem] font-extrabold'
+      >
         로그아웃
       </div>
     </div>
