@@ -178,7 +178,7 @@
 
 @layer components {
   .map {
-    @apply z-0 mx-auto h-screen w-full max-w-full sm:w-[430px] md:w-[600px];
+    @apply z-0 mx-auto h-screen w-full max-w-full;
   }
   .container {
     @apply h-full;
