@@ -15,7 +15,7 @@ export function MainPage() {
               <div className='absoulte text-[2.3rem] font-[1000]'>
                 반갑습니다
               </div>
-              <div className='text-[3rem] font-bold'>예나님!</div>
+              <div className='text-[3rem] font-bold'>해빈님!</div>
               <HanaAvengers className='absolute bottom-[-3rem] right-0 z-10 w-[85%]' />
             </div>
           </div>
