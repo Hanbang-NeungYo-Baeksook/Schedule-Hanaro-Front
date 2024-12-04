@@ -1,11 +1,11 @@
 FROM nginx:alpine
-WORKDIR /app
+WORKDIR /
 COPY dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d
 
 RUN apk update && apk add certbot certbot-nginx
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY entrypoint.sh /usr/share/nginx/entrypoint.sh
+RUN chmod +x /usr/share/nginx/entrypoint.sh
 
 EXPOSE 80 443
-CMD ["/entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]
