@@ -7,7 +7,7 @@ export function MapPage() {
 
   return (
     <MapProvider mapRef={mapRef}>
-      <div className='map'>
+      <div className='map relative'>
         <Map />
       </div>
     </MapProvider>
