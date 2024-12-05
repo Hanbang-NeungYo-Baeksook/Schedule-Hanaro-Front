@@ -21,6 +21,7 @@ export default function BranchInfo({
   const [selectedTab, setSelectedTab] = useState<'pedestrain' | 'automobile'>(
     'pedestrain'
   );
+
   const navigate = useNavigate();
   const targetBranch = BRANCH_MOCK.find(({ id }) => id === branchId);
   const targetBranchState = BRANCH_STATE_MOCK.find(({ id }) => id === branchId);
