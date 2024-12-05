@@ -11,7 +11,7 @@ certbot certonly --webroot -w /usr/share/nginx/html \
   --non-interactive --agree-tos -m likesun2000@gmail.com
 
 # 5. HTTPS로 NginX 설정
-cp /etc/nginx/nginx-http.conf /etc/nginx/conf.d/nginx.conf
+cp /etc/nginx/nginx-https.conf /etc/nginx/conf.d/nginx.conf
 
 # 4. Nginx 다시 실행
 nginx -s "reload";
