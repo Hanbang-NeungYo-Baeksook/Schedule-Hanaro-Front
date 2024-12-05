@@ -27,7 +27,7 @@ export default function DepartureArrivalTime() {
   }, [routesPedestrainResponse, routesAutomobileResponse, routesType]);
 
   return (
-    <div className='flex flex-col justify-between font-bold'>
+    <div className='flex flex-col justify-between font-bold max-[550px]:text-sm'>
       <div>
         {departureTime
           ? `${departureTime.getHours().toString().padStart(2, '0')} : ${departureTime.getMinutes().toString().padStart(2, '0')}`
