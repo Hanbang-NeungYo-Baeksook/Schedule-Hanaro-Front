@@ -102,6 +102,9 @@ export default {
         custom:
           '0px -8px 18px rgba(0, 0, 0, 0.04), 0px 8px 12px rgba(0, 0, 0, 0.08)',
       },
+      height: {
+        screen: '100dvh',
+      },
     },
   },
   plugins: [require('tailwindcss-animate'), require('tailwind-scrollbar-hide')],
