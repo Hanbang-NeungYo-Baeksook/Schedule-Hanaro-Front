@@ -1,17 +1,30 @@
 #!/bin/sh
 
-# 1. HTTP로 NginX 설정
+# 0. 기존 default.conf 삭제
+rm /etc/nginx/conf.d/default.conf
+
+# 1. HTTP 설정으로 NginX 시작
 cp /etc/nginx/nginx-http.conf /etc/nginx/conf.d/nginx.conf
+nginx &  # 임시로 백그라운드 실행
 
-nginx -g "daemon off;"
+# 2. NginX가 실행될 때까지 대기
+while ! curl -s http://localhost > /dev/null; do
+  echo "Waiting for NginX to be ready..."
+  sleep 2
+done
 
-# # 2. Certbot으로 인증서 발급 (Webroot 사용)
+echo "NginX is ready. Proceeding with Certbot..."
+
+# 3. Certbot으로 인증서 발급
 certbot certonly --webroot -w /usr/share/nginx/html \
   -d schedulehanaro.digital \
   --non-interactive --agree-tos -m likesun2000@gmail.com
 
-# 5. HTTPS로 NginX 설정
+# 4. 기존 NginX 종료
+nginx -s stop
+
+# 5. HTTPS 설정으로 변경
 cp /etc/nginx/nginx-https.conf /etc/nginx/conf.d/nginx.conf
 
-# 4. Nginx 다시 실행
-nginx -s "reload";
+# 6. NginX를 포어그라운드에서 실행
+nginx -g "daemon off;"
