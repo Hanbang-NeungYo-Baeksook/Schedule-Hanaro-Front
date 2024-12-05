@@ -64,7 +64,7 @@ const ChatPage = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-      
+
       const currentValue = textareaRef.current.value;
       setInputContent(currentValue);
     }
@@ -140,7 +140,7 @@ const ChatPage = () => {
                 rows={1}
               />
               <img
-                src='src/assets/images/arrowAI.png'
+                src='src/assets/icons/arrowAI.svg'
                 alt='Send'
                 className={`absolute right-4 h-7 w-7 cursor-pointer object-contain transition-all ${
                   isExpanded ? 'bottom-5' : 'bottom-3 -translate-y-1/2'
