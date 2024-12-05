@@ -57,21 +57,19 @@ export default function BranchInfo({
             className='flex items-center justify-center gap-2'
             onClick={handlePage(`/branch/${branchId}`)}
           >
-            <span className='flex text-2xl font-extrabold max-[375px]:text-sm'>
+            <span className='flex text-2xl font-extrabold'>
               {targetBranch?.name ?? ''}
             </span>
             <Hyperlink />
           </div>
           <div className='flex flex-wrap items-center justify-center gap-2'>
-            <span className='text-[1rem] text-lightGrey max-[375px]:text-[0.5rem]'>
+            <span className='text-[1rem] text-lightGrey'>
               {targetBranch?.address ?? ''}
             </span>
             <div className='flex items-center'>
               <Separator orientation='vertical' className='h-[0.6875rem]' />
             </div>
-            <span className='text-[1.125rem] font-bold max-[375px]:text-[0.7rem]'>
-              202m
-            </span>
+            <span className='text-[1.125rem] font-bold'>202m</span>
           </div>
         </div>
         {type === 'map' ? (
@@ -91,15 +89,15 @@ export default function BranchInfo({
       </div>
       <div className='my-3 flex gap-5'>
         <div className='flex items-end gap-3'>
-          <span className='text-sm max-[375px]:text-xs'>대기인원</span>
-          <span className='text-md font-bold max-[375px]:text-sm'>{`${targetBranchState?.waiting_number ?? 0}명`}</span>
+          <span className='text-sm'>대기인원</span>
+          <span className='text-md font-bold'>{`${targetBranchState?.waiting_number ?? 0}명`}</span>
         </div>
         <div className='flex items-center'>
           <Separator orientation='vertical' className='h-[0.6875rem]' />
         </div>
         <div className='flex items-end gap-3'>
-          <span className='text-sm max-[375px]:text-xs'>예상대기시간</span>
-          <span className='text-md font-bold max-[375px]:text-sm'>{`${targetBranchState?.waiting_time ?? 0}분`}</span>
+          <span className='text-sm'>예상대기시간</span>
+          <span className='text-md font-bold'>{`${targetBranchState?.waiting_time ?? 0}분`}</span>
         </div>
       </div>
       <Toaster />
