@@ -47,9 +47,11 @@ export default function LoginPage() {
     }
   };
 
+  const isDisabled = !id || !password;
+
   return (
-    <div className='my-auto flex items-center justify-center bg-[#FFFFFF]'>
-      <div className='shadow-[0_4px_20px_0_rgba(0,0,0,0.1) mx-auto flex h-full w-[40%] flex-col rounded-xl border-4 bg-[#008485] bg-opacity-5 p-[3.4375rem] pb-[5rem]'>
+    <div className='flex items-center justify-center bg-[#FFFFFF]'>
+      <div className='mx-auto flex h-full max-h-[60rem] min-h-[40rem] w-[40%] min-w-[40rem] max-w-[40rem] flex-col rounded-[1.25rem] bg-[#008485] bg-opacity-5 p-[3.4375rem] pb-[5rem] shadow-[0_4px_20px_0_rgba(0,0,0,0.1)]'>
         <div className='flex items-center justify-center'>
           <img
             src={hanaLogo}
@@ -72,7 +74,7 @@ export default function LoginPage() {
                 type='text'
                 value={id}
                 onChange={(e) => setId(e.target.value)}
-                className='mt-1 w-full border-b-2 border-[#D9D9D9] bg-transparent p-2 focus:border-[#008485] focus:outline-none focus:ring-0'
+                className='mt-[0.25rem] w-full border-b-[.125rem] border-[#D9D9D9] bg-transparent p-[0.5rem] transition-colors duration-300 ease-in-out focus:border-[#008485] focus:outline-none focus:ring-0' // 애니메이션 추가
               />
             </div>
             <div>
@@ -87,12 +89,13 @@ export default function LoginPage() {
                 type='password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className='mt-1 w-full border-b-2 border-[#D9D9D9] bg-transparent p-2 focus:border-[#008485] focus:outline-none focus:ring-0'
+                className='mt-[0.25rem] w-full border-b-[.125rem] border-[#D9D9D9] bg-transparent p-[0.2rem] transition-colors duration-300 ease-in-out focus:border-[#008485] focus:outline-none focus:ring-0' // 애니메이션 추가
               />
             </div>
             <button
               type='submit'
-              className='shadow-[0_4px_10px_0_rgba(0,0,0,0.1) w-full rounded-[1.25rem] bg-[#008485] p-[1rem] text-[1.25rem] font-bold text-white hover:bg-[#008585a9]'
+              disabled={isDisabled}
+              className={`w-full rounded-[1.25rem] p-[1rem] text-[1.25rem] font-bold text-white shadow-[0_4px_10px_0_rgba(0,0,0,0.1)] ${isDisabled ? 'bg-[#D9D9D9]' : 'bg-[#008485] hover:bg-[#008585a9]'} `}
             >
               로그인
             </button>
