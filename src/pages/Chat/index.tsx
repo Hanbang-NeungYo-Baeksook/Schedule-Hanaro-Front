@@ -87,14 +87,13 @@ const ChatPage = () => {
 
   return (
     <div className='flex min-h-screen flex-col items-center justify-between bg-white text-lg'>
-      <Header title={'AI 답변'} />
+      <Header title={'별꽁이에게 문의하기'} />
       {!isLoading && answers.length === 0 && (
-        <div className='flex min-h-screen w-full flex-col items-center justify-center gap-[2rem] pb-[15rem] text-lg'>
+        <div className='flex min-h-screen w-full flex-col items-center justify-center gap-[2rem] pb-[15rem] pt-[3.5rem] text-lg'>
           <div className='h-80 w-80'>
-            <img
-              src='/svg/santa.svg' // 산타 이미지
+            <object
+              data='/svg/santa.svg' // 산타 이미지
               className='h-full w-full object-contain'
-              alt='Santa'
             />
           </div>
           <div className='flex flex-col text-center text-lg font-bold'>
