@@ -12,7 +12,7 @@ export function ReservationVisitPage() {
     navigate(`/reservation/visit/${id}`);
   };
   return (
-    <div className='mx-auto h-[80%] w-[90%] pb-[5.5rem]'>
+    <div className='mx-auto h-[80%] w-[90%] pb-[120px] min-[400px]:pb-[170px] min-[500px]:pb-[160px] min-[600px]:pb-[150px] min-[700px]:pb-[160px] min-[800px]:pb-[170px]'>
       <hr />
       <div className='h-full overflow-auto'>
         {visitNum.map(({ id, my_num, name, waiting_number, waiting_time }) => (

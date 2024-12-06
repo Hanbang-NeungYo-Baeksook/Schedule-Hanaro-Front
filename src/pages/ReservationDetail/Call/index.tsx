@@ -55,7 +55,7 @@ export function ReservationDetailCallPage() {
 
   return (
     <>
-      <div className='w-[90%] justify-self-center'>
+      <div className='mx-auto w-[90%] justify-self-center'>
         <body className='w-full flex-col items-center justify-center gap-[2.5rem]'>
           <ReservationDetailHeader />
           <div className='flex h-screen flex-col justify-between'>
@@ -89,7 +89,7 @@ export function ReservationDetailCallPage() {
                 </div>
               </div>
             </div>
-            <div className='flex flex-col pb-[10rem]'>
+            <div className='mt-5 flex flex-col pb-[10rem]'>
               <Modalbutton
                 buttonTitle='상담 취소'
                 buttonVariant='outline'

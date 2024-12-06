@@ -1,8 +1,8 @@
 // import markermyGreen from '@/assets/icons/marker-my-green.svg';
-import markerCurrent from '@/assets/icons/marker-current.svg';
+import markerCurrent from '@/assets/icons/marker-current.png';
 import markerStart from '@/assets/icons/marker-start.svg';
 import markerEnd from '@/assets/icons/marker-end.svg';
-import markerBank from '@/assets/icons/marker-bank.svg';
+import markerBank from '@/assets/icons/marker-bank.png';
 import markerBankSelected from '@/assets/icons/marker-bank-selected.svg';
 import markerBankReserved from '@/assets/icons/marker-bank-reserved.svg';
 import markerBankReservedSelected from '@/assets/icons/marker-bank-reserved-selected.svg';
