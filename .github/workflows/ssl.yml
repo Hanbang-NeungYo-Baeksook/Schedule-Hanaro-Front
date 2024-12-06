@@ -71,4 +71,4 @@ jobs:
 
             sudo rm -rf live
 
-            sudo docker cp schedulehanaro:/etc/letsencrypt/live ./
+            sudo docker cp schedulehanaro:/etc/letsencrypt ./
