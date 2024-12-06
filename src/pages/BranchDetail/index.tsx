@@ -108,102 +108,103 @@ export function BranchDetailPage() {
       navigate(url);
     };
   return (
-    <div className='mx-auto overflow-hidden rounded-lg bg-white'>
-      <header className='flex h-14 items-center justify-between border'>
-        <BackButton />
-        <div className='text-xl'>{branchName}</div>
-        <div></div>
-      </header>
-      <main>
-        <BankImg />
-        {/* <img src={branch} alt='bank image' className='w-full' /> */}
-        <div className='w-[90%] justify-self-center border-b py-8'>
-          <div className='flex items-center justify-between'>
-            <h2 className='text-xl font-bold'>기본정보</h2>
-            <DirectionButton onClick={handleDirection} />
+    <>
+      <div className='mx-auto overflow-hidden rounded-lg bg-white'>
+        <header className='flex h-14 items-center justify-between border'>
+          <BackButton />
+          <div className='text-xl'>{branchName}</div>
+          <div></div>
+        </header>
+        <main>
+          <BankImg />
+          {/* <img src={branch} alt='bank image' className='w-full' /> */}
+          <div className='w-[90%] justify-self-center border-b py-8'>
+            <div className='flex items-center justify-between'>
+              <h2 className='text-xl font-bold'>기본정보</h2>
+              <DirectionButton onClick={handleDirection} />
+            </div>
+            <ul className='list-none'>
+              <li className='mt-4 flex items-center justify-start gap-2'>
+                <Addrss width={20} height={23} className='relative' />
+                <span className="font-['Inter'] text-base font-semibold text-[#464646]">
+                  {address}
+                </span>
+              </li>
+              <li className='mt-4 flex items-center justify-start gap-2'>
+                <Hours width={20} height={20} />
+                <span className="font-['Inter'] text-base font-semibold text-[#464646]">
+                  {businessTime}
+                </span>
+              </li>
+              <li className='mt-4 flex items-center justify-start gap-2'>
+                <Tel width={16} height={20} />
+                <span className="font-['Inter'] text-base font-semibold text-[#464646]">
+                  {tel}
+                </span>
+              </li>
+            </ul>
           </div>
-          <ul className='list-none'>
-            <li className='mt-4 flex items-center justify-start gap-2'>
-              <Addrss width={20} height={23} className='relative' />
-              <span className="font-['Inter'] text-base font-semibold text-[#464646]">
-                {address}
+          <div className='h-2 w-full bg-[#eeeeee]'></div>
+          <div className='w-[90%] justify-self-center py-8'>
+            <h3 className='text-left text-xl font-bold'>대기 정보</h3>
+            <div className='mt-8 grid grid-cols-2 gap-2 text-sm'>
+              <div className='flex items-center gap-2'>
+                <Time width={24} height={24} />
+                <span className="font-['Inter'] text-base font-medium text-[#666666]">
+                  이동 소요 시간
+                </span>
+              </div>
+              <span className="text-right font-['Inter'] text-lg font-bold text-[#464646]">
+                15분
               </span>
-            </li>
-            <li className='mt-4 flex items-center justify-start gap-2'>
-              <Hours width={20} height={20} />
-              <span className="font-['Inter'] text-base font-semibold text-[#464646]">
-                {businessTime}
+              <div className='flex items-center gap-2'>
+                <WaitPeople width={24} height={24} />
+                <span className="font-['Inter'] text-base font-medium text-[#666666]">
+                  현재 대기 인원
+                </span>
+              </div>
+              <span className="text-right font-['Inter'] text-lg font-bold text-[#464646]">
+                {state?.waiting_number}명
               </span>
-            </li>
-            <li className='mt-4 flex items-center justify-start gap-2'>
-              <Tel width={16} height={20} />
-              <span className="font-['Inter'] text-base font-semibold text-[#464646]">
-                {tel}
-              </span>
-            </li>
-          </ul>
-        </div>
-        <div className='h-2 w-full bg-[#eeeeee]'></div>
-        <div className='w-[90%] justify-self-center py-8'>
-          <h3 className='text-left text-xl font-bold'>대기 정보</h3>
-          <div className='mt-8 grid grid-cols-2 gap-2 text-sm'>
-            <div className='flex items-center gap-2'>
-              <Time width={24} height={24} />
-              <span className="font-['Inter'] text-base font-medium text-[#666666]">
-                이동 소요 시간
+              <div className='flex items-center gap-2'>
+                <Time width={24} height={24} />
+                <span className="font-['Inter'] text-base font-medium text-[#666666]">
+                  예상 대기 시간
+                </span>
+              </div>
+              <span className="text-right font-['Inter'] text-lg font-bold text-[#464646]">
+                {state?.waiting_time}분
               </span>
             </div>
-            <span className="text-right font-['Inter'] text-lg font-bold text-[#464646]">
-              15분
-            </span>
-            <div className='flex items-center gap-2'>
-              <WaitPeople width={24} height={24} />
-              <span className="font-['Inter'] text-base font-medium text-[#666666]">
-                현재 대기 인원
-              </span>
+          </div>
+          {reserved ? (
+            <div className='mt-8 flex h-[3.75rem] w-[90%] gap-x-[1.0625rem] justify-self-center'>
+              <Modalbutton
+                buttonTitle='예약 취소'
+                buttonVariant='ghost'
+                buttonSize='w-1/4 '
+                modalTitle='영업점 예약 취소'
+                modalDescription1='취소 시 30분 후부터 재예약이 가능합니다.'
+                modalDescription2=''
+                modalButtonTitle='확인'
+              ></Modalbutton>
+              <Button
+                className='w-3/4 font-bold'
+                onClick={(e) => handlePage(e)('/register/visit/1')}
+              >
+                예약 상세보기
+              </Button>
             </div>
-            <span className="text-right font-['Inter'] text-lg font-bold text-[#464646]">
-              {state?.waiting_number}명
-            </span>
-            <div className='flex items-center gap-2'>
-              <Time width={24} height={24} />
-              <span className="font-['Inter'] text-base font-medium text-[#666666]">
-                예상 대기 시간
-              </span>
+          ) : (
+            <div className='mt-8 flex w-[90%] items-center justify-self-center'>
+              <Button onClick={moveToReservation}>예약하기</Button>
             </div>
-            <span className="text-right font-['Inter'] text-lg font-bold text-[#464646]">
-              {state?.waiting_time}분
-            </span>
-          </div>
-        </div>
-        {reserved ? (
-          <div className='mt-8 flex h-[3.75rem] w-[90%] gap-x-[1.0625rem] justify-self-center'>
-            <Modalbutton
-              buttonTitle='예약 취소'
-              buttonVariant='ghost'
-              buttonSize='w-1/4 '
-              modalTitle='영업점 예약 취소'
-              modalDescription1='취소 시 30분 후부터 재예약이 가능합니다.'
-              modalDescription2=''
-              modalButtonTitle='확인'
-            ></Modalbutton>
-            <Button
-              className='w-3/4 font-bold'
-              onClick={(e) => handlePage(e)('/register/visit/1')}
-            >
-              예약 상세보기
-            </Button>
-          </div>
-        ) : (
-          <div className='mt-8 flex w-[90%] items-center justify-self-center'>
-            <Button onClick={moveToReservation}>예약하기</Button>
-          </div>
-        )}
-      </main>
-      <footer>
-        <Nav />
-      </footer>
-      <Toaster />
-    </div>
+          )}
+        </main>
+        <Toaster />
+      </div>
+
+      <Nav />
+    </>
   );
 }
