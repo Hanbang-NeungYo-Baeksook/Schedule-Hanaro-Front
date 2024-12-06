@@ -71,8 +71,4 @@ jobs:
 
             sudo rm -rf live
 
-            sudo mkdir live
-
-            cd live
-
             sudo docker cp schedulehanaro:/etc/letsencrypt ./
