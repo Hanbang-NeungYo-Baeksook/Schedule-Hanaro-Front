@@ -21,12 +21,10 @@ export function ReservationLayout() {
   }
 
   return (
-    <>
+    <div className='h-screen w-full justify-self-center overflow-hidden'>
       <ReservationHeader tabLocation={tabLocation} key={tabLocation} />
-      <div className='h-screen w-[90%] justify-self-center'>
-        <Outlet />
-      </div>
+      <Outlet />
       <Nav />
-    </>
+    </div>
   );
 }
