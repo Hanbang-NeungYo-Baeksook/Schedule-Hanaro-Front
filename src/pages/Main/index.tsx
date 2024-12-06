@@ -28,7 +28,7 @@ export function MainPage() {
                   </div>
                   <div
                     className='relative flex h-[3.5rem] w-full cursor-pointer items-center gap-4 rounded-3xl border-[3px] border-main bg-white p-4 pr-12 shadow-[0_0_17px_0_rgba(0,132,133,0.25)] focus:outline-none'
-                    onClick={() => console.log('Clicked!')}
+                    onClick={() => navigate('/chat')}
                   >
                     <StarGgonge className='mb-1' />
                     <div className='text-[1.05rem] text-lightText'>
@@ -43,12 +43,12 @@ export function MainPage() {
                     <MyCard
                       title='전화상담'
                       content='상담사를 통한 전화 상담 서비스'
-                      onClick={() => navigate('/register/call')}
+                      onClick={() => navigate('/chat')}
                     />
                     <MyCard
                       title='1:1 상담'
                       content='1:1 게시판을 통한 상담 서비스'
-                      onClick={() => navigate('/register/inquiry')}
+                      onClick={() => navigate('/chat')}
                     />
                   </div>
                 </div>

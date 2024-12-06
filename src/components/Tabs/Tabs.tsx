@@ -33,7 +33,7 @@ function Tabs({
             activeTab === leftValue
               ? 'scale-105 font-bold text-[#2b2b2b]'
               : 'scale-100 text-[#a6a6a6]'
-          } ml-[5rem] mr-auto md:ml-[6.8rem] lg:ml-[6.8rem]`}
+          } mx-auto lg:ml-[6.8rem]`}
           onClick={() => {
             ChangeTab(leftValue);
             onChange(leftValue);
@@ -46,7 +46,7 @@ function Tabs({
             activeTab === rightValue
               ? 'scale-105 font-bold text-[#2b2b2b]'
               : 'scale-100 text-[#a6a6a6]'
-          } ml-auto mr-[4rem] md:mr-[5.5rem] lg:mr-[5.5rem]`}
+          } mx-auto`}
           onClick={() => {
             ChangeTab(rightValue);
             onChange(rightValue);

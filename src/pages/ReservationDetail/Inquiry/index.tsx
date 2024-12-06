@@ -39,7 +39,7 @@ export function ReservationDetailInquiryPage() {
 
   return (
     <>
-      <div className='w-[90%] justify-self-center'>
+      <div className='mx-auto w-[90%] justify-self-center'>
         <ReservationDetailHeader />
         <body className='pt-[5rem]'>
           <div className='flex min-h-screen flex-col justify-between gap-[3rem]'>
