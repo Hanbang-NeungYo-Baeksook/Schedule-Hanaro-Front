@@ -56,4 +56,4 @@ jobs:
             docker rm schedulehanaro
             docker pull ${{ secrets.DOCKER_USERNAME }}/schedulehanaro
             docker run -d -p 80:80 -p 443:443 --name schedulehanaro ${{ secrets.DOCKER_USERNAME }}/schedulehanaro
-            sudo docker cp /etc/letsencrypt/live schedulehanaro:/etc/letsencrypt
+            sudo docker cp /etc/letsencrypt schedulehanaro:/etc/letsencrypt
