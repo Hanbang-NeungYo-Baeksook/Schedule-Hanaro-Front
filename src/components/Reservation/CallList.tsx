@@ -24,7 +24,7 @@ const CallList: React.FC<CallConsultationCardProps> = ({
 
   return (
     <div
-      className='z-10 cursor-pointer rounded-[0.9375rem] bg-white pb-[2.1875rem] pl-[1.1875rem] pr-[1.4688rem] pt-[1.75rem] drop-shadow'
+      className='z-100 cursor-pointer rounded-[0.9375rem] bg-white pb-[2.1875rem] pl-[1.1875rem] pr-[1.4688rem] pt-[1.75rem] drop-shadow'
       onClick={() => navigate(`/reservation/call/${idx}`)}
     >
       {timerText <= 5 && (

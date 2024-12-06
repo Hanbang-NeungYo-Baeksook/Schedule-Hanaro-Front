@@ -10,7 +10,7 @@ export function ReservationCallPage() {
 
   return (
     <>
-      <div className='mx-auto flex h-[80%] w-[90%] flex-col pb-[7rem]'>
+      <div className='mx-auto flex h-screen w-[90%] flex-col pb-[7rem]'>
         <div className='flex h-full w-full flex-col space-y-[1.5rem] overflow-auto'>
           {callListData.map((call, index) => (
             <CallList key={index} {...call} idx={call.id} />
