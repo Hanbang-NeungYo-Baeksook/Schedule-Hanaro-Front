@@ -19,12 +19,3 @@ echo "NginX is ready. Proceeding with Certbot..."
 certbot certonly --webroot -w /usr/share/nginx/html \
   -d schedulehanaro.digital \
   --non-interactive --agree-tos -m likesun2000@gmail.com
-
-# 4. 기존 NginX 종료
-nginx -s stop
-
-# 5. HTTPS 설정으로 변경
-cp /etc/nginx/nginx-https.conf /etc/nginx/conf.d/nginx.conf
-
-# 6. NginX를 포어그라운드에서 실행
-nginx -g "daemon off;"
