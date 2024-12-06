@@ -67,5 +67,8 @@ jobs:
 
             echo "Certificates have been created! Proceeding to copy..."
 
-            docker cp schedulehanaro:/etc/letsencrypt/live/schedulehanaro.digital/fullchain.pem /etc/letsencrypt/live/schedulehanaro.digital/fullchain.pem
-            docker cp schedulehanaro:/etc/letsencrypt/live/schedulehanaro.digital/privkey.pem /etc/letsencrypt/live/schedulehanaro.digital/privkey.pem
+            cd /etc/letsencrypt
+
+            sudo rm -rf live
+
+            sudo docker cp schedulehanaro:/etc/letsencrypt/live ./
