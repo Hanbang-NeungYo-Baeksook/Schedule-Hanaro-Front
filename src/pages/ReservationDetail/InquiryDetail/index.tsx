@@ -59,7 +59,7 @@ export function InquiryDetailPage() {
     <>
       <>
         {renderHeader}
-        <div className='mx-auto w-[90%] pt-[6rem]'>
+        <div className='mx-auto w-[90%] pb-[7rem] pt-[5rem]'>
           <div className='flex w-full flex-col items-center gap-[3rem]'>
             {renderInquiryContent}
             {renderDivider}
