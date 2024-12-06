@@ -21,7 +21,7 @@ export function AgreementCheckbox({
   const handleCloseModal = () => setIsModalOpen(false);
 
   return (
-    <div className='z-50 flex items-center space-x-2 pb-2'>
+    <div className='flex items-center space-x-2 pb-2'>
       <div onClick={handleOpenModal}>
         <Check
           className={`h-5 w-5 ${isChecked1 && isChecked2 ? 'text-black' : 'text-gray-400'}`}
@@ -34,15 +34,17 @@ export function AgreementCheckbox({
         개인 정보 수집 및 이용 동의
       </label>
 
-      {isModalOpen && (
-        <ModalFormPage
-          isChecked1={isChecked1}
-          isChecked2={isChecked2}
-          setIsChecked1={setIsChecked1}
-          setIsChecked2={setIsChecked2}
-          handleClose={handleCloseModal}
-        />
-      )}
+      <div className='z-50'>
+        {isModalOpen && (
+          <ModalFormPage
+            isChecked1={isChecked1}
+            isChecked2={isChecked2}
+            setIsChecked1={setIsChecked1}
+            setIsChecked2={setIsChecked2}
+            handleClose={handleCloseModal}
+          />
+        )}
+      </div>
     </div>
   );
 }
