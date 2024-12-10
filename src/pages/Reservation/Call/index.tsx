@@ -16,13 +16,15 @@ export function ReservationCallPage() {
             <CallList key={index} {...call} idx={call.id} />
           ))}
         </div>
-        <div className='pb-[142px] min-[435px]:pb-[160px] min-[800px]:pb-[180px]'></div>
-        <button
-          onClick={refreshButtonClick}
-          className='fixed bottom-[100px] z-40 flex h-[5rem] w-[5rem] self-end pr-3 min-[435px]:bottom-[110px] min-[800px]:bottom-[150px]'
-        >
-          <RefreshIcon className='' />
-        </button>
+
+        <div className='relative pb-[142px] min-[435px]:pb-[160px] min-[800px]:pb-[180px]'>
+          <button
+            onClick={refreshButtonClick}
+            className='absolute bottom-[170px] right-4 z-40 flex h-[5rem] w-[5rem] min-[435px]:bottom-[180px] min-[800px]:bottom-[200px]'
+          >
+            <RefreshIcon />
+          </button>
+        </div>
       </div>
     </>
   );
