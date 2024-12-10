@@ -11,6 +11,7 @@ type configProps = {
   params: object | null | undefined;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 const API = axios.create({ baseURL: 'http://localhost:8080/api/v1' });
 
 const apiCall = async (

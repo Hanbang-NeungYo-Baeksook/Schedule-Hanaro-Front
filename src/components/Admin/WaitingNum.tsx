@@ -22,6 +22,7 @@ function WaitingNumber({ numbers, angle, displayNum }: WaitingNumberProps) {
         ? `rotateX(${rotateAngle * idx}deg) translateZ(${rowTz}px)`
         : `rotateY(${rotateAngle * idx}deg) translateZ(${colTz}px)`;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rotateAngle]);
 
   useEffect(() => {
