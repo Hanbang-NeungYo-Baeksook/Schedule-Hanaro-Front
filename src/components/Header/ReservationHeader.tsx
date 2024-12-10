@@ -57,7 +57,7 @@ function ReservationHeader({ tabLocation }: Props) {
           onChange={changeActiveTab}
         />
         {activeTab === 'visit' ? (
-          <div className='mb-3 text-left text-2xl font-bold text-black'>
+          <div className='mb-1 text-left text-2xl font-bold text-black'>
             방문 상담
           </div>
         ) : selectedTab === '전화 상담 내역' ? (

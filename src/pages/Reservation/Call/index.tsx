@@ -10,18 +10,18 @@ export function ReservationCallPage() {
 
   return (
     <>
-      <div className='mx-auto flex h-[67%] w-[90%] flex-col pb-[4rem]'>
-        <div className='flex h-full w-full flex-col space-y-[1.5rem] overflow-auto'>
+      <div className='mx-auto flex h-screen w-[100%] flex-col pb-[120px]'>
+        <div className='flex h-full w-full flex-col space-y-[1.5rem] overflow-auto py-[1rem] scrollbar-hide'>
           {callListData.map((call, index) => (
             <CallList key={index} {...call} idx={call.id} />
           ))}
         </div>
+        <div className='pb-[142px] min-[435px]:pb-[160px] min-[800px]:pb-[180px]'></div>
         <button
           onClick={refreshButtonClick}
-          className='fixed z-10 flex h-[4rem] w-[4rem] sm:h-[3rem] sm:w-[3rem] lg:h-[5rem] lg:w-[5rem]'
-          style={{ bottom: '10%', right: '8%' }}
+          className='fixed bottom-[100px] z-40 flex h-[5rem] w-[5rem] self-end pr-3 min-[435px]:bottom-[110px] min-[800px]:bottom-[150px]'
         >
-          <RefreshIcon className='h-[80%] w-[80%]' />
+          <RefreshIcon className='' />
         </button>
       </div>
     </>
