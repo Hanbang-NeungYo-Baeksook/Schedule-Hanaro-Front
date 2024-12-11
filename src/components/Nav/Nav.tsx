@@ -53,7 +53,7 @@ const Item = ({ icon: Icon, name, route }: NavItemProps) => {
 
 const Nav = () => {
   return (
-    <nav className='navbar fixed bottom-0 flex items-center justify-around rounded-t-[1.875rem] bg-white py-6 shadow-[0_-4px_10px_0_rgba(0,0,0,0.1)]'>
+    <nav className='navbar fixed bottom-0 z-[50] flex items-center justify-around rounded-t-[1.875rem] bg-white py-6 shadow-[0_-4px_10px_0_rgba(0,0,0,0.1)]'>
       {NavIcons.map((item) => (
         <React.Fragment key={item.name}>
           <Item icon={item.icon} name={item.name} route={item.route} />

@@ -20,7 +20,7 @@ const InquiryList: React.FC<InquiryConsultationCardProps> = ({
   const navigate = useNavigate();
   return (
     <div
-      className='rounded-[0.9375rem] bg-white pb-[2.1875rem] pl-[1.1875rem] pr-[1.4688rem] pt-[1.2rem] drop-shadow'
+      className='mx-auto w-[90%] rounded-[0.9375rem] bg-white pb-[2.1875rem] pl-[1.1875rem] pr-[1.4688rem] pt-[1.2rem] drop-shadow'
       onClick={() => navigate(`/reservation/inquiry/${idx}`)}
     >
       <div className='space-y-[1rem]'>
