@@ -74,7 +74,11 @@ export default function LoginPage() {
                 type='text'
                 value={id}
                 onChange={(e) => setId(e.target.value)}
+<<<<<<< HEAD
                 className='mt-[0.25rem] w-full border-b-[.125rem] border-[#D9D9D9] bg-transparent p-[0.5rem] transition-colors duration-300 ease-in-out focus:border-[#008485] focus:outline-none focus:ring-0' // 애니메이션 추가
+=======
+                className='mt-1 w-full border-b-2 border-[#D9D9D9] bg-transparent p-2 focus:border-[#008485] focus:outline-none focus:ring-0'
+>>>>>>> b7e51880cd607fe61e4048cfe8a06712182cdf83
               />
             </div>
             <div>
@@ -89,13 +93,21 @@ export default function LoginPage() {
                 type='password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+<<<<<<< HEAD
                 className='mt-[0.25rem] w-full border-b-[.125rem] border-[#D9D9D9] bg-transparent p-[0.2rem] transition-colors duration-300 ease-in-out focus:border-[#008485] focus:outline-none focus:ring-0' // 애니메이션 추가
+=======
+                className='mt-1 w-full border-b-2 border-[#D9D9D9] bg-transparent p-2 focus:border-[#008485] focus:outline-none focus:ring-0'
+>>>>>>> b7e51880cd607fe61e4048cfe8a06712182cdf83
               />
             </div>
             <button
               type='submit'
+<<<<<<< HEAD
               disabled={isDisabled}
               className={`w-full rounded-[1.25rem] p-[1rem] text-[1.25rem] font-bold text-white shadow-[0_4px_10px_0_rgba(0,0,0,0.1)] ${isDisabled ? 'bg-[#D9D9D9]' : 'bg-[#008485] hover:bg-[#008585a9]'} `}
+=======
+              className='shadow-[0_4px_10px_0_rgba(0,0,0,0.1) w-full rounded-[1.25rem] bg-[#008485] p-[1rem] text-[1.25rem] font-bold text-white hover:bg-[#008585a9]'
+>>>>>>> b7e51880cd607fe61e4048cfe8a06712182cdf83
             >
               로그인
             </button>
