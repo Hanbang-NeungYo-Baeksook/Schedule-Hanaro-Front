@@ -26,8 +26,8 @@ function BranchCard({
   return (
     <div className='flex w-full cursor-pointer items-center justify-between rounded-[0.9375rem] bg-white p-6 shadow-[0_0_10px_5px_rgba(0,0,0,0.05)] transition-colors duration-300 hover:bg-gray-50'>
       <div className='flex flex-col gap-1 text-left'>
-        <div className='flex items-end gap-3'>
-          <span className='text-[1.5rem] font-bold'>{name}</span>
+        <div className='flex w-full items-center gap-3'>
+          <span className='max-w-[70%] text-[1.5rem] font-bold'>{name}</span>
           {isOpen ? (
             <Badge variant='lightSolid'>영업중</Badge>
           ) : (

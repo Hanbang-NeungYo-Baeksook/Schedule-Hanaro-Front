@@ -17,12 +17,18 @@ function RecBranchBox({
   return (
     <div
       onClick={handlePage(`/branch/${branchId}`)}
-      className='flex w-[full] max-w-[10.375rem] flex-col items-start justify-center rounded-[15px] px-3 py-2 shadow-[0px_0px_10px_8px_rgba(0,0,0,0.13)]'
+      className='flex h-full w-full flex-col items-start justify-between rounded-[15px] px-4 py-4 shadow-[0px_0px_10px_8px_rgba(0,0,0,0.05)]'
     >
-      <span>{branchName}</span>
-      <span>{location}</span>
-      <span>{distance}</span>
-      <Badge variant='lightSolid'>{congestion}</Badge>
+      <span className='text-[1.25rem] font-bold'>{branchName}</span>
+      <span className='text-[0.75rem] text-lightGrey'>{location}</span>
+      <span className='text-[0.875rem]'>{distance} m</span>
+      <Badge
+        variant='lightSolid'
+        className='flex w-full items-center justify-center gap-3'
+      >
+        <span>혼잡도</span>
+        <span>{congestion} %</span>
+      </Badge>
     </div>
   );
 }

@@ -8,10 +8,10 @@ function RecBranch() {
       <span className='text-[0.75rem] text-[#666666]'>
         혼잡도를 기준으로 업무를 가장 빠르게 보실 수 있는 영업점을 추천해드려요!
       </span>
-      <ul className='flex w-full whitespace-nowrap'>
+      <ul className='flex w-full items-stretch gap-4 overflow-x-scroll p-2'>
         {REC_BRANCH_MOCK.map(
           ({ branchId, branchName, location, distance, congestion }) => (
-            <li key={branchId}>
+            <li key={branchId} className='w-[40%] flex-shrink-0 items-stretch'>
               <RecBranchBox
                 branchId={branchId}
                 branchName={branchName}
