@@ -1,6 +1,7 @@
-import React from 'react';
 import { ReactComponent as TimerButton } from '@/assets/icons/reservation/timer.svg';
 import { ReactComponent as WarningTimer } from '@/assets/icons/reservation/warningalarm.svg';
+import useGetCallListQuery from '@/hooks/query/useGetCallListQuery';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 type CallConsultationCardProps = {
@@ -21,6 +22,12 @@ const CallList: React.FC<CallConsultationCardProps> = ({
   idx,
 }) => {
   const navigate = useNavigate();
+  const { data: calls, isLoading } = useGetCallListQuery();
+  console.log(calls);
+
+  if (isLoading) {
+    <>Loading...</>;
+  }
 
   return (
     <div
