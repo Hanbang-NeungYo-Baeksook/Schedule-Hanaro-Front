@@ -14,7 +14,7 @@ export function ReservationVisitPage() {
   return (
     <div className='mx-auto flex h-screen w-[90%] flex-col pb-[120px]'>
       <hr />
-      <div className='h-full overflow-auto'>
+      <div className='h-full overflow-auto scrollbar-hide'>
         {visitNum.map(({ id, my_num, name, waiting_number, waiting_time }) => (
           <div key={id}>
             <button

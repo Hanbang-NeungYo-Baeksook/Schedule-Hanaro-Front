@@ -21,7 +21,7 @@ export function ReservationLayout() {
   }
 
   return (
-    <div className='h-screen w-full justify-self-center overflow-hidden'>
+    <div className='relative h-screen w-full justify-self-center overflow-hidden'>
       <ReservationHeader tabLocation={tabLocation} key={tabLocation} />
       <Outlet />
       <Nav />
