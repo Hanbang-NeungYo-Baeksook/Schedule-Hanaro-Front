@@ -1,8 +1,8 @@
 import { ReactComponent as Close } from '@/assets/icons/close.svg';
+import { useMap } from '@/hooks/map-context';
 import { cn } from '@/lib/utils';
 import BranchInfo from './BranchInfo';
 import ReservationButton from './ReservationButton';
-import { useMap } from '@/hooks/map-context';
 
 export type FloatingType = {
   type: 'dir' | 'map';

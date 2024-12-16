@@ -18,6 +18,8 @@ const buttonVariants = cva(
         // TODO: ghost Hover시 text 색상 수정 필요
         ghost:
           'border border-input bg-background hover:bg-accent hover:text-accent-foreground border-main/80 border-[1px] text-main',
+        noLineGhost:
+          'bg-background hover:bg-accent hover:text-accent-foreground border-none text-main',
         link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
