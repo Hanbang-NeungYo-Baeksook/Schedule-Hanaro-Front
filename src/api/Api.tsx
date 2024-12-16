@@ -12,21 +12,25 @@ type configProps = {
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-const API = axios.create({ baseURL: 'http://localhost:8080/api/v1' });
+const API = axios.create({
+  baseURL: 'http://localhost:8080/api',
+  withCredentials: true,
+});
 
 const apiCall = async (
   url: string,
   method = 'get',
-  data: null | undefined | object = null,
-  token: null | string = null
+  data: null | undefined | object = null
 ) => {
   try {
     const headers: headersProps = {
       'Content-type': 'application/json',
       Authorization: '',
     };
+    const token = window.localStorage.getItem('token');
+    console.log(token);
     if (token) {
-      headers['Authorization'] = `token ${token}`;
+      headers['Authorization'] = `Bearer ${token}`;
     }
     const config: configProps = {
       url,
