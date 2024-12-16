@@ -10,7 +10,7 @@ type WaitingNumberProps = {
 
 function WaitingNumber({ numbers, angle, displayNum }: WaitingNumberProps) {
   const [isRow] = useState(false);
-  const rotateAngle = 360 / 8;
+  const rotateAngle = 45;
   const radian = (rotateAngle / 2) * (Math.PI / 180);
   const colTz = Math.round(210 / 2 / Math.tan(radian));
   const rowTz = Math.round(140 / 2 / Math.tan(radian));
@@ -44,7 +44,7 @@ function WaitingNumber({ numbers, angle, displayNum }: WaitingNumberProps) {
       </div>
       <div className='relative w-full max-w-xl pl-[0.8rem]'>
         <div
-          className='scene relative mx-auto h-[8.75rem] w-[13.125rem]'
+          className='scene relative mx-auto h-[8.75rem]'
           style={{
             perspective: '1200px',
           }}
@@ -58,7 +58,7 @@ function WaitingNumber({ numbers, angle, displayNum }: WaitingNumberProps) {
             {numbers.map((number, idx) => (
               <div
                 key={idx}
-                className='carousel-card absolute flex h-[7.5rem] w-[11.875rem] flex-col items-center justify-center bg-white opacity-90 transition-all duration-500'
+                className='carousel-card absolute flex h-[7.5rem] flex-col items-center justify-center bg-white opacity-90 transition-all duration-500'
               >
                 {/* <span className='text-sm text-gray-400 md:text-lg'></span> */}
                 <span

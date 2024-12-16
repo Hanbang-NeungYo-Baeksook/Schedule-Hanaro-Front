@@ -5,7 +5,7 @@ import { useState } from 'react';
 import CallInfoBox from '@/components/Admin/main/CallInfoBox';
 
 const INITIAL_NUMBERS = [952, 953, 954, 955, 956, 957, 958, 951];
-const ROTATE_ANGLE = 360 / INITIAL_NUMBERS.length;
+const ROTATE_ANGLE = 45;
 
 function VisitPage() {
   const [selectedIdx, setSelectedIdx] = useState(123);
@@ -21,6 +21,7 @@ function VisitPage() {
     });
 
     setAngle((prevAngle) => prevAngle + ROTATE_ANGLE);
+    console.log(angle);
 
     setDisplayNum((prevDisplay) =>
       prevDisplay.map((num) => (num + 1 > 7 ? 0 : num + 1))
