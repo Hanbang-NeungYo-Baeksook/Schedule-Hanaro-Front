@@ -1,5 +1,5 @@
 export type Call = {
-  CallData: CallData[];
+  data: CallData[];
   Pagination: Pagination;
 };
 

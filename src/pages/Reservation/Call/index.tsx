@@ -1,15 +1,23 @@
-import '@/index.css';
 import CallList from '@/components/Reservation/CallList';
-import { callListData } from '@/mock/mockReservationCall';
+import useGetCallListQuery from '@/hooks/query/useGetCallListQuery';
+import '@/index.css';
+import React from 'react';
 // import { ReactComponent as RefreshIcon } from '@/assets/icons/reservation/refresh.svg';
 
 export function ReservationCallPage() {
+  const { data: calls, isLoading } = useGetCallListQuery();
+
+  if (isLoading || !calls) {
+    <>Loading...</>;
+  }
   return (
     <>
       <div className='mx-auto flex h-screen w-[100%] flex-col overflow-visible pb-[120px]'>
         <div className='flex h-full w-full flex-col space-y-[1.5rem] overflow-auto py-[1rem] scrollbar-hide'>
-          {callListData.map((call, index) => (
-            <CallList key={index} {...call} idx={call.id} />
+          {calls?.data?.map((call, index) => (
+            <React.Fragment key={call.call_id}>
+              <CallList key={index} {...call} />
+            </React.Fragment>
           ))}
         </div>
         {/* <button
