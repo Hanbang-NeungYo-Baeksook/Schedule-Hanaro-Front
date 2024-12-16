@@ -76,7 +76,7 @@ export function BottomSheet() {
       <div className='navbar fixed bottom-24 left-1/2 z-10 -translate-x-1/2'>
         <Drawer open={open} onOpenChange={setOpen} snapPoints={[0.4, 1]}>
           <DrawerTrigger asChild>
-            <Button className='w-fit rounded-full bg-white px-5 py-2 shadow-[2px_4px_4px_0px_rgba(0,0,0,0.15)] hover:bg-[#F9F9F9]'>
+            <Button className='mb-3 w-fit rounded-full bg-white px-6 py-4 shadow-[2px_4px_4px_0px_rgba(0,0,0,0.15)] hover:bg-[#F9F9F9]'>
               <List width='1.0625rem' height='1.0625rem' color='#666666' />
               <span className='text-[0.875rem] font-bold text-lightGrey'>
                 지점목록
