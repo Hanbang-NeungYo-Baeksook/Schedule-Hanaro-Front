@@ -1,9 +1,9 @@
+import { useMap } from '@/hooks/map-context';
 import { BRANCH_MOCK } from '@/mock/branch_mock';
+import { useEffect } from 'react';
 import { BottomSheet } from '../BottomSheet/BottomSheet';
 import BottomFloatingBox from '../Direction/BottomFloatingBox';
 import Nav from '../Nav/Nav';
-import { useMap } from '@/hooks/map-context';
-import { useEffect } from 'react';
 import { MyLocation } from './MyLocation';
 
 export function Map() {
