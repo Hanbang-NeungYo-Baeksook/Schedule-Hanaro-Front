@@ -1,5 +1,5 @@
 import CallList from '@/components/Reservation/CallList';
-import useGetCallListQuery from '@/hooks/query/useGetCallListQuery';
+import useGetCallListQuery from '@/hooks/query/customer/useGetCallListQuery';
 import '@/index.css';
 import React from 'react';
 // import { ReactComponent as RefreshIcon } from '@/assets/icons/reservation/refresh.svg';

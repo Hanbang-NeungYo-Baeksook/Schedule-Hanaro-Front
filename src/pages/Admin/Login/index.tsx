@@ -1,15 +1,14 @@
 import { Toaster } from '@/components/ui/toaster';
+import usePostAdminLoginQuery from '@/hooks/query/admin/usePostAdminLoginQuery';
 import { useToast } from '@/hooks/use-toast';
-import axios from 'axios';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import hanaLogo from '../../../assets/icons/hanaLogo.svg';
 
 export default function LoginPage() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const { mutate: signin } = usePostAdminLoginQuery();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,28 +22,29 @@ export default function LoginPage() {
       return;
     }
 
-    try {
-      const response = await axios.post('/api/login', { id, password });
+    signin({ authId: id, password: password });
+    // try {
+    //   const response = await axios.post('/api/login', { id, password });
 
-      const { token } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('accountname', id);
+    //   const { token } = response.data;
+    //   localStorage.setItem('token', token);
+    //   localStorage.setItem('accountname', id);
 
-      toast({
-        title: '로그인 성공',
-        description: `${id}님, 환영합니다!`,
-        variant: 'default',
-      });
+    //   toast({
+    //     title: '로그인 성공',
+    //     description: `${id}님, 환영합니다!`,
+    //     variant: 'default',
+    //   });
 
-      navigate('/admin/online');
-    } catch (error: unknown) {
-      console.error('로그인 오류:', error);
-      toast({
-        title: '로그인 실패',
-        description: '아이디 또는 비밀번호가 올바르지 않습니다.',
-        variant: 'destructive',
-      });
-    }
+    //   navigate('/admin/online');
+    // } catch (error: unknown) {
+    //   console.error('로그인 오류:', error);
+    //   toast({
+    //     title: '로그인 실패',
+    //     description: '아이디 또는 비밀번호가 올바르지 않습니다.',
+    //     variant: 'destructive',
+    //   });
+    // }
   };
 
   const isDisabled = !id || !password;
@@ -70,6 +70,7 @@ export default function LoginPage() {
                 아이디
               </label>
               <input
+                required
                 id='id'
                 type='text'
                 value={id}
@@ -85,6 +86,7 @@ export default function LoginPage() {
                 비밀번호
               </label>
               <input
+                required
                 id='password'
                 type='password'
                 value={password}
