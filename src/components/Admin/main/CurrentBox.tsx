@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 function CurrentBox() {
   return (
     <div className='z-10 flex w-[30%] flex-col items-center justify-center'>
-      <div className='relative z-10 h-[42%] w-full max-w-md bg-lightGrey px-4 pt-10'>
+      <div className='relative z-10 h-[50%] w-full max-w-md bg-lightGrey px-4 pt-10'>
         <div className='z-30 mb-6 text-center text-white'>
           <p className='text-sm font-semibold'>현재 순번 고객</p>
           <h1 className='text-4xl font-bold'>123번</h1>
@@ -81,7 +81,7 @@ function CurrentBox() {
           </div>
         </div>
 
-        <Button className='hover <span>g-gray-700 w-full rounded-lg bg-gray-800 py-2 text-white'>
+        <Button className='hover w-full rounded-lg bg-gray-800 py-2 text-white hover:bg-gray-700'>
           상담 완료
         </Button>
       </div>
