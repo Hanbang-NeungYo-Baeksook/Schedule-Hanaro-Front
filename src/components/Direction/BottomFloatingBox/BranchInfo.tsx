@@ -49,6 +49,10 @@ export default function BranchInfo({
     setIsOpen(false);
   };
 
+  const [topName, bottomName] = targetBranch
+    ? targetBranch.name.split(' ')
+    : ['', ''];
+
   return (
     <>
       <div className='flex items-center justify-between'>
@@ -57,9 +61,10 @@ export default function BranchInfo({
             className='flex items-center justify-center gap-2'
             onClick={handlePage(`/branch/${branchId}`)}
           >
-            <span className='flex text-2xl font-extrabold'>
-              {targetBranch?.name ?? ''}
-            </span>
+            <div className='flex flex-wrap justify-center gap-1'>
+              <span className='flex text-2xl font-extrabold'>{topName}</span>
+              <span className='flex text-2xl font-extrabold'>{bottomName}</span>
+            </div>
             <Hyperlink />
           </div>
           <div className='flex flex-wrap items-center justify-center gap-2'>

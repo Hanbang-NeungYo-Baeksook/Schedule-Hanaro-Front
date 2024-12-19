@@ -42,12 +42,12 @@ export function MainPage() {
                   <div className='flex w-full justify-between gap-4'>
                     <MyCard
                       title='전화상담'
-                      content='상담사를 통한 전화 상담 서비스'
+                      contents={['상담사를 통한', '전화 상담 서비스']}
                       onClick={() => navigate('/chat')}
                     />
                     <MyCard
                       title='1:1 상담'
-                      content='1:1 게시판을 통한 상담 서비스'
+                      contents={['1:1 상담을을 통한', '1:1 상담 상담 서비스']}
                       onClick={() => navigate('/chat')}
                     />
                   </div>

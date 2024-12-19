@@ -19,7 +19,6 @@ import { showToast } from '../Register/Call';
 import { useEffect, useState } from 'react';
 // import axios from 'axios';
 import apiCall from '@/api/Api';
-import { BackButton } from '@/components/ui/back';
 import Modalbutton from '@/components/Direction/Modal';
 
 type BranchProps = {
@@ -44,6 +43,8 @@ const defaultBranchDetail = {
   businessTime: '',
 };
 import { useMap } from '@/hooks/map-context';
+import { Separator } from '@radix-ui/react-select';
+import BranchDetailHeader from '@/components/Header/BranchDetailHeader';
 
 export function BranchDetailPage() {
   const navigate = useNavigate();
@@ -109,13 +110,9 @@ export function BranchDetailPage() {
     };
   return (
     <>
+      <BranchDetailHeader branchName={branchName ?? ''} />
       <div className='mx-auto overflow-hidden rounded-lg bg-white'>
-        <header className='flex h-14 items-center justify-between border'>
-          <BackButton />
-          <div className='text-xl'>{branchName}</div>
-          <div></div>
-        </header>
-        <main>
+        <div>
           <BankImg />
           {/* <img src={branch} alt='bank image' className='w-full' /> */}
           <div className='w-[90%] justify-self-center border-b py-8'>
@@ -144,7 +141,7 @@ export function BranchDetailPage() {
               </li>
             </ul>
           </div>
-          <div className='h-2 w-full bg-[#eeeeee]'></div>
+          <Separator />
           <div className='w-[90%] justify-self-center py-8'>
             <h3 className='text-left text-xl font-bold'>대기 정보</h3>
             <div className='mt-8 grid grid-cols-2 gap-2 text-sm'>
@@ -200,7 +197,7 @@ export function BranchDetailPage() {
               <Button onClick={moveToReservation}>예약하기</Button>
             </div>
           )}
-        </main>
+        </div>
         <Toaster />
       </div>
 

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.marker-image {
+  width: 2.5rem !important;
+}
+
 .scene {
   width: 210px;
   height: 140px;
@@ -185,18 +189,24 @@
   }
   .label-green {
     position: absolute;
-    padding: 0.2rem;
-    color: #000;
-    -webkit-text-stroke: #fbfbfb;
-    font-weight: 700;
-    border-radius: 0.5rem;
-    top: -1.2rem;
+    padding: 0.3rem;
+    color: #111;
+    text-shadow:
+      -2px 0 #fff,
+      0 2px #fff,
+      2px 0 #fff,
+      0 -2px #fff;
+    font-weight: bold;
+    /* border: 0.125rem solid #d9d9d9; */
+    border-radius: 0.25rem;
+    top: -0.5rem;
     left: 50%;
     transform: translate(-50%);
     white-space: pre;
-    /* background: #008485; */
+    letter-spacing: 0.15rem;
+    /* background: #fbfbfb; */
     height: 1.4rem;
-    @apply text-[0.7rem];
+    @apply text-[0.8rem];
   }
   .label-red {
     position: absolute;
@@ -215,10 +225,9 @@
     box-shadow: 0px 0px 8px 0px rgba(0 0 0 /0.25);
     padding: 0.25rem;
   }
-  .marker-image {
-    width: 45px !important;
-    height: 70px !important;
-    z-index: 1;
+
+  .marker-image-with-label {
+    @apply w-12;
   }
 }
 

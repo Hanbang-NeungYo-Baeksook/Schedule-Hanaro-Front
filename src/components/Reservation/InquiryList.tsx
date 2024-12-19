@@ -25,8 +25,11 @@ const InquiryList: React.FC<InquiryConsultationCardProps> = ({
     >
       <div className='space-y-[1rem]'>
         <div className='flex items-center'>
-          <div className='flex text-[2rem] font-bold text-[#2b2b2b]'>
-            {inquiryNumber}
+          <div className='flex h-fit items-end gap-[0.125rem]'>
+            <span className='flex text-3xl font-bold text-[#2b2b2b]'>
+              {inquiryNumber}
+            </span>
+            <span className='pb-[0.1rem] text-xl font-bold'>번</span>
           </div>
           <Badge
             variant={responseStatus ? 'active' : 'outline'}
