@@ -91,7 +91,7 @@ export function BottomSheet() {
           </DrawerTrigger>
           <DrawerContent
             aria-describedby='custom-description'
-            className='customWidth h-[95%] overflow-y-scroll rounded-t-2xl bg-black/20 bg-white shadow-2xl dark:bg-gray-950'
+            className='customWidth h-[100%] rounded-t-2xl bg-black/20 bg-white shadow-2xl dark:bg-gray-950'
           >
             <div className='after:none mx-auto h-[90%] w-[90%]'>
               {/* <DrawerHeader> */}
