@@ -13,10 +13,12 @@ const badgeVariants = cva(
           'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
         destructive:
           'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
-        outline: 'text-main border-main bg-white font-bold',
+        outline:
+          'text-main border-main bg-white font-bold cursor-pointer hover:bg-main/5',
         lightSolid: 'text-main bg-main07 ',
         active: 'badge hover:bg-[main/90] active:bg-[main/90] cursor-pointer',
-        noactive: 'text-[#C9C9C9] border-border bg-white cursor-pointer',
+        noactive:
+          'text-[#C9C9C9] border-border bg-white cursor-pointer hover:bg-secondary/80',
       },
     },
     defaultVariants: {

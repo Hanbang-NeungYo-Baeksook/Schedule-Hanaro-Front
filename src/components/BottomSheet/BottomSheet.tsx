@@ -47,6 +47,11 @@ export function BottomSheet() {
   const { currentAddress, setSelectedBranchId, setFocus } = useMap();
   const [selectedChipIdx, setSelectedChipIdx] = useState(0); // 영업점 | ATM chip
 
+  const [firstAddress, secondAddress, ...lastAddress] =
+    currentAddress.split(' ');
+  const topAddress = firstAddress + ' ' + secondAddress;
+  const bottomAdrress = lastAddress.join(' ');
+
   const [open, setOpen] = useState(false);
   const toggleOpen = () => setOpen((prev) => !prev);
 
@@ -100,9 +105,14 @@ export function BottomSheet() {
                       className='ml-[18px] flex w-fit items-center justify-center gap-[0.3125rem] border-border bg-[#F8F8F8] px-5 py-3 tracking-wider text-text'
                     >
                       <MapPin width='1.25rem' height='1.25rem' />
-                      <span className='text-[1rem] font-bold'>
-                        {currentAddress}
-                      </span>
+                      <div className='flex flex-wrap justify-center gap-1'>
+                        <span className='text-[1rem] font-bold'>
+                          {topAddress}
+                        </span>
+                        <span className='text-[1rem] font-bold'>
+                          {bottomAdrress}
+                        </span>
+                      </div>
                     </Badge>
                     <Close
                       width={18}
@@ -122,7 +132,7 @@ export function BottomSheet() {
                           <Badge
                             key={id}
                             variant={
-                              selectedChipIdx === id ? 'active' : 'noactive'
+                              selectedChipIdx === id ? 'active' : 'outline'
                             }
                             className='px-6 py-1 text-[0.875rem] tracking-wider'
                             onClick={() => setSelectedChipIdx(id)}
