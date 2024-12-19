@@ -3,11 +3,15 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ActiveTab } from '@/types/inquiry';
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import ReplyState from '../Inquiry/ReplyState';
 import { CallProps } from './WaitingList';
-import { useLocation } from 'react-router-dom';
 
-function CallInfoBox({ selectedIdx, setSelectedIdx }: CallProps) {
+function CallInfoBox({
+  selectedIdx,
+  setSelectedIdx,
+  toggleOpen,
+}: CallProps & { toggleOpen: () => void }) {
   const location = useLocation();
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('문의정보');
@@ -47,15 +51,22 @@ function CallInfoBox({ selectedIdx, setSelectedIdx }: CallProps) {
           </div>
           {location.pathname === '/admin/online' && (
             <div className='mt-4 flex justify-end gap-3'>
-              <Button
-                className='w-fit rounded-3xl bg-[#777777] px-4 py-2'
-                onClick={() => setSelectedIdx(123)}
-              >
-                현재 고객으로 이동
-              </Button>
-              <Button className='w-fit rounded-3xl bg-[#777777] px-4 py-2 text-white'>
-                상담 내용 입력하기
-              </Button>
+              {selectedIdx !== 123 && (
+                <Button
+                  className='w-fit rounded-3xl bg-[#777777] px-4 py-2 hover:bg-[#666]'
+                  onClick={() => setSelectedIdx(123)}
+                >
+                  현재 고객으로 이동
+                </Button>
+              )}
+              {selectedIdx === 123 && (
+                <Button
+                  className='w-fit rounded-3xl bg-[#777777] px-4 py-2 text-white hover:bg-[#666]'
+                  onClick={toggleOpen}
+                >
+                  상담 내용 입력하기
+                </Button>
+              )}
             </div>
           )}
         </div>

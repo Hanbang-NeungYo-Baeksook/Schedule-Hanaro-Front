@@ -1,7 +1,4 @@
-export type Call = {
-  data: CallData[];
-  Pagination: Pagination;
-};
+export type Call = PageData<CallData[]>;
 
 export type CallData = {
   call_id: number;
@@ -10,4 +7,32 @@ export type CallData = {
   call_num: number;
   category: string;
   status: string;
+};
+
+export type AdminCall = {
+  progress: AdminCallData;
+  waiting: AdminCallData;
+};
+
+export type AdminCallData = {
+  id: number;
+  waitingNum: number;
+  category: string;
+  tags: string[];
+  content: string;
+  reservationTime: Date;
+  startTime?: Date;
+  endTime?: Date;
+  userName: string;
+  email: string;
+  mobile: string;
+  birthdt: string;
+  calls: AdminHistoryData[];
+  inquiries: AdminHistoryData[];
+};
+
+export type AdminHistoryData = {
+  id: number;
+  content: string;
+  category: string;
 };
