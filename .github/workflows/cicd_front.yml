@@ -47,7 +47,7 @@ jobs:
       - name: restart nginx
         run: |
           ssh ec2-user@${{ secrets.WAS }} '
-            cd /var/www/docroot
-            rm -rf dist
-            unzip -q dist.zip -d ./
+            rm -rf /var/www/docroot/dist
+            unzip -q /home/ec2-user/workspace/dist.zip -d /var/www/docroot
             sudo nginx -s reload
+          '
