@@ -1,5 +1,5 @@
 import { ReactComponent as Check } from '@/assets/icons/reservation/check.svg';
-import AnimationCheck from '@/assets/images/AnimationCheck.gif';
+import AnimationCheck from '@/assets/images/animationCheck.gif';
 import Modalbutton from '@/components/Direction/Modal';
 import ReservationDetailHeader from '@/components/Header/ReservationDetailHeader';
 import Nav from '@/components/Nav/Nav';
