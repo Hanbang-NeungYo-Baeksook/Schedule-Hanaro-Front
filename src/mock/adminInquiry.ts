@@ -196,4 +196,28 @@ export const mockCallData: CallDataType[] = [
     resTime: '12:00AM',
     now: false,
   },
+  {
+    waitingNum: 130,
+    category: '예금',
+    content: '상담내용내용내용내용',
+    userName: '문해빈',
+    resTime: '12:00AM',
+    now: false,
+  },
+  {
+    waitingNum: 131,
+    category: '예금',
+    content: '상담내용내용내용내용',
+    userName: '문해빈',
+    resTime: '12:00AM',
+    now: false,
+  },
+  {
+    waitingNum: 132,
+    category: '예금',
+    content: '상담내용내용내용내용',
+    userName: '문해빈',
+    resTime: '12:00AM',
+    now: false,
+  },
 ];

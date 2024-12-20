@@ -35,6 +35,11 @@ declare global {
     };
   }
 
+  type PageData<T> = {
+    data: T;
+    pagination: Pagination;
+  };
+
   type Pagination = {
     currentPage: number;
     pageSize: number;

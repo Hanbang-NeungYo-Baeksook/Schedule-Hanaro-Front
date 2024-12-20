@@ -17,7 +17,7 @@ function WaitingBox({
   return (
     <div
       className={cn(
-        'flex cursor-pointer flex-col border-b-[1px] border-[#D9D9D9] px-5 py-2',
+        'flex h-[60px] cursor-pointer flex-col border-b-[1px] border-[#D9D9D9] px-5 py-2',
         isSelected ? 'bg-[#EFEFEF]' : 'bg-white'
       )}
     >

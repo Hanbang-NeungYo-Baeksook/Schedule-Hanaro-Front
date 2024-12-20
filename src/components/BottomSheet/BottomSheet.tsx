@@ -91,9 +91,9 @@ export function BottomSheet() {
           </DrawerTrigger>
           <DrawerContent
             aria-describedby='custom-description'
-            className='customWidth h-[95%] rounded-t-2xl bg-black/20 bg-white shadow-2xl dark:bg-gray-950'
+            className='customWidth h-[100%] rounded-t-2xl bg-black/20 bg-white shadow-2xl dark:bg-gray-950'
           >
-            <div className='mx-auto h-[90%] w-[90%]'>
+            <div className='after:none mx-auto h-[90%] w-[90%]'>
               {/* <DrawerHeader> */}
               <DrawerDescription id='custom-description'></DrawerDescription>
               <div className='flex items-center justify-between'>
@@ -121,6 +121,7 @@ export function BottomSheet() {
                       onClick={toggleOpen}
                     />
                   </div>
+
                   {/* 추천 지점 */}
 
                   <RecBranch />
@@ -132,7 +133,7 @@ export function BottomSheet() {
                           <Badge
                             key={id}
                             variant={
-                              selectedChipIdx === id ? 'active' : 'outline'
+                              selectedChipIdx === id ? 'active' : 'noactive'
                             }
                             className='px-6 py-1 text-[0.875rem] tracking-wider'
                             onClick={() => setSelectedChipIdx(id)}
