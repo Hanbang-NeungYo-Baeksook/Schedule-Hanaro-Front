@@ -38,7 +38,7 @@ jobs:
           chmod 600 ~/.ssh/known_hosts
 
       - name: zip build files
-        run: zip -rq dist.zip .dist
+        run: zip -rq dist.zip dist
 
       - name: scp build file to was
         run: |
