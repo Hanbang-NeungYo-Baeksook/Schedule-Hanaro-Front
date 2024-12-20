@@ -38,16 +38,16 @@ jobs:
           chmod 600 ~/.ssh/known_hosts
 
       - name: zip build files
-        run: zip -rq build.zip .build
+        run: zip -rq dist.zip .dist
 
       - name: scp build file to was
         run: |
-          scp build.zip ec2-user@${{ secrets.WAS }}:/home/ec2-user/workspace/
+          scp dist.zip ec2-user@${{ secrets.WAS }}:/home/ec2-user/workspace/
 
       - name: restart nginx
         run: |
           ssh ec2-user@${{ secrets.WAS }} '
             cd /home/ec2-user/workspace
-            rm -rf schedulehanaro/build/
-            unzip -q build.zip -d schedulehanaro
+            rm -rf schedulehanaro/dist/
+            unzip -q dist.zip -d schedulehanaro
             sudo nginx -s reload
