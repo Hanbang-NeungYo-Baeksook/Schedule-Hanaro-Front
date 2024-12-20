@@ -47,7 +47,7 @@ jobs:
       - name: restart nginx
         run: |
           ssh ec2-user@${{ secrets.WAS }} '
-            cd /home/ec2-user/workspace
-            rm -rf schedulehanaro/dist/
-            unzip -q dist.zip -d schedulehanaro
+            cd /var/www/docroot
+            rm -rf dist
+            unzip -q dist.zip -d ./
             sudo nginx -s reload
