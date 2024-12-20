@@ -1,4 +1,4 @@
-import { TMapLatLng, TMap, TMapSize } from './tmap';
+import { TMap, TMapLatLng, TMapSize } from './tmap';
 
 declare global {
   interface Window {
@@ -34,6 +34,17 @@ declare global {
       }) => TMapPolyline;
     };
   }
+
+  type PageData<T> = {
+    data: T;
+    pagination: Pagination;
+  };
+
+  type Pagination = {
+    currentPage: number;
+    pageSize: number;
+    hasNext: boolean;
+  };
 }
 
 export {};

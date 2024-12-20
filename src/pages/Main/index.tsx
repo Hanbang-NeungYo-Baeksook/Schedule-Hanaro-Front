@@ -8,10 +8,10 @@ export function MainPage() {
   const navigate = useNavigate();
   return (
     <>
-      <div className='flex h-screen flex-col justify-between overflow-y-auto bg-[#DCEFEA] text-text scrollbar-hide'>
+      <div className='z-1 flex h-screen flex-col justify-start overflow-y-auto bg-[#DCEFEA] text-text scrollbar-hide'>
         <div className='flex w-full flex-col'>
           <div className='relative mx-auto flex w-[90%] flex-col py-20 pt-10'>
-            <div className='mx-auto flex w-full flex-col items-start'>
+            <div className='z-10 mx-auto flex w-full flex-col items-start'>
               <div className='absoulte text-[2.3rem] font-[1000]'>
                 반갑습니다
               </div>
@@ -19,7 +19,7 @@ export function MainPage() {
               <HanaAvengers className='absolute bottom-[-3rem] right-0 z-10 w-[85%]' />
             </div>
           </div>
-          <div className='flex h-screen w-full flex-col rounded-t-[1.2rem] bg-white'>
+          <div className='z-[1] flex h-fit w-full flex-col rounded-t-[1.2rem] bg-white'>
             <div className='mx-auto flex w-[90%] flex-col gap-[3rem] pb-6'>
               <div className='flex flex-col gap-[2rem]'>
                 <div className='mt-[3rem] flex w-full flex-col justify-start gap-[1rem]'>
@@ -42,12 +42,12 @@ export function MainPage() {
                   <div className='flex w-full justify-between gap-4'>
                     <MyCard
                       title='전화상담'
-                      content='상담사를 통한 전화 상담 서비스'
+                      contents={['상담사를 통한', '전화 상담 서비스']}
                       onClick={() => navigate('/chat')}
                     />
                     <MyCard
                       title='1:1 상담'
-                      content='1:1 게시판을 통한 상담 서비스'
+                      contents={['1:1 상담을을 통한', '1:1 상담 상담 서비스']}
                       onClick={() => navigate('/chat')}
                     />
                   </div>
@@ -65,7 +65,8 @@ export function MainPage() {
             </div>
           </div>
         </div>
-        <div className='bg-white pb-[8rem]'></div>
+        <div className='bg-white pb-[100px]'></div>
+        <div className='navbar fixed bottom-0 z-[0] bg-white pb-[30rem] min-[1000px]:pb-[29rem]'></div>
       </div>
     </>
   );

@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 function MypageLayout() {
   return (
-    <div>
+    <div className='relative h-screen w-full justify-self-center overflow-hidden'>
       <Outlet />
       <Nav />
     </div>

@@ -1,12 +1,12 @@
-import Nav from '@/components/Nav/Nav';
-import Loading from '@/assets/images/loading.gif';
-import { useRef, useState } from 'react';
-import Feedback from '@/components/Chat/Feedback';
-import Header from '@/components/Header/Header';
-import { Badge } from '@/components/ui/badge';
 import { ReactComponent as DownVector } from '@/assets/icons/DownVector.svg';
 import { ReactComponent as UpVector } from '@/assets/icons/UpVector.svg';
+import Loading from '@/assets/images/loading.gif';
+import Feedback from '@/components/Chat/Feedback';
+import Header from '@/components/Header/Header';
+import Nav from '@/components/Nav/Nav';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useRef, useState } from 'react';
 
 const recommendedQuestions = [
   '통장은 어떤 기준으로 선택하나요?',
@@ -36,6 +36,7 @@ const ChatPage = () => {
       if (!inputValue) {
         return;
       }
+      setInputContent(inputValue);
       setIsLoading(true);
       setAnswers([]);
       setTimeout(() => {
@@ -64,9 +65,6 @@ const ChatPage = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-
-      const currentValue = textareaRef.current.value;
-      setInputContent(currentValue);
     }
   };
 
@@ -89,7 +87,7 @@ const ChatPage = () => {
     <div className='flex min-h-screen flex-col items-center justify-between bg-white text-lg'>
       <Header title={'별꽁이에게 문의하기'} />
       {!isLoading && answers.length === 0 && (
-        <div className='flex min-h-screen w-full flex-col items-center justify-center gap-[2rem] pb-[15rem] pt-[3.5rem] text-lg'>
+        <div className='flex min-h-screen w-full flex-col items-center justify-center gap-[2rem] text-lg'>
           <div className='h-80 w-80'>
             <object
               data='/svg/santa.svg' // 산타 이미지
@@ -127,7 +125,7 @@ const ChatPage = () => {
             <div className='relative w-[80%]'>
               <textarea
                 ref={textareaRef}
-                className='w-full resize-none overflow-hidden rounded-3xl border-[.1875rem] border-main bg-white p-4 pr-12 shadow-[0_0_17px_0_rgba(0,132,133,0.25)] focus:outline-none'
+                className='h-fit w-full resize-none overflow-hidden rounded-3xl border-[.1875rem] border-main bg-white p-4 pr-12 shadow-[0_0_17px_0_rgba(0,132,133,0.25)] focus:outline-none'
                 placeholder='질문 내용을 입력하세요'
                 onInput={handleInput}
                 onKeyDown={(e) => {
@@ -164,11 +162,11 @@ const ChatPage = () => {
         </div>
       )}
       {!isLoading && answers.length > 0 && (
-        <div className='flex min-h-screen w-full flex-col justify-between gap-[2rem] pb-[7rem] pt-[7rem]'>
+        <div className='flex min-h-screen w-[90%] flex-col justify-between gap-[2rem] pb-[7rem] pt-[7rem]'>
           <div className='flex flex-col items-center gap-[1rem] px-[1rem]'>
             {inputContent.trim() || isExpanded ? (
               <div
-                className={`relative w-full rounded-[1.25rem] border-[.1875rem] border-main bg-white p-[1rem] text-left text-[1rem] font-normal shadow-[0_0_17px_0_rgba(0,132,133,0.25)] transition-all duration-300 ${
+                className={`relative w-full rounded-[1.25rem] border-[.1875rem] border-main bg-white p-[1rem] text-center text-[1rem] font-normal shadow-[0_0_17px_0_rgba(0,132,133,0.25)] transition-all duration-300 ${
                   // 수정한부분 2024.12.01
                   isExpanded ? 'h-auto' : 'cursor-pointer overflow-hidden'
                 }`}
@@ -250,7 +248,7 @@ const ChatPage = () => {
                 </div>
                 {dropdownIndex === index && (
                   <div className='relative z-10 -mt-4 w-full rounded-[.9375rem] border-[.125rem] border-[#d9d9d9] bg-white px-4 pb-3 pt-6'>
-                    <p className='text-[1rem] font-bold text-[#464646]'>
+                    <p className='text-left text-[1rem] font-bold text-[#464646]'>
                       {answer.content}
                     </p>
                   </div>

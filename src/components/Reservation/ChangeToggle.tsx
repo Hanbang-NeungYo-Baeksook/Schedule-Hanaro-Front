@@ -19,7 +19,7 @@ export function ChangeToggle({
   return (
     <div className='flex flex-col items-start'>
       <button
-        className='mb-[1.6875rem] flex items-center text-left text-[1.5rem] font-bold text-[#2b2b2b]'
+        className='mb-[1rem] flex items-center text-left text-[1.5rem] font-bold text-[#2b2b2b]'
         onClick={onToggle}
       >
         <span className='mr-[0.5rem]'>{selectedTab}</span>
@@ -27,7 +27,7 @@ export function ChangeToggle({
       </button>
       {isOpen && (
         <div className='absolute z-50 mt-[2rem] w-[15.5rem] rounded-[.9375rem] bg-white drop-shadow'>
-          <div className='py-[1rem]'>
+          <div className='py-[0.75rem]'>
             <ChangeToggleOption
               label='전화 상담 내역'
               selectedTab={selectedTab}

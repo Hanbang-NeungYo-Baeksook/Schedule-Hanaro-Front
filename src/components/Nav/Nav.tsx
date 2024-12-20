@@ -16,7 +16,6 @@ const Item = ({ icon: Icon, name, route }: NavItemProps) => {
       ? location.pathname
       : location.pathname.split('/').slice(1, 3).join('/');
   const iconFill = selectedPath === route.split('?')[0] ? '#777777' : '#D9D9D9';
-  console.log(route.split('?')[0]);
 
   const handleRoute = () => {
     navigate(`/${route}`);
@@ -24,7 +23,7 @@ const Item = ({ icon: Icon, name, route }: NavItemProps) => {
 
   return (
     <div
-      className={`flex h-[2.625rem] w-[2.625rem] cursor-pointer items-center justify-center bg-white ${
+      className={`flex h-[2.625rem] w-[2.625rem] cursor-pointer items-center justify-center bg-[#1A9091] ${
         name === '' ? 'rounded-xl' : ''
       }`}
     >
@@ -33,7 +32,7 @@ const Item = ({ icon: Icon, name, route }: NavItemProps) => {
         onClick={handleRoute}
       >
         {route.split('?')[0] === 'reservation/visit' ? (
-          <Icon stroke={iconFill} />
+          <Icon stroke={iconFill} fill={iconFill} />
         ) : route.split('?')[0] === '' ? (
           <Icon />
         ) : (
@@ -53,7 +52,7 @@ const Item = ({ icon: Icon, name, route }: NavItemProps) => {
 
 const Nav = () => {
   return (
-    <nav className='navbar fixed bottom-0 flex items-center justify-around rounded-t-[1.875rem] bg-white py-6 shadow-[0_-4px_10px_0_rgba(0,0,0,0.1)]'>
+    <nav className='navbar fixed bottom-0 z-[50] flex items-center justify-around rounded-t-[1.875rem] bg-[#1A9091] py-6 shadow-[0_-4px_10px_0_rgba(0,0,0,0.1)]'>
       {NavIcons.map((item) => (
         <React.Fragment key={item.name}>
           <Item icon={item.icon} name={item.name} route={item.route} />

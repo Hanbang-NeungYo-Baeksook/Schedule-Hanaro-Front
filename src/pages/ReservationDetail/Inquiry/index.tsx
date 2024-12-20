@@ -9,6 +9,7 @@ import ReservationDetailInquiryTags, {
   HashTag,
 } from '../ReservationDetailInquiryTags';
 import { useEffect, useState } from 'react';
+import { Separator } from '@/components/ui/separator';
 
 export function ReservationDetailInquiryPage() {
   const { id } = useParams<{ id: string }>();
@@ -41,7 +42,7 @@ export function ReservationDetailInquiryPage() {
     <>
       <div className='mx-auto w-[90%] justify-self-center'>
         <ReservationDetailHeader />
-        <body className='pt-[5rem]'>
+        <body className='pt-[1rem]'>
           <div className='flex min-h-screen flex-col justify-between gap-[3rem]'>
             <div className='flex flex-col items-center gap-[4rem]'>
               <div className='flex flex-col gap-[2rem]'>
@@ -79,7 +80,7 @@ export function ReservationDetailInquiryPage() {
               </div>
               <div className='flex w-[90%] flex-col gap-[1rem]'>
                 <label className='flex text-2xl font-bold'>문의 내용</label>
-                <hr className='border-2' />
+                <Separator />
                 <ReservationDetailInquiryTags tags={tags} />
                 <div className='text-left text-sm text-[#B3B3B3]'>
                   {date} {time}

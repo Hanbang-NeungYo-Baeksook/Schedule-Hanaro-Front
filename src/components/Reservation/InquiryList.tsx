@@ -20,13 +20,16 @@ const InquiryList: React.FC<InquiryConsultationCardProps> = ({
   const navigate = useNavigate();
   return (
     <div
-      className='rounded-[0.9375rem] bg-white pb-[2.1875rem] pl-[1.1875rem] pr-[1.4688rem] pt-[1.2rem] drop-shadow'
+      className='mx-auto w-[90%] rounded-[0.9375rem] bg-white pb-[2.1875rem] pl-[1.1875rem] pr-[1.4688rem] pt-[1.2rem] drop-shadow'
       onClick={() => navigate(`/reservation/inquiry/${idx}`)}
     >
       <div className='space-y-[1rem]'>
         <div className='flex items-center'>
-          <div className='flex text-[2rem] font-bold text-[#2b2b2b]'>
-            {inquiryNumber}
+          <div className='flex h-fit items-end gap-[0.125rem]'>
+            <span className='flex text-3xl font-bold text-[#2b2b2b]'>
+              {inquiryNumber}
+            </span>
+            <span className='pb-[0.1rem] text-xl font-bold'>번</span>
           </div>
           <Badge
             variant={responseStatus ? 'active' : 'outline'}

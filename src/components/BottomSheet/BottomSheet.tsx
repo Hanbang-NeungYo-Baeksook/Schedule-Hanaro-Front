@@ -33,6 +33,7 @@ import { BranchInfo } from '@/types/branch';
 import { List, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import BranchCard from '../Map/BranchCard';
+import RecBranch from '../Map/RecBranch';
 import { Badge } from '../ui/badge';
 import {
   Select,
@@ -45,6 +46,11 @@ import {
 export function BottomSheet() {
   const { currentAddress, setSelectedBranchId, setFocus } = useMap();
   const [selectedChipIdx, setSelectedChipIdx] = useState(0); // 영업점 | ATM chip
+
+  const [firstAddress, secondAddress, ...lastAddress] =
+    currentAddress.split(' ');
+  const topAddress = firstAddress + ' ' + secondAddress;
+  const bottomAdrress = lastAddress.join(' ');
 
   const [open, setOpen] = useState(false);
   const toggleOpen = () => setOpen((prev) => !prev);
@@ -76,7 +82,7 @@ export function BottomSheet() {
       <div className='navbar fixed bottom-24 left-1/2 z-10 -translate-x-1/2'>
         <Drawer open={open} onOpenChange={setOpen} snapPoints={[0.4, 1]}>
           <DrawerTrigger asChild>
-            <Button className='w-fit rounded-full bg-white px-5 py-2 shadow-[2px_4px_4px_0px_rgba(0,0,0,0.15)] hover:bg-[#F9F9F9]'>
+            <Button className='mb-4 w-fit rounded-full bg-white px-6 py-2 shadow-[2px_4px_4px_0px_rgba(0,0,0,0.15)] hover:bg-[#F9F9F9]'>
               <List width='1.0625rem' height='1.0625rem' color='#666666' />
               <span className='text-[0.875rem] font-bold text-lightGrey'>
                 지점목록
@@ -85,9 +91,9 @@ export function BottomSheet() {
           </DrawerTrigger>
           <DrawerContent
             aria-describedby='custom-description'
-            className='customWidth h-[90%] rounded-t-2xl bg-black/20 bg-white shadow-2xl dark:bg-gray-950'
+            className='customWidth h-[100%] rounded-t-2xl bg-black/20 bg-white shadow-2xl dark:bg-gray-950'
           >
-            <div className='mx-auto h-[90%] w-[90%]'>
+            <div className='after:none mx-auto h-[90%] w-[90%]'>
               {/* <DrawerHeader> */}
               <DrawerDescription id='custom-description'></DrawerDescription>
               <div className='flex items-center justify-between'>
@@ -99,9 +105,14 @@ export function BottomSheet() {
                       className='ml-[18px] flex w-fit items-center justify-center gap-[0.3125rem] border-border bg-[#F8F8F8] px-5 py-3 tracking-wider text-text'
                     >
                       <MapPin width='1.25rem' height='1.25rem' />
-                      <span className='text-[1rem] font-bold'>
-                        {currentAddress}
-                      </span>
+                      <div className='flex flex-wrap justify-center gap-1'>
+                        <span className='text-[1rem] font-bold'>
+                          {topAddress}
+                        </span>
+                        <span className='text-[1rem] font-bold'>
+                          {bottomAdrress}
+                        </span>
+                      </div>
                     </Badge>
                     <Close
                       width={18}
@@ -110,9 +121,10 @@ export function BottomSheet() {
                       onClick={toggleOpen}
                     />
                   </div>
+
                   {/* 추천 지점 */}
 
-                  {/* <RecBranch /> */}
+                  <RecBranch />
 
                   <div className='flex items-center justify-between py-5'>
                     <span className='space-x-2'>

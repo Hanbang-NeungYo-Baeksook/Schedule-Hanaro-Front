@@ -1,28 +1,33 @@
-import '@/index.css';
 import CallList from '@/components/Reservation/CallList';
-import { callListData } from '@/mock/mockReservationCall';
-import { ReactComponent as RefreshIcon } from '@/assets/icons/reservation/refresh.svg';
+import useGetCallListQuery from '@/hooks/query/customer/useGetCallListQuery';
+import '@/index.css';
+import React from 'react';
+// import { ReactComponent as RefreshIcon } from '@/assets/icons/reservation/refresh.svg';
 
 export function ReservationCallPage() {
-  const refreshButtonClick = () => {
-    // 추후 새로고침 기능 추가
-  };
+  const { data: calls, isLoading } = useGetCallListQuery();
 
+  if (isLoading || !calls) {
+    <>Loading...</>;
+  }
   return (
     <>
-      <div className='mx-auto flex h-[67%] w-[90%] flex-col pb-[4rem]'>
-        <div className='flex h-full w-full flex-col space-y-[1.5rem] overflow-auto'>
-          {callListData.map((call, index) => (
-            <CallList key={index} {...call} idx={call.id} />
+      <div className='mx-auto flex h-screen w-[100%] flex-col overflow-visible pb-[120px]'>
+        <div className='flex h-full w-full flex-col space-y-[1.5rem] overflow-auto py-[1rem] scrollbar-hide'>
+          {calls?.data?.map((call, index) => (
+            <React.Fragment key={call.call_id}>
+              <CallList key={index} {...call} />
+            </React.Fragment>
           ))}
         </div>
-        <button
+        {/* <button
           onClick={refreshButtonClick}
-          className='fixed z-10 flex h-[4rem] w-[4rem] sm:h-[3rem] sm:w-[3rem] lg:h-[5rem] lg:w-[5rem]'
-          style={{ bottom: '10%', right: '8%' }}
+          className='absolute bottom-[100px] right-4 z-50 flex h-[5rem] w-[5rem] min-[435px]:bottom-[110px] min-[800px]:bottom-[120px]'
+          style={{ transform: 'translateZ(0)' }}
         >
-          <RefreshIcon className='h-[80%] w-[80%]' />
-        </button>
+          <RefreshIcon />
+        </button> */}
+        <div className='pb-[142px] min-[435px]:pb-[160px] min-[800px]:pb-[180px]'></div>
       </div>
     </>
   );

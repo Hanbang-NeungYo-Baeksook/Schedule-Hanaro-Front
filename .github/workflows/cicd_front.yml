@@ -1,0 +1,53 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  frontend-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # SOURCE 단계 - 저장소 Checkout
+      - name: Checkout-source code
+        uses: actions/checkout@v3
+
+      # Node version 확인
+      - name: Check Node v
+        run: node -v
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+
+      # Application 빌드
+      - name: Generate wbuild
+        run: pnpm build
+
+      # SSH 세팅팅
+      - name: setup ssh
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.WAS }} >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: zip build files
+        run: zip -rq build.zip .build
+
+      - name: scp build file to was
+        run: |
+          scp build.zip ec2-user@${{ secrets.WAS }}:/home/ec2-user/workspace/
+
+      - name: restart nginx
+        run: |
+          ssh ec2-user@${{ secrets.WAS }} '
+            cd /home/ec2-user/workspace
+            rm -rf schedulehanaro/build/
+            unzip -q build.zip -d schedulehanaro
+            sudo nginx -s reload

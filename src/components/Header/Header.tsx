@@ -6,7 +6,7 @@ type HeaderProps = {
 
 function Header({ title }: HeaderProps) {
   return (
-    <header className='top_header fixed flex items-center justify-between bg-white py-[0.75rem] drop-shadow'>
+    <header className='top_header fixed z-50 flex items-center justify-between bg-white py-[0.75rem] drop-shadow'>
       <div className='flex h-[2.375rem] w-[2.375rem] items-center pl-3'>
         <BackButton />
       </div>
