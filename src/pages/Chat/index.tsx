@@ -21,10 +21,10 @@ const ChatPage = () => {
   >([]);
   const [isLoading, setIsLoading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const textareaRef2 = useRef<HTMLTextAreaElement>(null);
   const [inputContent, setInputContent] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const [, setIsEditing] = useState(false);
-  const [backupContent, setBackupContent] = useState('');
   const [dropdownIndex, setDropdownIndex] = useState<number | null>(null);
   const [badges] = useState<string[]>(['예금', '추천', '대학생']);
 
@@ -70,9 +70,6 @@ const ChatPage = () => {
 
   // 확장/축약 상태 전환
   const handleToggleExpand = () => {
-    if (!isExpanded) {
-      setBackupContent(inputContent);
-    }
     setIsExpanded(!isExpanded);
     setIsEditing(false);
   };
@@ -178,8 +175,8 @@ const ChatPage = () => {
                   <div>
                     <textarea
                       className='w-full resize-none border-none bg-white p-[1rem] text-[1rem] font-normal focus:outline-none'
-                      value={inputContent}
-                      onChange={(e) => setInputContent(e.target.value)}
+                      ref={textareaRef2}
+                      defaultValue={inputContent}
                       rows={5}
                       autoFocus
                     />
@@ -187,7 +184,6 @@ const ChatPage = () => {
                       <button
                         className='rounded-[3.125rem] bg-[#d9d9d9] px-[1.25rem] py-[.25rem] text-[.875rem] text-[#464646] drop-shadow'
                         onClick={() => {
-                          setInputContent(backupContent); // 이전 상태로 복구
                           setIsExpanded(false); // 축약 상태로 복귀
                         }}
                       >
@@ -196,7 +192,7 @@ const ChatPage = () => {
                       <button
                         className='rounded-[3.125rem] bg-[#464646] px-[1.25rem] py-[.25rem] text-[.875rem] text-white drop-shadow'
                         onClick={() => {
-                          setBackupContent(inputContent); // 변경된 내용 저장
+                          setInputContent(textareaRef2.current?.value ?? '');
                           setIsLoading(true); // 로딩 상태 시작
                           setTimeout(() => {
                             setIsLoading(false); // 로딩 상태 종료
