@@ -1,6 +1,6 @@
 import { getCallList } from '@/api/calls';
 import { QUERY_KEYS } from '@/constants/queryKeys';
-import { Call } from '@/types/call';
+import { Call } from '@/types/Call';
 import { useQuery } from '@tanstack/react-query';
 
 const useGetCallListQuery = () => {

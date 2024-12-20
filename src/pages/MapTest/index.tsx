@@ -28,12 +28,12 @@ export function MapTestPage() {
                 <div className='flex w-full justify-between gap-4'>
                   <MyCard
                     title='전화상담'
-                    contents='상담사를 통한 전화 상담 서비스'
+                    contents={['상담사를 통한', '전화 상담 서비스']}
                     onClick={() => navigate('/register/call')}
                   />
                   <MyCard
                     title='1:1 상담'
-                    contents='1:1 게시판을 통한 상담 서비스'
+                    contents={['1:1 게시판을 통한', '상담 서비스']}
                     onClick={() => navigate('/register/inquiry')}
                   />
                 </div>
