@@ -1,6 +1,6 @@
 import { API_ROUTE } from '@/constants/route';
 import { CallMemoParams } from '@/hooks/query/admin/usePostCallMemo';
-import { AdminCall } from '@/types/call';
+import { AdminCall } from '@/types/Call';
 import apiCall from '../Api';
 
 const BASE_URL = API_ROUTE.admin + '/calls';
