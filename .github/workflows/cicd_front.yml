@@ -50,3 +50,4 @@ jobs:
             rm -rf /var/www/docroot/dist
             unzip -q /home/ec2-user/workspace/dist.zip -d /var/www/docroot
             sudo nginx -s reload
+          '
