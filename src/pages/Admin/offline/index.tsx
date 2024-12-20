@@ -50,6 +50,7 @@ function VisitPage() {
         <CallInfoBox
           selectedIdx={selectedIdx}
           setSelectedIdx={setSelectedIdx}
+          toggleOpen={() => {}}
         />
       </div>
     </div>

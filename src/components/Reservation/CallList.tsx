@@ -1,6 +1,6 @@
 import { ReactComponent as TimerButton } from '@/assets/icons/reservation/timer.svg';
 import { ReactComponent as WarningTimer } from '@/assets/icons/reservation/warningalarm.svg';
-import { CallData } from '@/types/call';
+import { CallData } from '@/types/Call';
 import { useNavigate } from 'react-router-dom';
 
 const CallList = ({
