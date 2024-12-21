@@ -3,7 +3,7 @@ export const API_ROUTE = {
   admin: '/admin/api',
 };
 
-export const ROUTE = {
+export const CUSTOMER_ROUTE = {
   home: '/',
   login: '/signin',
 };

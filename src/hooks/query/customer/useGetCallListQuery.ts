@@ -1,4 +1,4 @@
-import { getCallList } from '@/api/calls';
+import { getCallList } from '@/api/customer/calls';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { Call } from '@/types/Call';
 import { useQuery } from '@tanstack/react-query';

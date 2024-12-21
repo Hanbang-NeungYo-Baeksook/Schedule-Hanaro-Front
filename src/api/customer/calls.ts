@@ -1,6 +1,6 @@
 import { API_ROUTE } from '@/constants/route';
 import { Call } from '@/types/Call';
-import apiCall from './Api';
+import apiCall from '../Api';
 
 const BASE_URL = API_ROUTE.customer + '/calls';
 

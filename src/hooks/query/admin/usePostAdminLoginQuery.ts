@@ -1,4 +1,5 @@
 import { postAdminLogin } from '@/api/admin/auth';
+import { TokenNames } from '@/api/Api';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { ADMIN_ROUTE } from '@/constants/route';
 import { useToast } from '@/hooks/use-toast';
@@ -13,9 +14,10 @@ const usePostAdminLoginQuery = () => {
   return useMutation({
     mutationKey: [QUERY_KEYS.LOGIN],
     mutationFn: postAdminLogin,
-    onSuccess: (data) => {
-      console.log(data);
-      window.localStorage.setItem('adminAccessToken', data.accessToken);
+    onSuccess: ({ accessToken }) => {
+      console.log(accessToken);
+      const tokenName: TokenNames = 'adminAccessToken';
+      window.localStorage.setItem(tokenName, accessToken);
       showToast(toast, '로그인에 성공하였습니다!');
       navigate(ADMIN_ROUTE.online.main);
     },
