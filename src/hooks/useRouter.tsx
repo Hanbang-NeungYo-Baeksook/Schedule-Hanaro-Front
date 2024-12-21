@@ -40,7 +40,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { SignUpPage } from '@/pages/SignUp';
 import { SignUpLayout } from '@/components/Layout/SignUp';
 import ChatPage from '@/pages/Chat';
-import SigninPage from '@/pages/Signin';
+import SignInPage from '@/pages/Signin';
 
 import { AdminMyPage } from '@/pages/Admin/online/mypage';
 import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
@@ -79,6 +79,11 @@ export const useRouter = () =>
           path: '/signup',
           element: <SignUpLayout />,
           children: [{ index: true, element: <SignUpPage /> }],
+        },
+        {
+          path: '/signin',
+          element: <SignUpLayout />,
+          children: [{ index: true, element: <SignInPage /> }],
         },
         {
           path: '/reservation',
@@ -154,7 +159,7 @@ export const useRouter = () =>
         },
         {
           path: '/signin',
-          element: <SigninPage />,
+          element: <SignInPage />,
         },
       ],
     },

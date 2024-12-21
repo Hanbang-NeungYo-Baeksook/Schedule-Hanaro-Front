@@ -13,6 +13,8 @@ type ConfigProps = {
   params?: object | null;
 };
 
+export type TokenNames = 'adminAccessToken' | 'customerAccessToken';
+
 const fetcher = async ({
   url,
   method,
@@ -21,10 +23,12 @@ const fetcher = async ({
   params,
 }: ConfigProps) => {
   try {
-    const tokenName = url.startsWith('/admin')
+    const tokenName: TokenNames = url.startsWith('/admin')
       ? 'adminAccessToken'
-      : 'accessToken';
+      : 'customerAccessToken';
+
     const token = window.localStorage.getItem(tokenName);
+
     const defaultHeaders: HeadersProps = {
       'Content-Type': 'application/json',
       Authorization: token ? `Bearer ${token}` : '',
