@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import mainLogo from '@/assets/images/mainLogo.svg';
-import usePostLoginQuery from '@/hooks/query/customer/usePostLogin';
+import usePostSignIn from '@/hooks/query/customer/usePostSignIn';
 import { toast } from '@/hooks/use-toast';
 
 function SignInPage() {
@@ -29,7 +29,7 @@ function SignInPage() {
     };
   }, []);
 
-  const { mutate: signin } = usePostLoginQuery();
+  const { mutate: signin } = usePostSignIn();
 
   const handleLogin = async () => {
     console.log('Handle Login!!');
