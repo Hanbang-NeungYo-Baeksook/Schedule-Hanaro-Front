@@ -1,77 +1,42 @@
 import { useParams } from 'react-router-dom';
-import {
-  mockReservationInquiryAnswerDetails,
-  mockReservationInquiryDetails,
-} from '@/mock/mockReservationsInquiry';
 import Header from '@/components/Header/Header';
 import Nav from '@/components/Nav/Nav';
 import waitingAnswer from '@/assets/images/waitingAnswer.svg';
-import ReservationDetailInquiryTags, {
-  HashTag,
-} from '../ReservationDetailInquiryTags';
-import { useEffect, useState } from 'react';
+import ReservationDetailInquiryTags from '../ReservationDetailInquiryTags';
+import { Separator } from '@/components/ui/separator';
+import useGetInquiryReply from '@/hooks/query/customer/useGetInquiryReply';
 export function InquiryDetailPage() {
   const { id: inquiryId } = useParams<{ id: string }>();
-  const [tags, setTags] = useState<HashTag[]>([]);
 
-  useEffect(() => {
-    async function fetchReservationDetails() {
-      const fetchedTags = [
-        { id: 1, label: '예금' },
-        { id: 2, label: '금융상품' },
-        { id: 2, label: '대학생' },
-      ];
-      setTags(fetchedTags);
-    }
-    fetchReservationDetails();
-  }, [inquiryId]);
+  const { data: response, isLoading: isLoading } = useGetInquiryReply({
+    inquiry_id: +(inquiryId ?? 0),
+  });
 
-  const inquiry = mockReservationInquiryDetails.find(
-    ({ id }: { id: string }) => id === inquiryId
-  );
-  const inquiry2 = mockReservationInquiryAnswerDetails.find(
-    ({ id }: { id: string }) => id === inquiryId
-  );
+  if (isLoading) {
+    <>Loading...</>;
+  }
 
-  if (!inquiry) {
+  if (!response) {
     return <div>문의 정보를 찾을 수 없습니다.</div>;
   }
 
-  const renderHeader = <Header title='답변 상세' />;
-
-  const renderInquiryContent = (
-    <div className='flex w-full flex-col gap-[0.5rem] text-left'>
-      <ReservationDetailInquiryTags tags={tags} />
-      <div className='text-sm text-[#B3B3B3]'>
-        {inquiry.date} {inquiry.time}
-      </div>
-      <div className='text-lg text-[#464646]'>{inquiry.content}</div>
-    </div>
-  );
-
-  const renderDivider = (
-    <div className='flex w-full justify-center'>
-      <hr className='w-full' />
-    </div>
-  );
-
+  const { content, status, reply } = response;
+  const tags = ['예금', '적금'];
   return (
     <>
       <>
-        {renderHeader}
+        <Header title='답변 상세' />
         <div className='mx-auto w-[90%] pb-[7rem] pt-[5rem]'>
           <div className='flex w-full flex-col items-center gap-[3rem]'>
-            {renderInquiryContent}
-            {renderDivider}
-            {inquiry2 ? (
+            <div className='flex w-full flex-col gap-[0.5rem] text-left'>
+              <ReservationDetailInquiryTags tags={tags} />
+              <div className='text-lg text-[#464646]'>{content}</div>
+            </div>
+            <Separator />
+            {status == '답변완료' ? (
               <div className='flex flex-col gap-[0.5rem] text-left'>
                 <label className='text-2xl font-bold'>답변 내용</label>
-                <div className='text-sm text-[#B3B3B3]'>
-                  {inquiry2.date2} • {inquiry2.time2}
-                </div>
-                <div className='text-lg text-[#464646]'>
-                  {inquiry2.content2}
-                </div>
+                <div className='text-lg text-[#464646]'>{reply}</div>
               </div>
             ) : (
               <div className='flex w-full flex-col items-center gap-[1rem]'>
