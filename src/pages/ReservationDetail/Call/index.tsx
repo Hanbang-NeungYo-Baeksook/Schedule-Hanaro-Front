@@ -1,42 +1,40 @@
 import '@/index.css';
 import Nav from '@/components/Nav/Nav';
 import { useParams } from 'react-router-dom';
-import { mockReservationCallDetails } from '@/mock/mockReservationsCall';
 import ReservationDetailHeader from '@/components/Header/ReservationDetailHeader';
 import Modalbutton from '@/components/Direction/Modal';
-import ReservationDetailCallTags, {
-  HashTag,
-} from '../ReservationDetailCallTags';
-import { useEffect, useState } from 'react';
+import useGetCallDetail from '@/hooks/query/customer/useGetCallDetail';
+import ReservationDetailInquiryTags from '../ReservationDetailInquiryTags';
+import { Separator } from '@/components/ui/separator';
+import useDeleteCall from '@/hooks/query/customer/useDeleteCall';
 export function ReservationDetailCallPage() {
-  const { id } = useParams<{ id: string }>();
-  const [tags, setTags] = useState<HashTag[]>([]);
+  const { callId } = useParams<{ callId: string }>();
 
-  useEffect(() => {
-    async function fetchReservationDetails() {
-      const fetchedTags = [
-        { id: 1, label: '예금' },
-        { id: 2, label: '금융상품' },
-      ];
-      setTags(fetchedTags);
-    }
-    fetchReservationDetails();
-  }, [id]);
+  const { data: call, isLoading } = useGetCallDetail({
+    call_id: +(callId ?? 0),
+  });
 
-  const reservation = mockReservationCallDetails.find((res) => res.id === id);
-  if (!reservation) {
+  const { mutate: deletCall } = useDeleteCall();
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
+
+  if (!call) {
     return <div>예약 정보를 찾을 수 없습니다.</div>;
   }
 
   const {
-    name,
-    phone,
-    consultationType,
-    date,
-    time,
-    waitingNumber,
-    waitingTime,
-  } = reservation;
+    call_date,
+    call_time,
+    call_num,
+    category,
+    content,
+    customer_name,
+    tags,
+    wait_num,
+    estimated_wait_time,
+  } = call;
 
   function ReservationInfoItem({
     label,
@@ -61,31 +59,50 @@ export function ReservationDetailCallPage() {
           <div className='flex flex-col gap-[5rem]'>
             <div className='flex flex-col gap-[2rem]'>
               <div className='text-center text-lg font-medium'>
-                현재 대기 번호는{' '}
+                현재 대기 중인 인원은{' '}
                 <span className='text-3xl font-bold text-[#008485]/80'>
-                  {waitingNumber}
+                  {wait_num}
                 </span>
-                번 입니다.
+                명 입니다.
               </div>
-              <div className='text-8xl font-bold'>{waitingNumber}</div>
+              <div className='flex items-end justify-center gap-[0.2rem]'>
+                <span className='text-8xl font-bold'>{call_num}</span>
+                <span className='pb-2 text-3xl font-bold'>번</span>
+              </div>
               <div className='justify-center gap-6'>
-                <div className='text-2xl font-semibold'>{waitingTime}분 후</div>
+                <div className='text-2xl font-semibold'>
+                  {estimated_wait_time}분 후
+                </div>
               </div>
             </div>
             <div className='flex flex-col gap-[1rem]'>
-              <ReservationDetailCallTags title='예약 상세 정보' tags={tags} />
+              <label className='ml-2 self-start text-2xl font-bold'>
+                예약상세정보
+              </label>
               <div className='flex flex-col gap-[1rem] rounded-[1.25rem] border border-[#d9d9d9] bg-[#f9f9f9] p-6'>
-                <ReservationInfoItem label='이름' value={name} />
-                <ReservationInfoItem label='전화번호' value={phone} />
-                <ReservationInfoItem
-                  label='상담 종류'
-                  value={consultationType}
-                />
-                <ReservationInfoItem label='예약 일자' value={date} />
-                <ReservationInfoItem label='예약 일시' value={time} />
+                <ReservationInfoItem label='이름' value={customer_name} />
+                <ReservationInfoItem label='상담 종류' value={category} />
+                <ReservationInfoItem label='예약 일자' value={call_date} />
+                <ReservationInfoItem label='예약 일시' value={call_time} />
               </div>
             </div>
           </div>
+          <div className='flex w-[90%] flex-col gap-[1rem]'>
+            <label className='flex text-2xl font-bold'>문의 내용</label>
+            <Separator />
+            <ReservationDetailInquiryTags tags={tags} />
+            <div
+              className='overflow-hidden text-ellipsis text-left text-lg text-[#464646]'
+              style={{
+                display: '-webkit-box',
+                WebkitLineClamp: 6,
+                WebkitBoxOrient: 'vertical',
+              }}
+            >
+              {content}
+            </div>
+          </div>
+
           <div className='mt-5 flex flex-col pb-[10rem]'>
             <Modalbutton
               buttonTitle='상담 취소'
@@ -96,6 +113,11 @@ export function ReservationDetailCallPage() {
               modalDescription2='취소시에는 다시 상담 신청을 하셔야합니다.'
               modalButtonTitle='확인'
               navigateTo='/reservation/call'
+              onClick={() =>
+                deletCall({
+                  call_id: +(callId ?? 0),
+                })
+              }
             />
           </div>
         </div>
