@@ -17,7 +17,6 @@ To read more about using these font, please visit the Next.js documentation:
 - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
-import { ReactComponent as Close } from '@/assets/icons/close.svg';
 import { Button } from '@/components/ui/button';
 import {
   Drawer,
@@ -41,6 +40,8 @@ import {
   SelectValue,
 } from '../ui/select';
 import { BranchData } from '@/api/customer/branches';
+import { Separator } from '../ui/separator';
+import { ReactComponent as Refresh } from '@/assets/icons/refresh.svg';
 
 export function BottomSheet() {
   const { currentAddress, branchList, setSelectedBranchId, setFocus } =
@@ -82,6 +83,8 @@ export function BottomSheet() {
     }, 200);
   };
 
+  const now = new Date(Date.now());
+
   return (
     <>
       {/* TODO: 검색 화면 구현시 SearchInput 설정 */}
@@ -105,11 +108,10 @@ export function BottomSheet() {
               <DrawerDescription id='custom-description'></DrawerDescription>
               <div className='flex items-center justify-between'>
                 <DrawerTitle className='w-full pt-6 text-center text-2xl font-bold'>
-                  <div className='flex items-center justify-between'>
-                    <div></div>
+                  <div className='flex flex-col items-center justify-center gap-4'>
                     <Badge
                       variant='outline'
-                      className='ml-[18px] flex w-fit items-center justify-center gap-[0.3125rem] border-border bg-[#F8F8F8] px-5 py-3 tracking-wider text-text'
+                      className='ml-[18px] flex w-fit cursor-default items-center justify-center gap-[0.3125rem] self-center border-border bg-[#F8F8F8] px-5 py-3 tracking-wider text-text'
                     >
                       <MapPin width='1.25rem' height='1.25rem' />
                       <div className='flex flex-wrap justify-center gap-1'>
@@ -121,27 +123,25 @@ export function BottomSheet() {
                         </span>
                       </div>
                     </Badge>
-                    <Close
-                      width={18}
-                      height={18}
-                      className='ml-4 cursor-pointer'
-                      onClick={toggleOpen}
-                    />
+                    <div className='flex cursor-pointer items-center gap-2 self-end'>
+                      <Refresh />
+                      <span className='text-[1.25rem] font-normal text-[#666]'>
+                        {`${now.getHours()}:${now.getMinutes()}`}
+                      </span>
+                    </div>
                   </div>
-
+                  <Separator className='mt-1' />
                   {/* 추천 지점 */}
 
                   <RecBranch />
 
-                  <div className='flex items-center justify-between py-5'>
+                  <div className='flex items-center justify-between py-3'>
                     <span className='space-x-2'>
                       {MAP_CHIPS.map(
                         ({ id, txt }: { id: number; txt: string }) => (
                           <Badge
                             key={id}
-                            variant={
-                              selectedChipIdx === id ? 'active' : 'noactive'
-                            }
+                            variant={selectedChipIdx === id ? 'dark' : 'white'}
                             className='px-6 py-1 text-[0.875rem] tracking-wider'
                             onClick={() => setSelectedChipIdx(id)}
                           >
@@ -153,10 +153,10 @@ export function BottomSheet() {
                     <div className='flex h-[90%] cursor-pointer items-center gap-1'>
                       {selectedChipIdx === 0 && (
                         <Select>
-                          <SelectTrigger className='space-x-1 border-none text-lightGrey'>
+                          <SelectTrigger className='z-[61] space-x-1 border-none text-lightGrey'>
                             <SelectValue placeholder='거리순' />
                           </SelectTrigger>
-                          <SelectContent className='right-8'>
+                          <SelectContent className='right-8 z-[61]'>
                             <SelectItem value='거리순'>거리순</SelectItem>
                             <SelectItem value='대기시간순'>
                               대기시간순
