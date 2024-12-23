@@ -1,32 +1,35 @@
 import { ReactComponent as DownVector } from '@/assets/icons/DownVector.svg';
 import { ReactComponent as UpVector } from '@/assets/icons/UpVector.svg';
-import Loading from '@/assets/images/loading.gif';
 import Feedback from '@/components/Chat/Feedback';
+import Loading from '@/components/Chat/Loading';
 import Header from '@/components/Header/Header';
 import Nav from '@/components/Nav/Nav';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useRef, useState } from 'react';
+import usePostRecommendList from '@/hooks/query/customer/usePostRecommendList';
+import { isLoadingAtom, recommendListAtom, tagListAtom } from '@/stores';
+import { useAtom, useAtomValue } from 'jotai';
+import { useEffect, useRef, useState } from 'react';
 
 const recommendedQuestions = [
-  '통장은 어떤 기준으로 선택하나요?',
-  '추천 예금 상품을 알려주세요',
+  '인터넷에서 신용대출을 신청했는데 언제 결과 확인이 가능합니까?',
+  '통장비밀번호를 잊어버렸어요',
   '적금 상품 추천을 받을 수 있나요?',
-  '비밀번호를 잃어버렸어요',
+  '미성년자도 펀드를 가입할 수 있나요?',
 ];
 
 const ChatPage = () => {
-  const [answers, setAnswers] = useState<
-    { question: string; content: string }[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [recommendList, setRecommendList] = useAtom(recommendListAtom);
+  const tagList = useAtomValue(tagListAtom);
+  const { mutate: postRecommendList } = usePostRecommendList();
+
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const textareaRef2 = useRef<HTMLTextAreaElement>(null);
   const [inputContent, setInputContent] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const [, setIsEditing] = useState(false);
   const [dropdownIndex, setDropdownIndex] = useState<number | null>(null);
-  const [badges] = useState<string[]>(['예금', '추천', '대학생']);
 
   const MAX_LENGTH = 65; // 축약 시 최대 글자 수
 
@@ -37,27 +40,7 @@ const ChatPage = () => {
         return;
       }
       setInputContent(inputValue);
-      setIsLoading(true);
-      setAnswers([]);
-      setTimeout(() => {
-        setAnswers([
-          {
-            question: '대학생을 위한 통장이 있나요?',
-            content:
-              '만 35세 이하 대학생이나 사회초년생을 위한 수수료 면제 통장입니다. Young 하나 통장이 대표적입니다.',
-          },
-          {
-            question: '직장인을 위한 통장이 있나요?',
-            content:
-              '직장인을 위한 혜택이 제공되는 통장으로, 월급 통장과 자동이체 혜택이 포함됩니다.',
-          },
-          {
-            question: '사랑해요',
-            content: '사랑해요라는 말은 언제 들어도 기분이 좋습니다!',
-          },
-        ]);
-        setIsLoading(false);
-      }, 2000);
+      postRecommendList({ query: inputValue });
     }
   };
 
@@ -80,11 +63,16 @@ const ChatPage = () => {
       ? inputContent.slice(0, MAX_LENGTH) + '...' // 문자열 길이를 기준으로 잘라내기
       : inputContent;
 
+  useEffect(() => {
+    setRecommendList([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <div className='flex min-h-screen flex-col items-center justify-between bg-white text-lg'>
         <Header title={'별꽁이에게 문의하기'} />
-        {!isLoading && answers.length === 0 && (
+        {!isLoading && recommendList.length === 0 && (
           <div className='flex min-h-screen w-full flex-col items-center justify-center gap-[2rem] text-lg'>
             <div className='h-80 w-80'>
               <object
@@ -112,6 +100,7 @@ const ChatPage = () => {
                           textareaRef.current.value = question;
                           handleInput();
                           handleSend();
+                          setIsLoading(true);
                         }
                       }}
                     >
@@ -147,19 +136,9 @@ const ChatPage = () => {
           </div>
         )}
 
-        {isLoading && (
-          <div className='flex h-screen w-full flex-col items-center justify-center pb-[15rem]'>
-            <img
-              className='h-48 w-48 object-contain'
-              src={Loading}
-              alt='Loading'
-            />
-            <div className='text-center text-2xl font-bold'>
-              AI가 추천 답변을 생성하고 있어요!
-            </div>
-          </div>
-        )}
-        {!isLoading && answers.length > 0 && (
+        {isLoading && <Loading />}
+
+        {!isLoading && recommendList.length > 0 && (
           <div className='flex min-h-screen w-[90%] flex-col justify-between gap-[2rem] pb-[7rem] pt-[7rem]'>
             <div className='flex flex-col items-center gap-[1rem] px-[1rem]'>
               {inputContent.trim() || isExpanded ? (
@@ -194,11 +173,11 @@ const ChatPage = () => {
                           className='rounded-[3.125rem] bg-[#464646] px-[1.25rem] py-[.25rem] text-[.875rem] text-white drop-shadow'
                           onClick={() => {
                             setInputContent(textareaRef2.current?.value ?? '');
-                            setIsLoading(true); // 로딩 상태 시작
-                            setTimeout(() => {
-                              setIsLoading(false); // 로딩 상태 종료
-                              setIsExpanded(false); // 축약 상태로 복귀
-                            }, 2000); // 2초 후 로딩 종료
+                            postRecommendList({
+                              query: textareaRef2.current?.value ?? '',
+                            });
+                            handleToggleExpand();
+                            setIsLoading(true);
                           }}
                         >
                           완료
@@ -213,7 +192,7 @@ const ChatPage = () => {
                   원하시는 문의와 유사한 답변들을 보여드릴게요
                 </p>
                 <div className='flex flex-wrap justify-center gap-[1rem]'>
-                  {badges.map((badge, index) => (
+                  {tagList.map((badge, index) => (
                     <Badge
                       key={index}
                       variant='lightSolid'
@@ -225,7 +204,7 @@ const ChatPage = () => {
                 </div>
               </div>
 
-              {answers.map((answer, index) => (
+              {recommendList.map((answer, index) => (
                 <div key={index} className='w-full'>
                   <div
                     className='relative z-20 flex w-full cursor-pointer items-start rounded-[.9375rem] bg-[#3FA5A6] p-4'
@@ -236,7 +215,7 @@ const ChatPage = () => {
                     <div className='pl-[.25rem] pr-[.625rem] font-bold text-white'>
                       Q
                     </div>
-                    <div className='text-white'>{answer.question}</div>
+                    <div className='text-white'>{answer.query}</div>
                     {dropdownIndex === index ? (
                       <UpVector className='"h-[1.5rem] ml-auto w-[1.5rem] py-[0.5rem] pr-[0.5rem]' />
                     ) : (
@@ -246,7 +225,7 @@ const ChatPage = () => {
                   {dropdownIndex === index && (
                     <div className='relative z-10 -mt-4 w-full rounded-[.9375rem] border-[.125rem] border-[#d9d9d9] bg-white px-4 pb-3 pt-6'>
                       <p className='text-left text-[1rem] font-bold text-[#464646]'>
-                        {answer.content}
+                        {answer.response}
                       </p>
                     </div>
                   )}
