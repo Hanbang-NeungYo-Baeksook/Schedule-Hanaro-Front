@@ -34,10 +34,15 @@ const fetcher = async ({
       Authorization: token ? `Bearer ${token}` : '',
     };
 
-    const configHeaders: Record<string, string> = {
-      ...defaultHeaders,
-      ...headers,
-    };
+    const configHeaders: Record<string, string> = url.startsWith('/api/auth')
+      ? {
+          ...headers,
+          'Content-Type': 'application/json',
+        }
+      : {
+          ...defaultHeaders,
+          ...headers,
+        };
 
     let queryString = '';
     if (params && method === 'GET') {
