@@ -39,7 +39,7 @@ export default function BottomFloatingBox({
         )}
 
         <BranchInfo type={type} branchId={branchId} />
-        <ReservationButton />
+        <ReservationButton branchId={+branchId} />
       </div>
     </div>
   );

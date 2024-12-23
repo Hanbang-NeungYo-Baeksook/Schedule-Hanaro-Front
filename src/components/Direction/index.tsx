@@ -61,10 +61,6 @@ export function Direction({
             <BottomFloatingBox type='dir' branchId={branchId} />
           </>
         )}
-
-        {/* <div className='navbar fixed bottom-[20.5rem] z-10 mx-auto flex w-[30rem] justify-end'>
-          <MyLocation onClick={onClickMyLocation} />
-        </div> */}
       </div>
 
       <div className='map' id='map' ref={mapRef} />

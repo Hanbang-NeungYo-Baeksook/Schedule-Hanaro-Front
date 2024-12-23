@@ -26,7 +26,7 @@ const DrawerOverlay = forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Overlay
     ref={ref}
-    className={cn('customWidth fixed inset-0 z-10 bg-black/10', className)}
+    className={cn('customWidth fixed inset-0 z-[60] bg-black/10', className)}
     {...props}
   />
 ));
@@ -41,7 +41,7 @@ const DrawerContent = forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-10 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background',
+        'fixed inset-x-0 bottom-0 z-[60] mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background',
         className
       )}
       aria-describedby='custom-description'

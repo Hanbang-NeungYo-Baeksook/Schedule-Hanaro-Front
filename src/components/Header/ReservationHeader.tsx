@@ -3,6 +3,9 @@ import { ChangeToggle } from '../Reservation/ChangeToggle';
 import Tabs from '../Tabs/Tabs';
 import { ReactComponent as DropButton } from '@/assets/icons/reservation/minidown.svg';
 import Header from '@/components/Header/Header';
+import { useAtom } from 'jotai';
+import { callStatusAtom } from '@/stores';
+import { Status } from '@/api/customer/calls';
 
 type Props = {
   tabLocation: 'visit' | 'call';
@@ -27,6 +30,7 @@ function ReservationHeader({ tabLocation }: Props) {
   };
 
   const [selectedStatus, setSelectedStatus] = useState('대기 중인 상담'); // 상담 상태
+  const [, setStatusAtom] = useAtom(callStatusAtom);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 상태
 
   const toggleInquiryList = () => {
@@ -37,9 +41,15 @@ function ReservationHeader({ tabLocation }: Props) {
     setIsDropdownOpen(!isDropdownOpen); // 드롭다운 열기/닫기
   };
 
-  const handleStatusChange = (status: string) => {
+  const handleStatusChange = (status: '대기 중인 상담' | '완료된 상담') => {
     setSelectedStatus(status); // 상태 변경
+    setStatusAtom(statusConverter[status] as Status);
     setIsDropdownOpen(false); // 선택 후 드롭다운 닫기
+  };
+
+  const statusConverter = {
+    '대기 중인 상담': '대기중',
+    '완료된 상담': '완료',
   };
 
   return (

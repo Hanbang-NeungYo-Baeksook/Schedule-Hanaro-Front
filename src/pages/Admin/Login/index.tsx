@@ -1,5 +1,5 @@
 import { Toaster } from '@/components/ui/toaster';
-import usePostAdminLoginQuery from '@/hooks/query/admin/usePostAdminLoginQuery';
+import usePostAdminLogin from '@/hooks/query/admin/usePostAdminLogin';
 import { useToast } from '@/hooks/use-toast';
 import React, { useState } from 'react';
 import hanaLogo from '../../../assets/icons/hanaLogo.svg';
@@ -8,7 +8,7 @@ export default function LoginPage() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const { toast } = useToast();
-  const { mutate: signin } = usePostAdminLoginQuery();
+  const { mutate: signin } = usePostAdminLogin();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
