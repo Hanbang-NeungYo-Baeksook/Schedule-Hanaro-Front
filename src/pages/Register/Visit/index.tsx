@@ -9,14 +9,16 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '@/components/Header/Header';
+import usePostVisit from '@/hooks/query/customer/usePostVisit';
+import { Category } from '@/api/customer/calls';
 
 export type RegisterVisitData = {
   name: string;
-  consultationType: string;
+  consultationType: Category;
   reservationDate: Date | undefined;
   reservationTime: string;
-  inquiryTitle: string;
-  inquiryContent: string;
+  title: string;
+  content: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,7 +32,9 @@ const showToast = (toast: any, description: string) => {
 export function RegisterVisitFormPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { branchId } = useParams<{ branchId: string }>();
+  const { mutate: postVisit } = usePostVisit();
+
   const {
     control,
     register,
@@ -41,24 +45,15 @@ export function RegisterVisitFormPage() {
 
   const consultationType = watch('consultationType');
 
-  const onSubmit: SubmitHandler<RegisterVisitData> = (data) => {
+  const onSubmit: SubmitHandler<RegisterVisitData> = ({
+    consultationType: category,
+    content,
+  }) => {
     if (!isChecked1 || !isChecked2) {
       showToast(toast, '개인정보 수집 및 이용에 동의해야 합니다.');
       return;
     }
-    console.log('예약 정보:', {
-      ...data,
-      consultationType: data.consultationType,
-      reservationDate: data.reservationDate,
-      reservationTime: data.reservationTime,
-      inquiryTitle: data.inquiryTitle,
-      inquiryContent: data.inquiryContent,
-    });
-
-    showToast(toast, '예약 완료되었습니다!');
-    setTimeout(() => {
-      navigate(`/reservation/visit/${id}`);
-    }, 1000);
+    postVisit({ branch_id: +(branchId ?? '0'), content, category });
   };
 
   const [isChecked1, setIsChecked1] = useState(false);
@@ -91,8 +86,8 @@ export function RegisterVisitFormPage() {
 
             <ReusableInput
               register={register}
-              fieldName='inquiryContent'
-              error={errors.inquiryContent?.message}
+              fieldName='content'
+              error={errors.content?.message}
               label='문의 내용'
               placeholder='내용을 입력하세요.'
               type='textarea'
