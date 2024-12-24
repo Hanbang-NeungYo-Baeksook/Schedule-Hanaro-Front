@@ -2,6 +2,7 @@ import CustomerInfo from '@/components/Admin/Inquiry/InputCustomerInfo'; // ê³ ê
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { ADMIN_ROUTE } from '@/constants/route';
 import useGetInquiryDetail from '@/hooks/query/admin/useGetInquiryDetail';
 import usePostInquiryReply from '@/hooks/query/admin/usePostInquiryReply';
 import { format } from 'date-fns';
@@ -44,7 +45,7 @@ export function AnswerInput() {
   };
 
   const handleCancel = () => {
-    navigate('/admin/inquiry');
+    navigate(ADMIN_ROUTE.online.inquiry);
   };
 
   return (

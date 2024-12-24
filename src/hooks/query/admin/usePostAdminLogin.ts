@@ -12,10 +12,9 @@ const usePostAdminLogin = () => {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationKey: [QUERY_KEYS.LOGIN],
+    mutationKey: [QUERY_KEYS.SIGN_IN],
     mutationFn: postAdminLogin,
     onSuccess: ({ accessToken }) => {
-      console.log(accessToken);
       const tokenName: TokenNames = 'adminAccessToken';
       window.localStorage.setItem(tokenName, accessToken);
       showToast(toast, '로그인에 성공하였습니다!');

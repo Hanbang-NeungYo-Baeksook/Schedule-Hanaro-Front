@@ -19,7 +19,7 @@ export type GetInquiryListRequest = {
   size?: number;
 };
 
-export type GetInquiryListResponse = PageData<InquiryData[]>;
+export type GetInquiryListResponse = PageData<InquiryData[], Pagination>;
 
 export type GetInquiryDetailRequest = {
   inquiry_id: number;

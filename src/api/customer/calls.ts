@@ -43,7 +43,7 @@ export type GetCallListRequest = {
   size?: number;
 };
 
-export type GetCallListResponse = PageData<CallData[]>;
+export type GetCallListResponse = PageData<CallData[], Pagination>;
 
 export type GetCallDetailRequest = {
   call_id: number;

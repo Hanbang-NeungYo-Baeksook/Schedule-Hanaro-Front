@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Category } from '@/types/enum';
-import { ActiveTab, AdminInquiryData } from '@/types/inquiry';
-import dayjs from 'dayjs';
+import { AdminInquiryData } from '@/types/inquiry';
+import { formatElapsedTime } from '@/utils/timeUtil';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import rightArrow from '../../../assets/icons/right_arrow.svg';
@@ -16,19 +16,14 @@ import { Button } from '../../ui/button';
 import FilterAndSearch from './FilterAndSearch';
 
 type InquiryListProps = {
-  activeTab: ActiveTab;
-  activeCategory: string;
+  activeCategory: Category;
   setActiveCategory: (category: Category) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   inquiries: AdminInquiryData[];
 };
-const minutesAHour = 60; // 1시간 = 60분
-const minutesADay = 1440;
-// const msecAMinute = 60000;
 
 function InquiryList({
-  activeTab,
   activeCategory,
   setActiveCategory,
   inquiries,
@@ -37,7 +32,6 @@ function InquiryList({
 }: InquiryListProps) {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const navigate = useNavigate();
-  console.log(activeTab, activeCategory, searchQuery);
 
   if (!inquiries)
     return (
@@ -57,24 +51,9 @@ function InquiryList({
       created_at,
       customer_name,
     }) => {
-      // 시간 계산 함수
-      const formatElapsedTime = (created_at: string): string => {
-        const now = dayjs();
-        const startTime = dayjs(created_at);
-        const elapsedMinutes = now.diff(startTime, 'minute'); // 경과 시간(분)
-
-        if (elapsedMinutes < minutesAHour) {
-          return `${elapsedMinutes}분 전`;
-        } else if (elapsedMinutes < minutesADay) {
-          return `${Math.floor(elapsedMinutes / minutesAHour)}시간 전`;
-        } else {
-          return `${Math.floor(elapsedMinutes / minutesADay)}일 전`;
-        }
-      };
-
       return {
         id: String(inquiry_id),
-        status: status as ActiveTab,
+        status,
         category: category,
         time: formatElapsedTime(created_at),
         content: content,
@@ -84,19 +63,6 @@ function InquiryList({
       };
     }
   );
-
-  // const filteredInquiries = formattedInquiries.filter(
-  //   ({ status, category, content, customer_name, tags }) =>
-  //     status === activeTab &&
-  //     (activeCategory === '전체' || category === activeCategory) &&
-  //     (searchQuery === '' ||
-  //       category.includes(searchQuery) ||
-  //       content.includes(searchQuery) || // 문의 내용에 검색어 포함
-  //       customer_name.includes(searchQuery) || // 고객명에 검색어 포함
-  //       tags.some((tag) => tag.includes(searchQuery))) // 태그에 검색어 포함
-  // );
-
-  // console.log(filteredInquiries);
 
   return (
     <div className='font-inter mx-auto w-full rounded-lg border-gray-200 bg-white p-6 text-[1.25rem] font-bold leading-normal shadow-custom'>
@@ -109,7 +75,9 @@ function InquiryList({
           건
         </h2>
         <FilterAndSearch
+          activeCategory={activeCategory}
           setActiveCategory={setActiveCategory}
+          searchQuery={searchQuery}
           setSearchQuery={setSearchQuery} // 검색 상태 전달
         />
       </div>
@@ -134,7 +102,7 @@ function InquiryList({
                   <Badge
                     variant='lightSolid'
                     className={`font-inter h-[1.8rem] w-auto justify-center rounded-full px-4 py-0.5 text-[0.8rem] font-normal leading-normal ${
-                      status === '답변대기'
+                      status === 'PENDING'
                         ? 'bg-teal-50 text-teal-600'
                         : 'bg-gray-200 text-gray-600'
                     }`}
@@ -142,7 +110,7 @@ function InquiryList({
                     {category}
                   </Badge>
                 </div>
-                {status === '답변완료' ? (
+                {status === 'REGISTRATIONCOMPLETE' ? (
                   <span
                     className='mr-6 flex cursor-pointer items-center pb-[1.05rem] pt-[1rem] text-sm font-medium text-black'
                     onClick={() => navigate(`/admin/online/inquiry/${id}`)}
@@ -182,7 +150,7 @@ function InquiryList({
                         ))}
                     </p>
 
-                    {status === '답변대기' && (
+                    {status === 'PENDING' && (
                       <Button
                         variant='default'
                         className='font-inter h-[2.8rem] w-[9rem] rounded-full bg-main px-4 py-1 align-middle text-base font-extrabold text-white'
