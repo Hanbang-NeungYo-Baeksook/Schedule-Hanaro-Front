@@ -1,14 +1,13 @@
 import InfoCard from '@/components/Admin/Infocard';
-import Next from '../../../components/Admin/Next';
 import WaitingNumber from '@/components/Admin/WaitingNum';
 import { useState } from 'react';
-import CallInfoBox from '@/components/Admin/main/CallInfoBox';
+import Next from '../../../components/Admin/Next';
 
 const INITIAL_NUMBERS = [952, 953, 954, 955, 956, 957, 958, 951];
 const ROTATE_ANGLE = 45;
 
 function VisitPage() {
-  const [selectedIdx, setSelectedIdx] = useState(123);
+  // const [selectedIdx, setSelectedIdx] = useState(123);
   const [numbers, setNumbers] = useState(INITIAL_NUMBERS);
   const [angle, setAngle] = useState(0);
   const [displayNum, setDisplayNum] = useState([7, 0, 1]);
@@ -47,11 +46,11 @@ function VisitPage() {
       </div>
 
       <div className='w-full rounded-[.9375rem] shadow-[0_4px_20px_0_rgba(0,0,0,0.1)]'>
-        <CallInfoBox
+        {/* <CallInfoBox
           selectedIdx={selectedIdx}
           setSelectedIdx={setSelectedIdx}
           toggleOpen={() => {}}
-        />
+        /> */}
       </div>
     </div>
   );

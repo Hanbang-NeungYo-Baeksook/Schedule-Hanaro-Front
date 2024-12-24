@@ -1,17 +1,17 @@
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { CallDataType } from '@/types/inquiry';
+import dayjs from 'dayjs';
 
 type Props = {
   isSelected: boolean;
-} & Omit<CallDataType, 'now'>;
+} & Omit<CallDataType, 'now' | 'userName'>;
 
 function WaitingBox({
   isSelected,
   waitingNum,
   category,
   content,
-  userName,
   resTime,
 }: Props) {
   return (
@@ -26,11 +26,13 @@ function WaitingBox({
           <span className='text-[1.125rem]'>{waitingNum}</span>
           <Badge>{category}</Badge>
         </div>
-        <span className='text-[0.75rem]'>{userName}</span>
+        <span className='text-[0.875rem] font-bold text-main'>
+          {dayjs(resTime).format('mm분')} 기다림
+        </span>
       </div>
       <div className='flex items-center justify-between'>
         <span className='text-[0.875rem]'>{content}</span>
-        <span className='text-[0.625rem]'>{resTime}</span>
+        <span className='text-[0.75rem]'>{dayjs(resTime).format('HH:MM')}</span>
       </div>
     </div>
   );

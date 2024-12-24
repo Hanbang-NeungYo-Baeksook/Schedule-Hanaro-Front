@@ -1,97 +1,86 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { mockCallData } from '@/mock/adminInquiry';
+import { AdminCallData } from '@/types/Call';
 import { useState } from 'react';
 import WaitingBox from './WaitingBox';
 
 export type CallProps = {
   selectedIdx: number;
-  setSelectedIdx: React.Dispatch<React.SetStateAction<number>>;
+  changeIdx: (idx: number) => void;
+  progress: AdminCallData;
+  waiting: AdminCallData[];
 };
-function WaitingList({ selectedIdx, setSelectedIdx }: CallProps) {
+function WaitingList({ selectedIdx, changeIdx, progress, waiting }: CallProps) {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const toggleShowDetail = () => setIsShowDetail((prev) => !prev);
-  const nowData = mockCallData.filter(({ now }) => now)[0];
+
   return (
     <div className='w-[35%] rounded-[30px] bg-white pt-5'>
       <div className='mx-auto flex w-[90%] items-center justify-between'>
         <span className='text-[1.125rem] font-medium'>대기목록</span>
         <span className='text-[0.8725rem] font-medium'>
-          <span className='text-[1.125rem] font-bold'>
-            {mockCallData.length - 1}
+          <span className='mr-1 text-[1.125rem] font-bold'>
+            {waiting?.length - 1 >= 0 ? waiting?.length - 1 : 0}
           </span>
           명 대기중
         </span>
       </div>
-      <div className='pt-5 text-center'>
-        <span className='text-[0.875rem]'>현재 진행 중</span>
-        <div
-          className='border-t-[1px] border-[#D9D9D9]'
-          onClick={() => setSelectedIdx(nowData.waitingNum)}
-        >
-          <WaitingBox
-            isSelected={selectedIdx === nowData.waitingNum}
-            waitingNum={nowData.waitingNum}
-            category={nowData.category}
-            content={nowData.content}
-            userName={nowData.userName}
-            resTime={nowData.resTime}
-          />
-        </div>
+      <div className='py-2 text-center'>
+        <span className='mb-3 text-[1rem]'>현재 진행 중</span>
+        {progress ? (
+          <div
+            className='border-t-[1px] border-[#D9D9D9]'
+            onClick={() => changeIdx(progress.waiting_num)}
+          >
+            <WaitingBox
+              isSelected={selectedIdx === progress.waiting_num}
+              waitingNum={progress.waiting_num}
+              category={progress.category}
+              content={progress.content}
+              resTime={progress.reservation_time}
+            />
+          </div>
+        ) : (
+          <div className='mt-2 flex h-[60px] w-full cursor-pointer flex-col items-center justify-center border-y-[1px] border-[#D9D9D9] bg-[#FAFAFA] px-5 py-2 text-center'>
+            <span className='text-lightGrey'>진행 중인 상담이 없습니다.</span>
+          </div>
+        )}
       </div>
       <div className='pt-8 text-center text-[0.875rem]'>
-        <span className='pt-3 text-[0.875rem]'>대기중</span>
+        <span className='mb-3 text-[1rem]'>대기중</span>
         <ul
           className={cn(
-            'flex flex-col border-t-[1px] border-[#D9D9D9]',
+            'flex h-[361px] flex-col border-y-[1px] border-[#D9D9D9] bg-[#FAFAFA]',
             isShowDetail && 'max-h-[361px] overflow-y-auto scrollbar-hide'
           )}
         >
-          {isShowDetail ? (
+          {waiting?.length ? (
             <>
-              {mockCallData
-                .filter(({ now }) => !now)
-                .map(({ waitingNum, category, content, userName, resTime }) => (
-                  <li
-                    key={waitingNum}
-                    onClick={() => setSelectedIdx(waitingNum)}
-                  >
+              {(isShowDetail ? waiting : waiting.slice(0, 6)).map(
+                ({ waiting_num, category, content, reservation_time }) => (
+                  <li key={waiting_num} onClick={() => changeIdx(waiting_num)}>
                     <WaitingBox
-                      isSelected={selectedIdx === waitingNum}
-                      waitingNum={waitingNum}
+                      isSelected={selectedIdx === waiting_num}
+                      waitingNum={waiting_num}
                       category={category}
                       content={content}
-                      userName={userName}
-                      resTime={resTime}
+                      resTime={reservation_time}
                     />
                   </li>
-                ))}
+                )
+              )}
             </>
           ) : (
-            <>
-              {mockCallData
-                .filter(({ now }, idx) => !now && idx < 7)
-                .map(({ waitingNum, category, content, userName, resTime }) => (
-                  <li
-                    key={waitingNum}
-                    onClick={() => setSelectedIdx(waitingNum)}
-                  >
-                    <WaitingBox
-                      isSelected={selectedIdx === waitingNum}
-                      waitingNum={waitingNum}
-                      category={category}
-                      content={content}
-                      userName={userName}
-                      resTime={resTime}
-                    />
-                  </li>
-                ))}
-            </>
+            <div className='mt-2 flex h-full w-full items-center justify-center bg-[#FAFAFA] text-center'>
+              <span className='text-[1rem] text-lightGrey'>
+                대기 중인 상담이 없습니다.
+              </span>
+            </div>
           )}
         </ul>
       </div>
       <div className='mb-5 mt-2 text-center'>
-        {!isShowDetail && (
+        {!isShowDetail && waiting?.length > 6 ? (
           <Button
             variant='secondary'
             className='w-fit'
@@ -99,6 +88,8 @@ function WaitingList({ selectedIdx, setSelectedIdx }: CallProps) {
           >
             더보기
           </Button>
+        ) : (
+          <div className='h-12 w-full'></div>
         )}
       </div>
     </div>

@@ -9,7 +9,15 @@ export const CUSTOMER_ROUTE = {
 };
 
 export const ADMIN_ROUTE = {
+  login: '/admin/login',
   online: {
     main: '/admin/online',
+
+    call_detail: (callId: number) => `/admin/online/call/${callId}`,
+
+    inquiry: '/admin/online/inquiry',
+    inquiry_detail: (inquiryId: number) => `/admin/online/inquiry/${inquiryId}`,
+
+    customer_detail: (userId: number) => `/admin/online/customer/${userId}`,
   },
 };

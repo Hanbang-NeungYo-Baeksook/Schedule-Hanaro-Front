@@ -1,3 +1,4 @@
+import { ADMIN_ROUTE } from '@/constants/route';
 import { useNavigate } from 'react-router-dom';
 
 export type CurtomerBoxProps = {
@@ -6,7 +7,7 @@ export type CurtomerBoxProps = {
   name: string;
   mobile: string;
   birthdt: string;
-  email: string;
+  authId: string;
 };
 
 function CustomerBox({
@@ -15,9 +16,10 @@ function CustomerBox({
   name,
   mobile,
   birthdt,
-  email,
+  authId,
 }: CurtomerBoxProps) {
   const navigate = useNavigate();
+
   return (
     <li className='mx-auto flex w-full border-b-[1px] border-border py-7'>
       <span className='font-regular w-[5%] text-center text-[1.125rem] text-black'>
@@ -33,11 +35,11 @@ function CustomerBox({
         {birthdt}
       </span>
       <span className='font-regular w-[25%] text-center text-[1rem] text-lightGrey'>
-        {email}
+        {authId}
       </span>
       <span
         className='font-regular w-[10%] cursor-pointer text-center text-[1rem] text-black'
-        onClick={() => navigate(`/admin/online/customer/${userId}`)}
+        onClick={() => navigate(ADMIN_ROUTE.online.customer_detail(userId))}
       >
         상세보기
       </span>

@@ -1,7 +1,10 @@
 import CustomerInfoBox from '@/components/Admin/customer/CustomerInfoBox';
 import CustomerInquiryList from '@/components/Admin/customer/CustomerInquiryList';
+import { useParams } from 'react-router-dom';
 
 function AdminCustomerDetailPage() {
+  const { id: customerId } = useParams<{ id: string }>();
+
   return (
     <div className='mx-auto max-w-[1300px] space-y-16 text-left'>
       <div>
@@ -11,7 +14,7 @@ function AdminCustomerDetailPage() {
           </h3>
           <div className='h-[2px] w-full bg-[#666666]'></div>
         </div>
-        <CustomerInfoBox />
+        <CustomerInfoBox customerId={+(customerId ?? 1)} />
       </div>
 
       <div>
@@ -21,7 +24,7 @@ function AdminCustomerDetailPage() {
           </h3>
           <div className='h-[2px] w-full bg-[#666666]'></div>
         </div>
-        <CustomerInquiryList />
+        <CustomerInquiryList customerId={+(customerId ?? 1)} />
       </div>
     </div>
   );

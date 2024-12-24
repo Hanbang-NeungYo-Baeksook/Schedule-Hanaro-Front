@@ -1,13 +1,9 @@
 import { Badge } from '@/components/ui/badge'; // Badge 컴포넌트 import
+import { AdminHistoryData } from '@/types/Call';
 import { useNavigate } from 'react-router-dom'; // 상세보기 이동을 위해 useNavigate 사용
 import rightArrow from '../../../assets/icons/right_arrow.svg';
-import { CallDetail } from '@/types/callDetail';
 
-type ListOfCallInquiryProps = {
-  inquiries: CallDetail[];
-};
-
-function ListOfCallInquiry({ inquiries }: ListOfCallInquiryProps) {
+function ListOfCallInquiry({ inquiries }: { inquiries: AdminHistoryData[] }) {
   const navigate = useNavigate();
 
   return (
@@ -25,9 +21,9 @@ function ListOfCallInquiry({ inquiries }: ListOfCallInquiryProps) {
 
       {/* 리스트 영역 */}
       <ul>
-        {inquiries.map(({ call_id, inquiry_content, category }, index) => (
+        {inquiries.map(({ id, content, category }, index) => (
           <li
-            key={call_id}
+            key={id}
             className='font-inter flex items-center justify-between border-b py-6 font-normal leading-normal'
           >
             <div className='flex items-center space-x-2'>
@@ -35,9 +31,9 @@ function ListOfCallInquiry({ inquiries }: ListOfCallInquiryProps) {
                 {index + 1}
               </span>
               <span className='font-semibold text-gray-800'>
-                {inquiry_content.length <= 15
-                  ? inquiry_content
-                  : `${inquiry_content.substring(0, 15)}...`}
+                {content.length <= 15
+                  ? content
+                  : `${content.substring(0, 15)}...`}
               </span>
               <Badge
                 variant='lightSolid'
@@ -48,7 +44,7 @@ function ListOfCallInquiry({ inquiries }: ListOfCallInquiryProps) {
             </div>
             <button
               className='mr-5 flex items-center text-[0.875rem] font-normal text-black'
-              onClick={() => navigate(`/admin/online/call/${call_id}`)}
+              onClick={() => navigate(`/admin/online/call/${id}`)}
             >
               상세보기
               <img src={rightArrow} alt='Go' className='ml-0 inline-block' />
