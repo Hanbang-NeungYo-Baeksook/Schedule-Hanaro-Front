@@ -35,15 +35,22 @@ declare global {
     };
   }
 
-  type PageData<T> = {
+  type PageData<T, P> = {
     data: T;
-    pagination: Pagination;
+    pagination: P;
   };
 
   type Pagination = {
     currentPage: number;
     pageSize: number;
     hasNext: boolean;
+  };
+
+  type TotalPagination = {
+    current_page: number;
+    page_size: number;
+    total_items: number;
+    total_pages: number;
   };
 }
 
