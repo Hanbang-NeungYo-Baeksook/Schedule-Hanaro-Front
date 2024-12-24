@@ -27,6 +27,19 @@ export const QUERY_KEYS = {
 };
 
 export const ADMIN_QUERY_KEYS = {
+  CALL_LIST: 'call-list',
   CALL_WAIT_LIST: 'call-wait-list',
   CALL_MEMO: 'call-memo',
+  CALL_DETAIL: 'call-detail',
+  CALL_PROGRESS: 'call-progress',
+  CALL_COMPLETE: 'call-complete',
+
+  INQUIRY_DETAIL: 'inquiry-detail',
+  INQUIRY_REPLY: 'inquiry-reply',
+
+  CUSTOMER_LIST: 'customer-list',
+  CUSTOMER_DETAIL: 'customer-detail',
+  CUSTOMER_HISTORY: 'customer-history',
+
+  ADMIN_INFO: 'admin-info',
 };
