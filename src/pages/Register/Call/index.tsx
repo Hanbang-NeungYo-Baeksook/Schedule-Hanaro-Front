@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-
 import { Category, PostCallRequest } from '@/api/customer/calls';
 import Header from '@/components/Header/Header';
 import { AgreementCheckbox } from '@/components/Register/AgreementCheckbox';
@@ -14,6 +13,8 @@ import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { contentAtom } from '@/stores';
 
 export type RegisterCallData = {
   name: string;
@@ -61,6 +62,8 @@ export function RegisterCallFormPage() {
   const navigate = useNavigate();
   const { mutate: postCall } = usePostCall();
 
+  const [content] = useAtom(contentAtom);
+
   const {
     control,
     register,
@@ -72,7 +75,6 @@ export function RegisterCallFormPage() {
   const reservationDate = watch('reservationDate');
   const reservationTime = watch('reservationTime');
   const consultationType = watch('consultationType');
-  const callContent = watch('callContent');
 
   const onSubmit: SubmitHandler<RegisterCallData> = ({
     reservationDate,
@@ -101,7 +103,7 @@ export function RegisterCallFormPage() {
     postCall({
       call_date: dateTime,
       category: consultationType,
-      content: callContent,
+      content: content,
     } as PostCallRequest);
   };
 
@@ -161,14 +163,14 @@ export function RegisterCallFormPage() {
               timeFieldName={'reservationTime'}
             />
 
-            <ReusableInput
-              register={register}
-              fieldName='callContent'
-              error={errors.callContent?.message}
-              label='문의 내용'
-              placeholder='내용을 입력하세요.'
-              type='textarea'
-            />
+            <div>
+              <label className='mb-1 block pb-2 text-left text-lg font-semibold'>
+                문의 내용
+              </label>
+              <span className='mt-1 block text-left text-gray-800'>
+                {content || '문의 내용이 없습니다.'}
+              </span>
+            </div>
           </div>
 
           <div className='flex w-full flex-col'>

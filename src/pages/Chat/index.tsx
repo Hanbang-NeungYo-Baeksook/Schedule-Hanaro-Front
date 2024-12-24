@@ -7,7 +7,12 @@ import Nav from '@/components/Nav/Nav';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import usePostRecommendList from '@/hooks/query/customer/usePostRecommendList';
-import { isLoadingAtom, recommendListAtom, tagListAtom } from '@/stores';
+import {
+  contentAtom,
+  isLoadingAtom,
+  recommendListAtom,
+  tagListAtom,
+} from '@/stores';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 
@@ -31,6 +36,8 @@ const ChatPage = () => {
   const [, setIsEditing] = useState(false);
   const [dropdownIndex, setDropdownIndex] = useState<number | null>(null);
 
+  const [, setContent] = useAtom(contentAtom);
+
   const MAX_LENGTH = 65; // 축약 시 최대 글자 수
 
   const handleSend = () => {
@@ -39,7 +46,7 @@ const ChatPage = () => {
       if (!inputValue) {
         return;
       }
-      setInputContent(inputValue);
+      setContent(inputValue);
       postRecommendList({ query: inputValue });
     }
   };

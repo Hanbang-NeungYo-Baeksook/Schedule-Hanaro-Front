@@ -11,6 +11,8 @@ import { ReusableInput } from '@/components/Register/ReusableInput';
 import Header from '@/components/Header/Header';
 import { Category } from '@/api/customer/calls';
 import usePostInquiry from '@/hooks/query/customer/usePostInquiry';
+import { useAtom } from 'jotai';
+import { contentAtom } from '@/stores';
 
 export type RegisterInquiryData = {
   name: string;
@@ -33,6 +35,8 @@ export function RegisterInquiryFormPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { mutate: postInquiry } = usePostInquiry();
+
+  const [content] = useAtom(contentAtom);
 
   const {
     control,
@@ -83,14 +87,14 @@ export function RegisterInquiryFormPage() {
               fieldName={'consultationType'}
             />
 
-            <ReusableInput
-              register={register}
-              fieldName='inquiryContent'
-              error={errors.inquiryContent?.message}
-              label='문의 내용'
-              placeholder='내용을 입력하세요.'
-              type='textarea'
-            />
+            <div>
+              <label className='mb-1 block pb-2 text-left text-lg font-semibold'>
+                문의 내용
+              </label>
+              <span className='mt-1 block text-left text-gray-800'>
+                {content || '문의 내용이 없습니다.'}
+              </span>
+            </div>
           </div>
 
           <div className='flex flex-col'>

@@ -26,3 +26,5 @@ export const inquiryStatusAtom = atom<InquiryStatus>('답변 대기중');
 export const recommendListAtom = atom<RecommendData[]>([]);
 export const isLoadingAtom = atom(false);
 export const tagListAtom = atom<string[]>([]);
+
+export const contentAtom = atom<string>('');
