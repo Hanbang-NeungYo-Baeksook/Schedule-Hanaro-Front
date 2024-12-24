@@ -2,20 +2,26 @@ import { Button } from '@/components/ui/button';
 import usePostCallMemo from '@/hooks/query/admin/usePostCallMemo';
 import { useRef } from 'react';
 
-function CallMemoForm() {
-  // {
-  // callId
-  //  }: { callId: number }
+type Params = {
+  callId: number;
+  toggleOpenCallMemo: () => void;
+};
+
+function CallMemoForm({ callId, toggleOpenCallMemo }: Params) {
   const { mutate: postMemo } = usePostCallMemo();
   const memoRef = useRef<HTMLTextAreaElement>(null);
 
   const submitMemo = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(memoRef?.current);
+    if (callId === -1) {
+      return;
+    }
+
     const body = {
       content: memoRef?.current?.value ?? '',
     };
-    postMemo({ callId: 1, body });
+    postMemo({ callId, body });
+    toggleOpenCallMemo();
   };
 
   return (
@@ -31,6 +37,7 @@ function CallMemoForm() {
             type='button'
             className='w-fit rounded-full bg-white px-10 hover:bg-[#F2F2F2]'
             variant='outline'
+            onClick={toggleOpenCallMemo}
           >
             취소
           </Button>

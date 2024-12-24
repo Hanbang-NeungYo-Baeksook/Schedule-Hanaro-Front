@@ -1,19 +1,19 @@
 import { Button } from '@/components/ui/button';
 
+import { Category, PostCallRequest } from '@/api/customer/calls';
+import Header from '@/components/Header/Header';
 import { AgreementCheckbox } from '@/components/Register/AgreementCheckbox';
 import { ConsultationSelect } from '@/components/Register/ConsultationSelect';
 import { DateAndTimePicker } from '@/components/Register/DateAndTimePicker';
 import { PhoneNumberInput } from '@/components/Register/PhoneNumberInput';
 import { ReusableInput } from '@/components/Register/ReusableInput';
 import { Toaster } from '@/components/ui/toaster';
+import usePostCall from '@/hooks/query/customer/usePostCall';
 import { useToast } from '@/hooks/use-toast';
+import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import Header from '@/components/Header/Header';
-import usePostCall from '@/hooks/query/customer/usePostCall';
-import { Category, PostCallRequest } from '@/api/customer/calls';
-import { format } from 'date-fns';
 
 export type RegisterCallData = {
   name: string;
@@ -33,13 +33,13 @@ export const showToast = (toast: any, description: string) => {
 };
 
 // 영업점 운영 시간 데이터
-const storeOperatingHours = {
+export const storeOperatingHours = {
   startTime: '09:00',
   endTime: '18:00',
 };
 
 // 1시간 단위의 시간 생성
-function generateTimeSlots(startTime: string, endTime: string) {
+export function generateTimeSlots(startTime: string, endTime: string) {
   const slots: string[] = [];
   let current = new Date(`1970-01-01T${startTime}:00`);
   const end = new Date(`1970-01-01T${endTime}:00`);
