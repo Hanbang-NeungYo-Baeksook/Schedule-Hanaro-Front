@@ -60,13 +60,16 @@ function WaitingNumber({ numbers, angle, displayNum }: WaitingNumberProps) {
                 key={idx}
                 className='carousel-card absolute flex h-[7.5rem] flex-col items-center justify-center bg-white opacity-90 transition-all duration-500'
               >
-                {/* <span className='text-sm text-gray-400 md:text-lg'></span> */}
                 <span
-                  className={`text-4xl font-bold text-[#000000] md:text-6xl ${displayNum.includes(idx) ? '' : 'hidden'}`}
+                  className={`text-4xl font-bold text-[#000000] md:text-6xl ${
+                    displayNum.includes(idx) && number !== 0 ? '' : 'hidden'
+                  }`}
                 >
                   {number}
                 </span>
-                <div className={`${displayNum.includes(idx) ? '' : 'hidden'}`}>
+                <div
+                  className={`${displayNum.includes(idx) && number !== 0 ? '' : 'hidden'}`}
+                >
                   <CategoryButton category={'예금'} />
                 </div>
               </div>
