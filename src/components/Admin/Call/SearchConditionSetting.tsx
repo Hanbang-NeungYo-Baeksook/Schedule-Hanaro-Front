@@ -1,6 +1,9 @@
-import { DatePicker } from '../Call/DatePicker'; // 날짜 선택 컴포넌트
 import { SELECT_ITEMS } from '@/constants';
+import { SearchConditions } from '@/pages/Admin';
 import { Search } from 'lucide-react';
+import { useState } from 'react';
+import arrowDown from '../../../assets/icons/arrow_down.svg';
+import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
 import {
   Select,
@@ -9,33 +12,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../../ui/select';
-import { Button } from '../../ui/button';
-import arrowDown from '../../../assets/icons/arrow_down.svg';
-
-type SearchConditions = {
-  startDate?: Date;
-  endDate?: Date;
-  category: string;
-  keyword: string;
-};
+import { DatePicker } from '../Call/DatePicker'; // 날짜 선택 컴포넌트
 
 type SearchConditionSettingProps = {
   searchConditions: SearchConditions;
-  onInputChange: <K extends keyof SearchConditions>(
-    field: K,
-    value: SearchConditions[K]
-  ) => void;
   onSearch: (conditions: SearchConditions) => void;
-  onReset: () => void;
 };
 
 function SearchConditionSetting({
   searchConditions,
-  onInputChange,
   onSearch,
-  onReset,
 }: SearchConditionSettingProps) {
-  const { startDate, endDate, category, keyword } = searchConditions;
+  const [tmpFilterConditions, setTmpFilterConditions] =
+    useState(searchConditions);
+
+  const onInputChange = <K extends keyof SearchConditions>(
+    field: K,
+    value: SearchConditions[K]
+  ) => {
+    setTmpFilterConditions((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  // 초기화
+  const handleReset = () => {
+    setTmpFilterConditions({
+      page: 1,
+      startedAt: undefined,
+      endedAt: undefined,
+      category: undefined,
+      keyword: undefined,
+    });
+  };
 
   return (
     <div className='mx-auto w-full max-w-[1300px] rounded-lg bg-white p-6 shadow-custom'>
@@ -53,16 +63,30 @@ function SearchConditionSetting({
           </label>
           <div className='flex items-center space-x-2'>
             <DatePicker
-              selected={startDate}
-              onChange={(date) => onInputChange('startDate', date)}
+              selected={
+                tmpFilterConditions.startedAt
+                  ? new Date(tmpFilterConditions.startedAt)
+                  : undefined
+              }
+              onChange={(date) =>
+                onInputChange('startedAt', date?.toISOString())
+              } // string으로 저장
               maxDate={new Date()}
               placeholderText='시작일'
             />
             <span className='text-gray-500'>~</span>
             <DatePicker
-              selected={endDate}
-              onChange={(date) => onInputChange('endDate', date)}
-              minDate={startDate || new Date()}
+              selected={
+                tmpFilterConditions.endedAt
+                  ? new Date(tmpFilterConditions.endedAt)
+                  : undefined
+              }
+              onChange={(date) => onInputChange('endedAt', date?.toISOString())} // string으로 저장
+              minDate={
+                tmpFilterConditions.startedAt
+                  ? new Date(tmpFilterConditions.startedAt)
+                  : undefined
+              }
               maxDate={new Date()}
               placeholderText='종료일'
             />
@@ -79,7 +103,7 @@ function SearchConditionSetting({
             style={{ width: '14rem', height: '2.5rem' }}
           >
             <Select
-              value={category}
+              value={tmpFilterConditions.category}
               onValueChange={(value) => onInputChange('category', value)}
             >
               <SelectTrigger className='relative h-[3rem] w-[14rem] rounded-full border-none bg-white pl-3 text-left text-base text-gray-500 shadow-md'>
@@ -113,7 +137,7 @@ function SearchConditionSetting({
             <Search className='absolute left-3' size={18} />
             <Input
               type='text'
-              value={keyword}
+              value={tmpFilterConditions.keyword}
               onChange={(e) => onInputChange('keyword', e.target.value)}
               className='placeholer:text-base h-full w-full rounded-full border-none bg-white pl-10 pr-4 text-base shadow-md placeholder:text-gray-500 focus:outline-none'
             />
@@ -123,14 +147,14 @@ function SearchConditionSetting({
           <div className='flex w-full justify-end space-x-4'>
             <Button
               variant='outline'
-              onClick={onReset}
+              onClick={handleReset}
               className='h-[4rem] w-[14rem] rounded-full border-2 border-gray-800 bg-white px-4 py-2 text-xl font-bold text-gray-600 hover:bg-gray-100'
             >
               초기화
             </Button>
             <Button
               variant='default'
-              onClick={() => onSearch(searchConditions)}
+              onClick={() => onSearch(tmpFilterConditions)}
               className='h-[4rem] w-[14rem] rounded-full bg-gray-800 px-4 py-2 text-xl font-bold text-white hover:bg-gray-900'
             >
               검색
