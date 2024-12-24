@@ -25,6 +25,8 @@ export const QUERY_KEYS = {
   VISIT_DEL: 'visit-del',
 
   RECOMMEND: 'recommend',
+
+  CUSTOMER_DETAIL: 'customer-detail',
 };
 
 export const ADMIN_QUERY_KEYS = {

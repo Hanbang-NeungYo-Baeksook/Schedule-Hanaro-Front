@@ -1,24 +1,44 @@
 import { Separator } from '@/components/ui/separator';
 import { MYPAGECONSTANTS } from '@/constants/mypage';
+import useGetCustomerDetail from '@/hooks/query/customer/useGetCustomerDetail';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Mypage() {
-  const name = '김예나';
-  const userId = 'isad';
-  const phoneNumber = '010-1234-1234';
-  const email = 'likesun2000@naver.com';
+  const navigate = useNavigate();
+
+  const { data: customerDetail, isLoading } = useGetCustomerDetail();
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
+
+  if (!customerDetail) {
+    return <>존재하지 않는 고객</>;
+  }
+
+  const {
+    name,
+    authId: userId,
+    phoneNum: phoneNumber,
+    birth,
+    callAmount,
+    inquiryAmount,
+    visitAmount,
+  } = customerDetail;
+
   const infoItems = [
     { label: '아이디', value: userId },
-    { label: '이메일', value: email },
+    { label: '생년월일', value: birth },
     { label: '휴대폰 번호', value: phoneNumber },
   ];
+
   const receiptItems = [
-    { label: '방문 예약', value: 1 },
-    { label: '전화 문의', value: 2 },
-    { label: '1:1 문의', value: 3 },
+    { label: '방문 예약', value: visitAmount },
+    { label: '전화 문의', value: callAmount },
+    { label: '1:1 문의', value: inquiryAmount },
   ];
-  const navigate = useNavigate();
+
   const handleNavigate = (url: string) => {
     navigate(url);
   };
