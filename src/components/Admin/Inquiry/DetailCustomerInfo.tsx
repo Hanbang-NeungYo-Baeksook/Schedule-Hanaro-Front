@@ -20,7 +20,6 @@ function DetailCustomerInfo({
       <div className='mx-auto flex items-center justify-between font-medium text-gray-400'>
         {/* 고객명 */}
         <div className='flex items-center space-x-6'>
-          {/* 자식 간 일정 간격 */}
           <span className='text-[1.4rem] text-gray-400'>고객명</span>
           <span className='ml-6 text-[1.4rem] font-semibold text-gray-800'>
             {name}
@@ -29,7 +28,6 @@ function DetailCustomerInfo({
 
         {/* 전화번호 */}
         <div className='ml-10 flex items-center border-l border-gray-200'>
-          {/* 경계선 이후 간격 통일 */}
           <span className='ml-10 text-[1.4rem] text-gray-400'>전화번호</span>
           <span className='ml-6 text-[1.4rem] font-semibold text-gray-800'>
             {phoneNumber}
@@ -38,7 +36,6 @@ function DetailCustomerInfo({
 
         {/* 상담시간 */}
         <div className='ml-10 flex items-center border-l border-gray-200'>
-          {/* 경계선 이후 간격 통일 */}
           <span className='ml-10 text-[1.4rem] text-gray-400'>문의시간</span>
           <span className='ml-6 text-[1.4rem] font-semibold text-gray-800'>
             {start_time}
@@ -47,7 +44,6 @@ function DetailCustomerInfo({
 
         {/* 답변시간 */}
         <div className='ml-10 flex items-center border-l border-gray-200'>
-          {/* 경계선 이후 간격 통일 */}
           <span className='ml-10 text-[1.4rem] text-gray-400'>답변시간</span>
           <span className='ml-6 text-[1.4rem] font-semibold text-gray-800'>
             {end_time}

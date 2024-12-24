@@ -1,3 +1,5 @@
+import { Category, InquiryStatus } from './enum';
+
 export type ActiveTab = '답변대기' | '답변완료' | '문의정보' | '고객정보';
 
 export type CallDataType = {
@@ -25,8 +27,8 @@ export type AdminInquiryDetail = {
 export type AdminInquiry = PageData<AdminInquiryData[], TotalPagination>;
 
 export type AdminInquiryData = {
-  category: string;
-  status: string;
+  category: Category;
+  status: InquiryStatus;
   content: string;
   tags: string[];
   inquiry_id: number;

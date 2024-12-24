@@ -27,6 +27,8 @@ export const QUERY_KEYS = {
 };
 
 export const ADMIN_QUERY_KEYS = {
+  SIGNIN: 'sign-in',
+
   CALL_LIST: 'call-list',
   CALL_WAIT_LIST: 'call-wait-list',
   CALL_MEMO: 'call-memo',
@@ -34,6 +36,7 @@ export const ADMIN_QUERY_KEYS = {
   CALL_PROGRESS: 'call-progress',
   CALL_COMPLETE: 'call-complete',
 
+  INQUIRY_LIST: 'inquiry-list',
   INQUIRY_DETAIL: 'inquiry-detail',
   INQUIRY_REPLY: 'inquiry-reply',
 

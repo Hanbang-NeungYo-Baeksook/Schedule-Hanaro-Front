@@ -41,7 +41,7 @@ function WaitingList({ selectedIdx, changeIdx, progress, waiting }: CallProps) {
             />
           </div>
         ) : (
-          <div className='mt-2 flex h-[60px] w-full cursor-pointer flex-col items-center justify-center border-y-[1px] border-[#D9D9D9] bg-[#FAFAFA] px-5 py-2 text-center'>
+          <div className='mt-2 flex h-[60px] w-full flex-col items-center justify-center border-y-[1px] border-[#D9D9D9] bg-[#FAFAFA] px-5 py-2 text-center'>
             <span className='text-lightGrey'>진행 중인 상담이 없습니다.</span>
           </div>
         )}

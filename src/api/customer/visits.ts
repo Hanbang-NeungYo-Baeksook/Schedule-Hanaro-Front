@@ -22,7 +22,7 @@ export type GetVisitListRequest = {
   size?: number;
 };
 
-export type GetVisitListResponse = PageData<VisitData[]>;
+export type GetVisitListResponse = PageData<VisitData[], Pagination>;
 
 export type GetVisitDetailRequest = {
   visit_id: number;

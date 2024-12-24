@@ -8,10 +8,12 @@ const useGetInquiryList = (searchConditions: InquirySearchConditions) => {
 
   return useQuery<AdminInquiry>({
     queryKey: [
-      ADMIN_QUERY_KEYS.CALL_LIST,
-      { page, status, category, search_content },
+      ADMIN_QUERY_KEYS.INQUIRY_LIST,
+      { page },
+      { status, category, search_content },
     ],
     queryFn: () => getInquiryList({ page, status, category, search_content }),
+    staleTime: 1000 * 60 * 5,
   });
 };
 
