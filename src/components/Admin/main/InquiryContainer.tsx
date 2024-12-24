@@ -1,4 +1,4 @@
-import { mockInquiryData } from '@/mock/adminInquiry';
+import useGetInquiryList from '@/hooks/query/admin/useGetInquiryList';
 import { useState } from 'react';
 import InquiryList from '../Inquiry/InquiryList';
 
@@ -7,6 +7,11 @@ function InquiryContainer() {
   const [activeCategory, setActiveCategory] = useState<string>('전체');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  const { data: inquiries } = useGetInquiryList({ page: 0 });
+
+  if (!inquiries) {
+    return <></>;
+  }
   return (
     <div className='mx-auto w-full space-y-5 text-left'>
       <span className='text-2xl font-bold'>1:1 문의</span>
@@ -15,7 +20,7 @@ function InquiryContainer() {
           activeTab={activeTab}
           activeCategory={activeCategory}
           setActiveCategory={setActiveCategory}
-          inquiries={mockInquiryData}
+          inquiries={inquiries.data}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
         />

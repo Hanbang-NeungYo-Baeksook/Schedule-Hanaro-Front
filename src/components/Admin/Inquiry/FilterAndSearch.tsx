@@ -1,4 +1,5 @@
 import { SELECT_ITEMS } from '@/constants';
+import { Category } from '@/types/enum';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { Input } from '../../ui/input';
@@ -16,7 +17,7 @@ function FilterAndSearch({
   setActiveCategory,
   setSearchQuery,
 }: {
-  setActiveCategory: (category: string) => void;
+  setActiveCategory: (category: Category) => void;
   setSearchQuery: (query: string) => void;
 }) {
   const [selectedCategory, setSelectedCategory] = useState('전체');
@@ -24,7 +25,7 @@ function FilterAndSearch({
   // const [startDate, setStartDate] = useState<Date | undefined>(undefined); // 시작일
   // const [endDate, setEndDate] = useState<Date | undefined>(undefined); // 종료일
 
-  const handleCategoryChange = (category: string) => {
+  const handleCategoryChange = (category: Category) => {
     setSelectedCategory(category);
     setActiveCategory(category); // 상위 컴포넌트에 카테고리 변경 전달
   };

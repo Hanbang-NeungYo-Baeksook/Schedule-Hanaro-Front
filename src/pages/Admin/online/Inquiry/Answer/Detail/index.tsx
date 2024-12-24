@@ -1,39 +1,28 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { InquiryDetail } from '@/types/inquiryDetail'; // 경로에 따라 수정
-import { mockInquiryData } from '@/mock/adminInquiry';
 import arrowLeft from '@/assets/icons/arrow_left.svg';
 import CustomerInfo from '@/components/Admin/Inquiry/DetailCustomerInfo';
 import { Badge } from '@/components/ui/badge';
+import useGetInquiryDetail from '@/hooks/query/admin/useGetInquiryDetail';
 import { format } from 'date-fns';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function AnswerDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [inquiryData, setInquiryData] = useState<InquiryDetail | null>(null);
-  useEffect(() => {
-    const fetchInquiryDetail = () => {
-      const inquiry = mockInquiryData.find(({ id }) => id === Number(id)); // ID로 데이터 찾기
-      setInquiryData(inquiry || null);
-    };
-
-    fetchInquiryDetail();
-  }, [id]);
+  const { data: inquiryData } = useGetInquiryDetail(+(id ?? 1));
 
   if (!inquiryData) {
     return <div>Loading...</div>;
   }
 
   const {
-    name,
+    customer_name: name,
     phone_number,
-    start_time,
-    end_time,
+    reply_created_at,
     category,
     tags,
-    content,
+    inquiry_content: content,
     reply_content,
-    recommended_entry_time,
+    inquiry_created_at: recommended_entry_time,
   } = inquiryData;
 
   return (
@@ -51,8 +40,16 @@ export function AnswerDetail() {
         className='mb-[2rem] w-full rounded-[1.875rem] bg-[#f9f9f9] p-[1.5rem] shadow-[0_4px_10px_0_rgba(0,0,0,0.1)]'
         name={name}
         phoneNumber={phone_number}
-        start_time={format(new Date(start_time), 'MM월 dd일 HH시 mm분')}
-        end_time={format(new Date(end_time), 'MM월 dd일 HH시 mm분')}
+        start_time={
+          recommended_entry_time
+            ? format(new Date(recommended_entry_time), 'MM월 dd일 HH시 mm분')
+            : ''
+        }
+        end_time={
+          recommended_entry_time
+            ? format(new Date(recommended_entry_time), 'MM월 dd일 HH시 mm분')
+            : ''
+        }
       />
       <div className='mx-auto h-[80%] rounded-[1.875rem] bg-white p-[1.5rem] shadow-[0_4px_20px_0_rgba(0,0,0,0.1)]'>
         <div className='overflow-wrap break-word mb-3 text-left text-[1.5rem] font-extrabold text-[#464646]'>
@@ -87,8 +84,8 @@ export function AnswerDetail() {
         <div className='mb-[0.5rem] mt-[3.6rem] text-left text-[1.5rem] font-bold text-[#464646]'>
           답변 내용
           <span className='ml-3 text-[1rem] font-normal text-gray-400'>
-            {recommended_entry_time
-              ? format(new Date(end_time), 'MM월 dd일 HH시 mm분')
+            {reply_created_at
+              ? format(new Date(reply_created_at), 'MM월 dd일 HH시 mm분')
               : ''}
           </span>
         </div>
