@@ -46,6 +46,7 @@ const ChatPage = () => {
       if (!inputValue) {
         return;
       }
+      setInputContent(inputValue);
       setContent(inputValue);
       postRecommendList({ query: inputValue });
     }
