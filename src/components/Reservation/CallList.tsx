@@ -9,11 +9,11 @@ const CallList = ({
   call_time,
   call_num,
   category,
-  status,
+  // status,
 }: CallData) => {
   const navigate = useNavigate();
   const timerText = 10;
-  console.log(status);
+  // console.log(status);
 
   return (
     <div
@@ -52,8 +52,11 @@ const CallList = ({
             {call_date}
           </div>
         </div>
-        <div className='ml-auto'>
-          <div className='text-[2rem] font-bold text-[#2b2b2b]'>{call_num}</div>
+        <div className='ml-auto flex items-end gap-[0.1rem]'>
+          <span className='text-3xl font-bold text-[#2b2b2b]'>{call_num}</span>
+          <span className='pb-[0.1rem] text-xl font-bold text-[#2b2b2b]'>
+            번
+          </span>
         </div>
       </div>
 

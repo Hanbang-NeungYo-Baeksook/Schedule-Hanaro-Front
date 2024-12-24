@@ -17,7 +17,6 @@ To read more about using these font, please visit the Next.js documentation:
 - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
-import { ReactComponent as Close } from '@/assets/icons/close.svg';
 import { Button } from '@/components/ui/button';
 import {
   Drawer,
@@ -28,8 +27,6 @@ import {
 } from '@/components/ui/drawer';
 import { MAP_CHIPS } from '@/constants';
 import { useMap } from '@/hooks/map-context';
-import { BRANCH_MOCK, BRANCH_STATE_MOCK } from '@/mock/branch_mock';
-import { BranchInfo } from '@/types/branch';
 import { List, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import BranchCard from '../Map/BranchCard';
@@ -42,10 +39,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import { BranchData } from '@/api/customer/branches';
+import { Separator } from '../ui/separator';
+import { ReactComponent as Refresh } from '@/assets/icons/refresh.svg';
 
 export function BottomSheet() {
-  const { currentAddress, setSelectedBranchId, setFocus } = useMap();
+  const { currentAddress, branchList, setSelectedBranchId, setFocus } =
+    useMap();
   const [selectedChipIdx, setSelectedChipIdx] = useState(0); // 영업점 | ATM chip
+  const selectedBranchList: BranchData[] =
+    selectedChipIdx === 0 ? branchList.bank_list : branchList.atm_list;
 
   const [firstAddress, secondAddress, ...lastAddress] =
     currentAddress.split(' ');
@@ -55,31 +58,38 @@ export function BottomSheet() {
   const [open, setOpen] = useState(false);
   const toggleOpen = () => setOpen((prev) => !prev);
 
-  const handleDetailPage = (branchId: string) => {
+  const isOpen = (business_hours: string) => {
+    const date = new Date(Date.now());
+
+    if (date.getDay() === 0 || date.getDay() === 6) {
+      return false;
+    }
+
+    const [startTime, endTime] = business_hours.split('~');
+    const startHour = startTime.split(':')[0];
+    const endHour = endTime.split(':')[0];
+    return date.getHours() >= +startHour && date.getHours() < +endHour;
+  };
+
+  const handleDetailPage = (branchId: number) => {
     toggleOpen();
-    const targetBranch = BRANCH_MOCK.find(
-      ({ id }) => id === branchId
-    ) as BranchInfo;
-    const { position_x: lat, position_y: lon } = targetBranch;
+    const targetBranch = selectedBranchList.find(
+      ({ branch_id }) => branch_id === branchId
+    ) as BranchData;
+    const { x_position: lat, y_position: lon } = targetBranch;
     setTimeout(() => {
-      setSelectedBranchId(branchId);
+      setSelectedBranchId(branchId.toString());
       if (lat && lon) setFocus(+lon, +lat);
     }, 200);
   };
 
-  const findWaitingInfo = (branchId: string) => {
-    const targetBranch = BRANCH_STATE_MOCK.find(({ id }) => id === branchId);
-    return {
-      waiting_number: targetBranch?.waiting_number ?? '-1',
-      waiting_time: targetBranch?.waiting_time ?? '-1',
-    };
-  };
+  const now = new Date(Date.now());
 
   return (
     <>
       {/* TODO: 검색 화면 구현시 SearchInput 설정 */}
       {/* <SearchInput /> */}
-      <div className='navbar fixed bottom-24 left-1/2 z-10 -translate-x-1/2'>
+      <div className='navbar fixed bottom-24 left-1/2 z-[60] -translate-x-1/2'>
         <Drawer open={open} onOpenChange={setOpen} snapPoints={[0.4, 1]}>
           <DrawerTrigger asChild>
             <Button className='mb-4 w-fit rounded-full bg-white px-6 py-2 shadow-[2px_4px_4px_0px_rgba(0,0,0,0.15)] hover:bg-[#F9F9F9]'>
@@ -98,11 +108,10 @@ export function BottomSheet() {
               <DrawerDescription id='custom-description'></DrawerDescription>
               <div className='flex items-center justify-between'>
                 <DrawerTitle className='w-full pt-6 text-center text-2xl font-bold'>
-                  <div className='flex items-center justify-between'>
-                    <div></div>
+                  <div className='flex flex-col items-center justify-center gap-4'>
                     <Badge
                       variant='outline'
-                      className='ml-[18px] flex w-fit items-center justify-center gap-[0.3125rem] border-border bg-[#F8F8F8] px-5 py-3 tracking-wider text-text'
+                      className='ml-[18px] flex w-fit cursor-default items-center justify-center gap-[0.3125rem] self-center border-border bg-[#F8F8F8] px-5 py-3 tracking-wider text-text'
                     >
                       <MapPin width='1.25rem' height='1.25rem' />
                       <div className='flex flex-wrap justify-center gap-1'>
@@ -114,27 +123,25 @@ export function BottomSheet() {
                         </span>
                       </div>
                     </Badge>
-                    <Close
-                      width={18}
-                      height={18}
-                      className='ml-4 cursor-pointer'
-                      onClick={toggleOpen}
-                    />
+                    <div className='flex cursor-pointer items-center gap-2 self-end'>
+                      <Refresh />
+                      <span className='text-[1.25rem] font-normal text-[#666]'>
+                        {`${now.getHours()}:${now.getMinutes()}`}
+                      </span>
+                    </div>
                   </div>
-
+                  <Separator className='mt-1' />
                   {/* 추천 지점 */}
 
                   <RecBranch />
 
-                  <div className='flex items-center justify-between py-5'>
+                  <div className='flex items-center justify-between py-3'>
                     <span className='space-x-2'>
                       {MAP_CHIPS.map(
                         ({ id, txt }: { id: number; txt: string }) => (
                           <Badge
                             key={id}
-                            variant={
-                              selectedChipIdx === id ? 'active' : 'noactive'
-                            }
+                            variant={selectedChipIdx === id ? 'dark' : 'white'}
                             className='px-6 py-1 text-[0.875rem] tracking-wider'
                             onClick={() => setSelectedChipIdx(id)}
                           >
@@ -146,10 +153,10 @@ export function BottomSheet() {
                     <div className='flex h-[90%] cursor-pointer items-center gap-1'>
                       {selectedChipIdx === 0 && (
                         <Select>
-                          <SelectTrigger className='space-x-1 border-none text-lightGrey'>
+                          <SelectTrigger className='z-[61] space-x-1 border-none text-lightGrey'>
                             <SelectValue placeholder='거리순' />
                           </SelectTrigger>
-                          <SelectContent className='right-8'>
+                          <SelectContent className='right-8 z-[61]'>
                             <SelectItem value='거리순'>거리순</SelectItem>
                             <SelectItem value='대기시간순'>
                               대기시간순
@@ -163,30 +170,37 @@ export function BottomSheet() {
               </div>
               {/* </DrawerHeader> */}
               <ul className='h-full space-y-6 overflow-y-auto p-1 scrollbar-hide'>
-                {BRANCH_MOCK?.filter(({ type }) => {
-                  const stype = selectedChipIdx === 0 ? 'branch' : 'atm';
-                  return type === stype;
-                })
-                  ?.map(({ id, name, address, business_hours, type }) => {
-                    // TODO: waiting_number -> distance로 수정
-                    const { waiting_number, waiting_time } =
-                      findWaitingInfo(id);
-                    return (
-                      <li key={id} onClick={() => handleDetailPage(id)}>
-                        <BranchCard
-                          id={id}
-                          name={name}
-                          isOpen={true}
-                          address={address}
-                          distance={waiting_number}
-                          openTime={business_hours}
-                          waitingNumber={waiting_number}
-                          waitingTime={waiting_time}
-                          type={type}
-                        />
-                      </li>
-                    );
-                  })
+                {selectedBranchList
+                  .map(
+                    ({
+                      branch_id: id,
+                      branch_name: name,
+                      address,
+                      business_hours,
+                      branch_type: type,
+                      distance,
+                      section_types,
+                      wait_time,
+                      wait_amount,
+                    }) => {
+                      return (
+                        <li key={id} onClick={() => handleDetailPage(id)}>
+                          <BranchCard
+                            id={id.toString()}
+                            name={name}
+                            isOpen={isOpen(business_hours)}
+                            address={address}
+                            distance={distance.toString()}
+                            openTime={business_hours}
+                            sectionType={section_types}
+                            waitingNumber={wait_amount}
+                            waitingTime={wait_time}
+                            type={type == '방문점' ? 'branch' : 'atm'}
+                          />
+                        </li>
+                      );
+                    }
+                  )
                   ?.sort((a, b) => +a.props.distance - +b.props.distance)}
               </ul>
             </div>

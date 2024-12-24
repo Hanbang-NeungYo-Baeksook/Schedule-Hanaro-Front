@@ -1,13 +1,13 @@
 import { RecBranch } from '@/types/branch';
 import { useNavigate } from 'react-router-dom';
-import { Badge } from '../ui/badge';
+import { Separator } from '../ui/separator';
 
 function RecBranchBox({
   branchId,
   branchName,
   location,
   distance,
-  congestion,
+  waitingTime,
 }: RecBranch) {
   const navigate = useNavigate();
 
@@ -21,14 +21,16 @@ function RecBranchBox({
     >
       <span className='text-[1.25rem] font-bold'>{branchName}</span>
       <span className='text-[0.75rem] text-lightGrey'>{location}</span>
-      <span className='text-[0.875rem]'>{distance} m</span>
-      <Badge
-        variant='lightSolid'
-        className='flex w-full items-center justify-center gap-3'
-      >
-        <span>혼잡도</span>
-        <span>{congestion} %</span>
-      </Badge>
+
+      <Separator />
+      <div className='flex w-full justify-between'>
+        <span className='text-[0.875rem]'>거리</span>
+        <span className='text-[0.875rem] text-[#339D9D]'>{distance}m</span>
+      </div>
+      <div className='flex w-full justify-between'>
+        <span className='text-[0.875rem]'>예상 대시 시간</span>
+        <span className='text-[0.875rem] text-[#339D9D]'>{waitingTime}분</span>
+      </div>
     </div>
   );
 }

@@ -3,19 +3,20 @@ import { Badge } from '../ui/badge';
 import { Separator } from '../ui/separator';
 
 export type BranchCardProps = {
-  id?: string;
+  id: string;
   name: string;
-  isOpen?: boolean;
+  isOpen: boolean;
   address: string;
-  distance?: string;
-  openTime?: string;
-  waitingNumber: string;
-  waitingTime: string;
+  distance: string;
+  openTime: string;
+  sectionType?: string[];
+  waitingNumber?: number[];
+  waitingTime?: number[];
   type?: 'branch' | 'atm' | 'reservedBranch';
 };
 
-type WaitingInfo = {
-  section: '예금' | '개인대출' | '기업대출';
+export type WaitingInfo = {
+  section: string;
   waitingAmount: number;
   waitingTime: number;
 };
@@ -26,27 +27,23 @@ function BranchCard({
   address,
   distance,
   openTime,
+  sectionType,
+  waitingNumber,
+  waitingTime,
   type = 'branch',
 }: BranchCardProps) {
   const [firstName, lastName] = name.split(' ');
+  const waitingInfos: WaitingInfo[] = [];
+  if (type === 'branch' && sectionType) {
+    for (let i = 0; i < sectionType?.length; i++) {
+      waitingInfos.push({
+        section: sectionType?.at(i) ?? '',
+        waitingAmount: waitingNumber?.at(i) ?? 0,
+        waitingTime: waitingTime?.at(i) ?? 0,
+      });
+    }
+  }
 
-  const waitingInfos: WaitingInfo[] = [
-    {
-      section: '예금',
-      waitingAmount: 10,
-      waitingTime: 25,
-    },
-    {
-      section: '개인대출',
-      waitingAmount: 3,
-      waitingTime: 12,
-    },
-    {
-      section: '기업대출',
-      waitingAmount: 0,
-      waitingTime: 0,
-    },
-  ];
   return (
     <div className='flex w-full cursor-pointer items-center rounded-[0.9375rem] bg-white p-6 shadow-[0_0_10px_5px_rgba(0,0,0,0.05)] transition-colors duration-300 hover:bg-gray-50'>
       <div className='flex w-full flex-col gap-1 text-left'>

@@ -9,15 +9,19 @@ import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header/Header';
+import usePostCall from '@/hooks/query/customer/usePostCall';
+import { Category, PostCallRequest } from '@/api/customer/calls';
+import { format } from 'date-fns';
 
 export type RegisterCallData = {
   name: string;
   phone: string;
-  consultationType: string;
+  consultationType: Category;
   reservationDate: Date | undefined;
-  reservationTime: string;
+  reservationTime: string | undefined;
+  callContent: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, react-refresh/only-export-components
@@ -42,7 +46,7 @@ function generateTimeSlots(startTime: string, endTime: string) {
 
   while (current < end) {
     const next = new Date(current);
-    next.setHours(current.getHours() + 1);
+    next.setMinutes(current.getMinutes() + 30);
     slots.push(
       `${current.toTimeString().slice(0, 5)}~${next.toTimeString().slice(0, 5)}`
     );
@@ -55,7 +59,8 @@ function generateTimeSlots(startTime: string, endTime: string) {
 export function RegisterCallFormPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { mutate: postCall } = usePostCall();
+
   const {
     control,
     register,
@@ -67,23 +72,37 @@ export function RegisterCallFormPage() {
   const reservationDate = watch('reservationDate');
   const reservationTime = watch('reservationTime');
   const consultationType = watch('consultationType');
+  const callContent = watch('callContent');
 
-  const onSubmit: SubmitHandler<RegisterCallData> = (data) => {
+  const onSubmit: SubmitHandler<RegisterCallData> = ({
+    reservationDate,
+    reservationTime,
+    consultationType,
+  }) => {
     if (!isChecked1 || !isChecked2) {
       showToast(toast, '개인정보 수집 및 이용에 동의해야 합니다.');
       return;
     }
-    console.log('예약 정보:', {
-      ...data,
-      reservationDate: data.reservationDate,
-      consultationType: data.consultationType,
-      reservationTime: data.reservationTime,
-    });
 
-    showToast(toast, '예약 완료되었습니다!');
-    setTimeout(() => {
-      navigate(`/reservation/call/${id}`);
-    }, 1000);
+    const selectedHour = (reservationTime ?? '00:00~00:00 100명')
+      .split('~')[0]
+      .split(':')[0];
+    const selectedMinute = (reservationTime ?? '00:00~00:00 100명')
+      .split('~')[0]
+      .split(':')[1];
+
+    const date = reservationDate ?? new Date(Date.now());
+    date.setHours(+selectedHour);
+    date.setMinutes(+selectedMinute);
+
+    const localeString = format(date, 'yyyy-MM-dd HH:mm:ss');
+    const dateTime = localeString.split(' ').join('T');
+
+    postCall({
+      call_date: dateTime,
+      category: consultationType,
+      content: callContent,
+    } as PostCallRequest);
   };
 
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
@@ -140,6 +159,15 @@ export function RegisterCallFormPage() {
               timeError={errors.reservationTime?.message}
               dateFieldName={'reservationDate'}
               timeFieldName={'reservationTime'}
+            />
+
+            <ReusableInput
+              register={register}
+              fieldName='callContent'
+              error={errors.callContent?.message}
+              label='문의 내용'
+              placeholder='내용을 입력하세요.'
+              type='textarea'
             />
           </div>
 

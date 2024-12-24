@@ -7,7 +7,7 @@ import { showToast } from '@/pages';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-const usePostAdminLoginQuery = () => {
+const usePostAdminLogin = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -24,4 +24,4 @@ const usePostAdminLoginQuery = () => {
   });
 };
 
-export default usePostAdminLoginQuery;
+export default usePostAdminLogin;

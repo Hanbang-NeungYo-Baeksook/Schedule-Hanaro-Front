@@ -1,13 +1,12 @@
 import { getCallWaitList } from '@/api/admin/calls';
 import { ADMIN_QUERY_KEYS } from '@/constants/queryKeys';
-import { AdminCall } from '@/types/Call';
 import { useQuery } from '@tanstack/react-query';
 
-const useGetCallWaitListQuery = () => {
-  return useQuery<AdminCall>({
+const useGetCallWaitList = () => {
+  return useQuery({
     queryKey: [ADMIN_QUERY_KEYS.CALL_WAIT_LIST],
     queryFn: getCallWaitList,
   });
 };
 
-export default useGetCallWaitListQuery;
+export default useGetCallWaitList;

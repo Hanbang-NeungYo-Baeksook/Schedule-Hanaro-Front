@@ -95,7 +95,7 @@ export const useRouter = () =>
               children: [
                 { index: true, element: <ReservationCallPage /> },
                 {
-                  path: '/reservation/call/:id',
+                  path: '/reservation/call/:callId',
                   children: [
                     { index: true, element: <ReservationDetailCallPage /> },
                   ],
@@ -107,7 +107,7 @@ export const useRouter = () =>
               children: [
                 { index: true, element: <ReservationInquiryPage /> },
                 {
-                  path: '/reservation/inquiry/:id',
+                  path: '/reservation/inquiry/:inquiryId',
                   children: [
                     { index: true, element: <ReservationDetailInquiryPage /> },
                   ],
@@ -123,7 +123,7 @@ export const useRouter = () =>
               children: [
                 { index: true, element: <ReservationVisitPage /> },
                 {
-                  path: '/reservation/visit/:branchId',
+                  path: '/reservation/visit/:visitId',
                   children: [
                     { index: true, element: <ReservationDetailVisitPage /> },
                   ],
@@ -147,7 +147,7 @@ export const useRouter = () =>
               element: <RegisterInquiryFormPage />,
             },
             {
-              path: '/register/visit',
+              path: '/register/visit/:branchId',
               element: <RegisterVisitFormPage />,
             },
           ],

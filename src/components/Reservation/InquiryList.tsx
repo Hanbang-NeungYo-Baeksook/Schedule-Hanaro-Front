@@ -2,12 +2,13 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ReactComponent as DetailButton } from '@/assets/icons/reservation/reservationdetailbutton.svg';
 import { useNavigate } from 'react-router-dom';
+import { InquiryStatus } from '@/api/customer/inquires';
 type InquiryConsultationCardProps = {
   inquiryNumber: number; // 대기 번호
   inquiryconsultationType: string; // 상담 종류
   consultationContents: string; // 상담 내용
-  responseStatus: boolean; // 답변여부
-  idx: string;
+  responseStatus: InquiryStatus; // 답변여부
+  inquiryId: number;
 };
 
 const InquiryList: React.FC<InquiryConsultationCardProps> = ({
@@ -15,13 +16,13 @@ const InquiryList: React.FC<InquiryConsultationCardProps> = ({
   inquiryconsultationType,
   consultationContents,
   responseStatus,
-  idx,
+  inquiryId,
 }) => {
   const navigate = useNavigate();
   return (
     <div
       className='mx-auto w-[90%] rounded-[0.9375rem] bg-white pb-[2.1875rem] pl-[1.1875rem] pr-[1.4688rem] pt-[1.2rem] drop-shadow'
-      onClick={() => navigate(`/reservation/inquiry/${idx}`)}
+      onClick={() => navigate(`/reservation/inquiry/${inquiryId}`)}
     >
       <div className='space-y-[1rem]'>
         <div className='flex items-center'>
@@ -29,13 +30,15 @@ const InquiryList: React.FC<InquiryConsultationCardProps> = ({
             <span className='flex text-3xl font-bold text-[#2b2b2b]'>
               {inquiryNumber}
             </span>
-            <span className='pb-[0.1rem] text-xl font-bold'>번</span>
+            <span className='pb-[0.1rem] text-xl font-bold text-[#2b2b2b]'>
+              번
+            </span>
           </div>
           <Badge
-            variant={responseStatus ? 'active' : 'outline'}
+            variant={responseStatus != '답변 대기중' ? 'active' : 'outline'}
             className='ml-[0.5rem]'
           >
-            {responseStatus ? '답변 완료' : '답변 대기'}
+            {responseStatus != '답변 대기중' ? '답변 완료' : '답변 대기'}
           </Badge>
           <div className='ml-auto'>
             <button>

@@ -2,17 +2,19 @@ import { Button } from '@/components/ui/button';
 
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { ConsultationSelect } from '@/components/Register/ConsultationSelect';
 import { AgreementCheckbox } from '@/components/Register/AgreementCheckbox';
 import { ReusableInput } from '@/components/Register/ReusableInput';
 import Header from '@/components/Header/Header';
+import { Category } from '@/api/customer/calls';
+import usePostInquiry from '@/hooks/query/customer/usePostInquiry';
 
 export type RegisterInquiryData = {
   name: string;
-  consultationType: string;
+  consultationType: Category;
   reservationDate: Date | undefined;
   reservationTime: string;
   inquiryTitle: string;
@@ -30,7 +32,8 @@ const showToast = (toast: any, description: string) => {
 export function RegisterInquiryFormPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { mutate: postInquiry } = usePostInquiry();
+
   const {
     control,
     register,
@@ -41,24 +44,15 @@ export function RegisterInquiryFormPage() {
 
   const consultationType = watch('consultationType');
 
-  const onSubmit: SubmitHandler<RegisterInquiryData> = (data) => {
+  const onSubmit: SubmitHandler<RegisterInquiryData> = ({
+    consultationType: category,
+    inquiryContent: content,
+  }) => {
     if (!isChecked1 || !isChecked2) {
       showToast(toast, '개인정보 수집 및 이용에 동의해야 합니다.');
       return;
     }
-    console.log('예약 정보:', {
-      ...data,
-      consultationType: data.consultationType,
-      reservationDate: data.reservationDate,
-      reservationTime: data.reservationTime,
-      inquiryTitle: data.inquiryTitle,
-      inquiryContent: data.inquiryContent,
-    });
-
-    showToast(toast, '예약 완료되었습니다!');
-    setTimeout(() => {
-      navigate(`/reservation/inquiry/${id}`);
-    }, 1000);
+    postInquiry({ category, content });
   };
 
   const [isChecked1, setIsChecked1] = useState(false);
