@@ -37,6 +37,30 @@ export type GetBranchDetailRequest = {
 
 export type GetBranchDetailResponce = BranchData;
 
+export type TransportType = 'WALK' | 'CAR';
+
+export type SectionType = 'DEPOSIT' | 'PERSONAL_LOAN' | 'OTHERS';
+
+export type GetBranchRecommendListRequest = {
+  latitude: number;
+  longitude: number;
+  transportType: TransportType;
+  sectionType: SectionType;
+};
+
+export type BranchRecommendData = {
+  branch_id: number;
+  branch_name: string;
+  address: string;
+  distance: number;
+  wait_time: number;
+  current_num: number;
+};
+
+export type GetBranchRecommendListResponse = {
+  recommend_list: BranchRecommendData[];
+};
+
 export const getBranchList = async ({
   latitude,
   longitude,
@@ -51,4 +75,13 @@ export const getBranchDetail = async ({
   return (await apiCall.get(
     BASE_URL + '/' + branch_id
   )) as GetBranchDetailResponce;
+};
+
+export const getBranchRecommendList = async (
+  getBranchRecommendListRequest: GetBranchRecommendListRequest
+) => {
+  return (await apiCall.get(
+    BASE_URL + '/recommend',
+    getBranchRecommendListRequest
+  )) as GetBranchRecommendListResponse;
 };
