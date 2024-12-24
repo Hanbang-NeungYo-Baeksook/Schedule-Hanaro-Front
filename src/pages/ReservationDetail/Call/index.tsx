@@ -14,7 +14,7 @@ export function ReservationDetailCallPage() {
     call_id: +(callId ?? 0),
   });
 
-  const { mutate: deletCall } = useDeleteCall();
+  const { mutate: deleteCall } = useDeleteCall();
 
   if (isLoading) {
     return <>Loading...</>;
@@ -23,6 +23,8 @@ export function ReservationDetailCallPage() {
   if (!call) {
     return <div>예약 정보를 찾을 수 없습니다.</div>;
   }
+
+  console.log('🚀 ~ ReservationDetailCallPage ~ call:', call);
 
   const {
     call_date,
@@ -55,7 +57,7 @@ export function ReservationDetailCallPage() {
     <>
       <div className='mx-auto h-screen w-[90%] flex-col justify-between overflow-y-auto scrollbar-hide'>
         <ReservationDetailHeader />
-        <div className='flex h-screen flex-col justify-between'>
+        <div className='flex h-screen flex-col justify-between gap-5'>
           <div className='flex flex-col gap-[5rem]'>
             <div className='flex flex-col gap-[2rem]'>
               <div className='text-center text-lg font-medium'>
@@ -87,7 +89,7 @@ export function ReservationDetailCallPage() {
               </div>
             </div>
           </div>
-          <div className='flex w-[90%] flex-col gap-[1rem]'>
+          <div className='mt-1 flex w-[90%] flex-col gap-[1rem]'>
             <label className='flex text-2xl font-bold'>문의 내용</label>
             <Separator />
             <ReservationDetailInquiryTags tags={tags} />
@@ -114,7 +116,7 @@ export function ReservationDetailCallPage() {
               modalButtonTitle='확인'
               navigateTo='/reservation/call'
               onClick={() =>
-                deletCall({
+                deleteCall({
                   call_id: +(callId ?? 0),
                 })
               }

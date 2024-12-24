@@ -55,6 +55,19 @@ export type GetCallDetailResponse = CallData & {
   tags: string[];
 };
 
+export type GetCallAvailabilityRequest = {
+  date: string;
+};
+
+export type TimeSlot = {
+  time_slot: string;
+  available_slots: number;
+};
+
+export type GetCallAvailabilityResponse = {
+  data: TimeSlot[];
+};
+
 export type PostCallRequest = {
   call_date: string;
   // call_time: string;
@@ -91,6 +104,15 @@ export const getCallList = async ({
 
 export const getCallDetail = async ({ call_id }: GetCallDetailRequest) => {
   return (await apiCall.get(BASE_URL + '/' + call_id)) as GetCallDetailResponse;
+};
+
+export const getCallAvailability = async (
+  getCallAvailabilityRequest: GetCallAvailabilityRequest
+) => {
+  return (await apiCall.post(
+    BASE_URL + '/availability',
+    getCallAvailabilityRequest
+  )) as GetCallAvailabilityResponse;
 };
 
 export const postCall = async ({
