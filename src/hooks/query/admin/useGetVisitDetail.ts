@@ -7,7 +7,8 @@ const useGetVisitDetailQuery = (visitId: number) => {
   return useQuery<AdminVisitInquiryInfoResponse>({
     queryKey: [ADMIN_QUERY_KEYS.VISIT_DETAIL, visitId],
     queryFn: () => getVisitDetail(visitId),
+    enabled: !!visitId,
   });
 };
 
-export default useGetVisitDetailQuery; 
+export default useGetVisitDetailQuery;

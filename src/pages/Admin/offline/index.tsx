@@ -6,12 +6,15 @@ import { getVisitStatus } from '@/api/admin/visit';
 import useUpdateVisitStatusMutation from '@/hooks/mutation/admin/useUpdateVisitStatus';
 import { AdminVisitStatusUpdateResponse } from '@/types/Visit';
 import Next from '../../../components/Admin/Next';
+import useGetVisitDetailQuery from '@/hooks/query/admin/useGetVisitDetail';
+import CallInfoBox from '@/components/Admin/main/CallInfoBox';
 
 const ROTATE_ANGLE = 45;
 const SECTION_ID = 5;
 
 function VisitPage() {
-  // const [selectedIdx, setSelectedIdx] = useState(123);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+  const { data: visitDetail } = useGetVisitDetailQuery(selectedIdx ?? 0);
   const [numbers, setNumbers] = useState<number[]>(Array(8).fill(0));
   const [angle, setAngle] = useState(0);
   const [displayNum, setDisplayNum] = useState([7, 0, 1]);
@@ -36,6 +39,7 @@ function VisitPage() {
       );
       console.log('다음 번호 호출 결과:', response);
       setWaitingInfo(response); // 응답으로 waitingInfo 업데이트
+      setSelectedIdx(response.current_num); // 현재 방문 ID를 selectedIdx로 설정
 
       setNumbers(() => {
         const updatedNumbers = Array(8).fill(0);
@@ -118,11 +122,25 @@ function VisitPage() {
       </div>
 
       <div className='w-full rounded-[.9375rem] shadow-[0_4px_20px_0_rgba(0,0,0,0.1)]'>
-        {/* <CallInfoBox
-          selectedIdx={selectedIdx}
-          setSelectedIdx={setSelectedIdx}
+        <CallInfoBox
+          selectedCall={
+            visitDetail
+              ? {
+                  id: visitDetail.visit_id,
+                  customer_id: visitDetail.visit_id,
+                  waiting_num: waitingInfo?.current_num || 0,
+                  category: visitDetail.category,
+                  tags: visitDetail.tags,
+                  content: visitDetail.content,
+                  memo: '',
+                  reservation_time: new Date().toISOString(),
+                }
+              : undefined
+          }
+          currentIdx={waitingInfo?.current_num || 0}
+          changeIdx={setSelectedIdx}
           toggleOpen={() => {}}
-        /> */}
+        />
       </div>
     </div>
   );
