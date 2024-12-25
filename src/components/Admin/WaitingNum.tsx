@@ -6,9 +6,15 @@ type WaitingNumberProps = {
   numbers: number[];
   angle: number;
   displayNum: number[];
+  categories: string[];
 };
 
-function WaitingNumber({ numbers, angle, displayNum }: WaitingNumberProps) {
+function WaitingNumber({
+  numbers,
+  angle,
+  displayNum,
+  categories,
+}: WaitingNumberProps) {
   const [isRow] = useState(false);
   const rotateAngle = 45;
   const radian = (rotateAngle / 2) * (Math.PI / 180);
@@ -70,7 +76,7 @@ function WaitingNumber({ numbers, angle, displayNum }: WaitingNumberProps) {
                 <div
                   className={`${displayNum.includes(idx) && number !== 0 ? '' : 'hidden'}`}
                 >
-                  <CategoryButton category={'예금'} />
+                  <CategoryButton category={categories[idx] || '예금'} />
                 </div>
               </div>
             ))}

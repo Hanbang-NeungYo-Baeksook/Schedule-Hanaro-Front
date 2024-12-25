@@ -17,6 +17,7 @@ function VisitPage() {
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const { data: visitDetail } = useGetVisitDetailQuery(selectedIdx ?? 0);
   const [numbers, setNumbers] = useState<number[]>(Array(8).fill(0));
+  const [categories, setCategories] = useState<string[]>(Array(8).fill(''));
   const [angle, setAngle] = useState(0);
   const [displayNum, setDisplayNum] = useState([7, 0, 1]);
   const [waitingInfo, setWaitingInfo] =
@@ -118,6 +119,32 @@ function VisitPage() {
     void fetchInitialStatus();
   }, [isConnected, fetchInitialStatus]);
 
+  useEffect(() => {
+    if (waitingInfo) {
+      const newNumbers = [...Array(8).fill(0)];
+      const newCategories = [...Array(8).fill('')];
+
+      displayNum.forEach((index, i) => {
+        if (i === 0) {
+          newNumbers[index] = waitingInfo.previous_num;
+          newCategories[index] = waitingInfo.previous_category;
+        }
+        if (i === 1) {
+          newNumbers[index] = waitingInfo.current_num;
+          newCategories[index] = waitingInfo.current_category;
+        }
+        if (i === 2) {
+          newNumbers[index] = waitingInfo.next_num;
+          newCategories[index] = waitingInfo.next_category;
+        }
+      });
+
+      setNumbers(newNumbers);
+      setCategories(newCategories);
+      console.log(...newNumbers);
+    }
+  }, [waitingInfo, displayNum]);
+
   return (
     <div className='relative mx-auto mt-[6.25rem] flex w-[98%] max-w-[1300px] justify-between'>
       <div className='w-[100%]'>
@@ -130,6 +157,7 @@ function VisitPage() {
             numbers={numbers}
             angle={angle}
             displayNum={displayNum}
+            categories={categories}
           />
         </div>
 
