@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { contentAtom } from '@/stores';
 import useGetCallAvailability from '@/hooks/query/customer/useGetCallAvailability';
 import usePostCall from '@/hooks/query/customer/usePostCall';
@@ -39,7 +39,7 @@ export function RegisterCallFormPage() {
   const navigate = useNavigate();
   const { mutate: postCall } = usePostCall();
 
-  const [content] = useAtom(contentAtom);
+  const content = useAtomValue(contentAtom);
 
   const {
     control,

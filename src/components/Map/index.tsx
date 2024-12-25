@@ -20,6 +20,7 @@ export function Map() {
   const { data: branches, isLoading } = useGetBranchList({
     latitude: getCurrentLatitude(),
     longitude: getCurrentLongitude(),
+    order_by: 'distance',
   });
 
   useEffect(() => {

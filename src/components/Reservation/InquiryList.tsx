@@ -2,12 +2,11 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ReactComponent as DetailButton } from '@/assets/icons/reservation/reservationdetailbutton.svg';
 import { useNavigate } from 'react-router-dom';
-import { InquiryStatus } from '@/api/customer/inquires';
 type InquiryConsultationCardProps = {
   inquiryNumber: number; // 대기 번호
   inquiryconsultationType: string; // 상담 종류
   consultationContents: string; // 상담 내용
-  responseStatus: InquiryStatus; // 답변여부
+  responseStatus: string; // 답변여부
   inquiryId: number;
 };
 

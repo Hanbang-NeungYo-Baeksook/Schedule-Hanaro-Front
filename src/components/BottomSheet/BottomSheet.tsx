@@ -39,14 +39,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { BranchData } from '@/api/customer/branches';
+import { BranchData, BranchOrder } from '@/api/customer/branches';
 import { Separator } from '../ui/separator';
 import { ReactComponent as Refresh } from '@/assets/icons/refresh.svg';
+import { useAtom } from 'jotai';
+import { branchOrderByAtom } from '@/stores';
+import useGetBranchList from '@/hooks/query/customer/useGetBranchList';
 
 export function BottomSheet() {
-  const { currentAddress, branchList, setSelectedBranchId, setFocus } =
-    useMap();
+  const {
+    currentAddress,
+    setSelectedBranchId,
+    setFocus,
+    getCurrentLatitude,
+    getCurrentLongitude,
+  } = useMap();
   const [selectedChipIdx, setSelectedChipIdx] = useState(0); // 영업점 | ATM chip
+  const [open, setOpen] = useState(false);
+  const [branchOrderBy, setBranchOrderByAtom] = useAtom(branchOrderByAtom);
+  console.log('🚀 ~ BottomSheet ~ branchOrderBy:', branchOrderBy);
+
+  const { data: branchList, isLoading } = useGetBranchList({
+    latitude: getCurrentLatitude(),
+    longitude: getCurrentLongitude(),
+    order_by: branchOrderBy,
+  });
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
+
+  if (!branchList) {
+    return <>주변에 영업점이 없습니다.</>;
+  }
+
   const selectedBranchList: BranchData[] =
     selectedChipIdx === 0 ? branchList.bank_list : branchList.atm_list;
 
@@ -55,7 +81,6 @@ export function BottomSheet() {
   const topAddress = firstAddress + ' ' + secondAddress;
   const bottomAdrress = lastAddress.join(' ');
 
-  const [open, setOpen] = useState(false);
   const toggleOpen = () => setOpen((prev) => !prev);
 
   const isOpen = (business_hours: string) => {
@@ -84,6 +109,14 @@ export function BottomSheet() {
   };
 
   const now = new Date(Date.now());
+
+  const convertValueToItem = (type: BranchOrder) => {
+    if (type === 'distance') {
+      return '거리순';
+    } else if (type === 'wait') {
+      return '대기시간순';
+    }
+  };
 
   return (
     <>
@@ -152,15 +185,19 @@ export function BottomSheet() {
                     </span>
                     <div className='flex h-[90%] cursor-pointer items-center gap-1'>
                       {selectedChipIdx === 0 && (
-                        <Select>
+                        <Select
+                          onValueChange={(value) =>
+                            setBranchOrderByAtom(value as BranchOrder)
+                          }
+                        >
                           <SelectTrigger className='z-[61] space-x-1 border-none text-lightGrey'>
-                            <SelectValue placeholder='거리순' />
+                            <SelectValue
+                              placeholder={convertValueToItem(branchOrderBy)}
+                            />
                           </SelectTrigger>
                           <SelectContent className='right-8 z-[61]'>
-                            <SelectItem value='거리순'>거리순</SelectItem>
-                            <SelectItem value='대기시간순'>
-                              대기시간순
-                            </SelectItem>
+                            <SelectItem value='diatance'>거리순</SelectItem>
+                            <SelectItem value='wait'>대기시간순</SelectItem>
                           </SelectContent>
                         </Select>
                       )}

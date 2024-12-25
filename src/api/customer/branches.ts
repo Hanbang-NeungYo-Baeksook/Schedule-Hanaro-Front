@@ -21,9 +21,12 @@ export type BranchData = {
   reserved?: boolean;
 };
 
+export type BranchOrder = 'distance' | 'wait';
+
 export type GetBranchListRequest = {
   latitude: number;
   longitude: number;
+  order_by: BranchOrder;
 };
 
 export type GetBranchListResponse = {
@@ -61,12 +64,13 @@ export type GetBranchRecommendListResponse = {
   recommend_list: BranchRecommendData[];
 };
 
-export const getBranchList = async ({
-  latitude,
-  longitude,
-}: GetBranchListRequest) => {
-  const param = { latitude, longitude };
-  return (await apiCall.get(BASE_URL, param)) as GetBranchListResponse;
+export const getBranchList = async (
+  getBranchListRequest: GetBranchListRequest
+) => {
+  return (await apiCall.get(
+    BASE_URL,
+    getBranchListRequest
+  )) as GetBranchListResponse;
 };
 
 export const getBranchDetail = async ({

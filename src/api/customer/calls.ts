@@ -24,7 +24,7 @@ export const CATEGORY = [
 
 export type Category = (typeof CATEGORY)[number];
 
-export type Status = '대기중' | '진행중' | '완료' | '취소';
+export type Status = 'PENDING' | 'PROGRESS' | 'COMPLETE' | 'CANCELED';
 
 export type CallData = {
   call_id: number;
@@ -95,8 +95,7 @@ export const getCallList = async ({
         }
       : status
         ? {
-            // TODO: 수정 필요
-            status: 'PENDING',
+            status,
           }
         : {};
   return (await apiCall.get(BASE_URL, param)) as GetCallListResponse;

@@ -11,7 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Header from '@/components/Header/Header';
 import usePostVisit from '@/hooks/query/customer/usePostVisit';
 import { Category } from '@/api/customer/calls';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { contentAtom } from '@/stores';
 
 export type RegisterVisitData = {
@@ -37,7 +37,7 @@ export function RegisterVisitFormPage() {
   const { branchId } = useParams<{ branchId: string }>();
   const { mutate: postVisit } = usePostVisit();
 
-  const [content] = useAtom(contentAtom);
+  const content = useAtomValue(contentAtom);
 
   const {
     control,

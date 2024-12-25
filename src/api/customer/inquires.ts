@@ -11,7 +11,7 @@ export type InquiryData = {
   status: InquiryStatus;
 };
 
-export type InquiryStatus = '답변 대기중' | '답변완료';
+export type InquiryStatus = 'PENDING' | 'REGISTRATIONCOMPLETE';
 
 export type GetInquiryListRequest = {
   status?: InquiryStatus;
@@ -59,14 +59,13 @@ export const getInquiryList = async ({
   const param =
     status && page != 0 && size != 0
       ? {
-          status: 'PENDING',
+          status,
           page,
           size,
         }
       : status
         ? {
-            // TODO: 수정 필요
-            status: 'PENDING',
+            status,
           }
         : {};
   return (await apiCall.get(BASE_URL, param)) as GetInquiryListResponse;
@@ -85,8 +84,7 @@ export const postInquiry = async ({
   content,
 }: PostInquiryRequest) => {
   return (await apiCall.post(BASE_URL, {
-    // TODO: 수정 필요
-    category: category == '예금' ? 'FUND' : 'LOAN',
+    category,
     content,
   })) as PostInquiryResponse;
 };
