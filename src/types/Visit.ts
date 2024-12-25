@@ -3,14 +3,14 @@ export enum Status {
   PENDING = 'PENDING',
   PROGRESS = 'PROGRESS',
   COMPLETE = 'COMPLETE',
-  CANCELED = 'CANCELED'
+  CANCELED = 'CANCELED',
 }
 
 // 섹션 타입 enum
 export enum SectionType {
   DEPOSIT = 'DEPOSIT',
   PERSONAL_LOAN = 'PERSONAL_LOAN',
-  BUSINESS_LOAN = 'BUSINESS_LOAN'
+  BUSINESS_LOAN = 'BUSINESS_LOAN',
 }
 
 // 카테고리 enum
@@ -30,16 +30,17 @@ export enum Category {
   ATM = 'ATM',
   UTILITY_BILL = 'UTILITY_BILL',
   FOREIGN = 'FOREIGN',
-  BRANCH = 'BRANCH'
+  BRANCH = 'BRANCH',
 }
 
 // 방문 상담 상세 조회 응답 타입
 export type AdminVisitInquiryInfoResponse = {
   visit_id: number;
+  customer_id: number;
   category: string;
   content: string;
   tags: string[];
-}
+};
 
 // 섹션 정보 타입
 export type SectionInfo = {
@@ -49,7 +50,7 @@ export type SectionInfo = {
   wait_amount: number;
   wait_time: number;
   today_visitors: number;
-}
+};
 
 // 방문 상태 업데이트 응답 타입
 export type AdminVisitStatusUpdateResponse = {
@@ -60,4 +61,4 @@ export type AdminVisitStatusUpdateResponse = {
   next_num: number;
   next_category: string;
   section_info: SectionInfo;
-} 
+};

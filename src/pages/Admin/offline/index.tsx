@@ -1,6 +1,6 @@
 import InfoCard from '@/components/Admin/Infocard';
 import WaitingNumber from '@/components/Admin/WaitingNum';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 // import CallInfoBox from '@/components/Admin/main/CallInfoBox';
 import { getVisitStatus } from '@/api/admin/visit';
 import useUpdateVisitStatusMutation from '@/hooks/mutation/admin/useUpdateVisitStatus';
@@ -8,6 +8,7 @@ import { AdminVisitStatusUpdateResponse } from '@/types/Visit';
 import Next from '../../../components/Admin/Next';
 import useGetVisitDetailQuery from '@/hooks/query/admin/useGetVisitDetail';
 import CallInfoBox from '@/components/Admin/main/CallInfoBox';
+import { useWebSocket } from '@/hooks/useWebSocket';
 
 const ROTATE_ANGLE = 45;
 const SECTION_ID = 5;
@@ -22,6 +23,33 @@ function VisitPage() {
     useState<AdminVisitStatusUpdateResponse | null>(null);
 
   const updateVisitMutation = useUpdateVisitStatusMutation();
+
+  const fetchInitialStatus = useCallback(async () => {
+    try {
+      console.log('초기 상태 조회 시작 - SECTION_ID:', SECTION_ID);
+      const response = await getVisitStatus(SECTION_ID);
+      console.log('초기 대기 현황 응답:', response);
+
+      if (!response) {
+        console.log('응답이 없습니다.');
+        return;
+      }
+
+      setWaitingInfo(response);
+      setSelectedIdx(response.current_num);
+
+      const updatedNumbers = Array(8).fill(0);
+      displayNum.forEach((index, i) => {
+        if (i === 0) updatedNumbers[index] = response.previous_num;
+        if (i === 1) updatedNumbers[index] = response.current_num;
+        if (i === 2) updatedNumbers[index] = response.next_num;
+      });
+
+      setNumbers(updatedNumbers);
+    } catch (error) {
+      console.error('초기 대기 현황 조회 실패:', error);
+    }
+  }, [displayNum]);
 
   const handleNext = async () => {
     try {
@@ -38,8 +66,9 @@ function VisitPage() {
         waitingInfo.next_num
       );
       console.log('다음 번호 호출 결과:', response);
-      setWaitingInfo(response); // 응답으로 waitingInfo 업데이트
-      setSelectedIdx(response.current_num); // 현재 방문 ID를 selectedIdx로 설정
+
+      setSelectedIdx(response.current_num);
+      setWaitingInfo(response);
 
       setNumbers(() => {
         const updatedNumbers = Array(8).fill(0);
@@ -57,8 +86,6 @@ function VisitPage() {
       });
 
       setAngle((prevAngle) => prevAngle + ROTATE_ANGLE);
-      console.log(angle);
-
       setDisplayNum((prevDisplay) =>
         prevDisplay.map((num) => (num + 1 > 7 ? 0 : num + 1))
       );
@@ -67,37 +94,29 @@ function VisitPage() {
     }
   };
 
-  useEffect(() => {
-    const fetchInitialStatus = async () => {
-      try {
-        console.log('초기 상태 조회 시작 - SECTION_ID:', SECTION_ID);
-        const response = await getVisitStatus(SECTION_ID);
-        console.log('초기 대기 현황 응답:', response);
+  const handleWebSocketMessage = useCallback(
+    (message: { type: 'UPDATE_NEEDED'; sectionId: number }) => {
+      console.log('웹소켓 메시지 수신 - 상태 업데이트 필요:', message);
 
-        if (!response) {
-          console.log('응답이 없습니다.');
-          return;
-        }
-
-        console.log('waitingInfo 설정:', response);
-        setWaitingInfo(response);
-
-        const updatedNumbers = Array(8).fill(0);
-        displayNum.forEach((index, i) => {
-          if (i === 0) updatedNumbers[index] = response.previous_num;
-          if (i === 1) updatedNumbers[index] = response.current_num;
-          if (i === 2) updatedNumbers[index] = response.next_num;
-        });
-
-        setNumbers(updatedNumbers);
-      } catch (error) {
-        console.error('초기 대기 현황 조회 실패:', error);
+      // 해당 섹션의 상태 업데이트가 필요한 경우에만 처리
+      if (
+        message.type === 'UPDATE_NEEDED' &&
+        message.sectionId === SECTION_ID
+      ) {
+        console.log(`섹션 ${SECTION_ID}의 상태 업데이트 시작`);
+        void fetchInitialStatus();
       }
-    };
+    },
+    [fetchInitialStatus]
+  );
 
-    console.log('VisitPage 마운트');
-    fetchInitialStatus();
-  }, []);
+  const { isConnected } = useWebSocket(SECTION_ID, handleWebSocketMessage);
+
+  // 초기 로드와 웹소켓 연결 상태 변경 시에만 실행
+  useEffect(() => {
+    console.log('방문 페이지 마운트, 웹소켓 연결 상태:', isConnected);
+    void fetchInitialStatus();
+  }, [isConnected, fetchInitialStatus]);
 
   return (
     <div className='relative mx-auto mt-[6.25rem] flex w-[98%] max-w-[1300px] justify-between'>
@@ -127,7 +146,7 @@ function VisitPage() {
             visitDetail
               ? {
                   id: visitDetail.visit_id,
-                  customer_id: visitDetail.visit_id,
+                  customer_id: visitDetail.customer_id,
                   waiting_num: waitingInfo?.current_num || 0,
                   category: visitDetail.category,
                   tags: visitDetail.tags,
