@@ -122,8 +122,7 @@ export const postCall = async ({
 }: PostCallRequest) => {
   return (await apiCall.post(BASE_URL, {
     call_date,
-    // TODO: 수정 필요
-    category: category == '예금' ? 'FUND' : 'LOAN',
+    category,
     content,
   })) as PostCallResponse;
 };

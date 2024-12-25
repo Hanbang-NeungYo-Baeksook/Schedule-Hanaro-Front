@@ -7,19 +7,15 @@ import { DateAndTimePicker } from '@/components/Register/DateAndTimePicker';
 import { PhoneNumberInput } from '@/components/Register/PhoneNumberInput';
 import { ReusableInput } from '@/components/Register/ReusableInput';
 import { Toaster } from '@/components/ui/toaster';
-import usePostCall from '@/hooks/query/customer/usePostCall';
 import { useToast } from '@/hooks/use-toast';
-import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { contentAtom } from '@/stores';
-import Header from '@/components/Header/Header';
-import usePostCall from '@/hooks/query/customer/usePostCall';
-import { Category, PostCallRequest } from '@/api/customer/calls';
-import { format } from 'date-fns';
 import useGetCallAvailability from '@/hooks/query/customer/useGetCallAvailability';
+import usePostCall from '@/hooks/query/customer/usePostCall';
+import { format } from 'date-fns';
 
 export type RegisterCallData = {
   name: string;
