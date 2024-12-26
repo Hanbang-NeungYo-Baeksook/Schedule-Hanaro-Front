@@ -12,7 +12,7 @@ function InquiryPage() {
   const [searchQuery, setSearchQuery] = useState<string>(''); // 검색어 상태 추가
   const tabs: ActiveTab[] = ['답변대기', '답변완료'];
 
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: inquiries } = useGetInquiryList({
     page: currentPage,
@@ -69,8 +69,8 @@ function InquiryPage() {
       <div className='my-6'>
         {inquiries?.data.length > 0 && (
           <ListPagination
-            firstPage={0}
-            currentPage={currentPage}
+            firstPage={1}
+            currentPage={currentPage - 1}
             setCurrentPage={setCurrentPage}
             totalPage={inquiries?.total_pages ?? 1}
             onPrev={onPrev}

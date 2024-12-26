@@ -1,10 +1,12 @@
-import RecBranchBox from './RecBranchBox';
-import { Badge } from '../ui/badge';
-import { ReactComponent as PedestrainIcon } from '@/assets/icons/pedestrain.svg';
-import { ReactComponent as PedestrainWhiteIcon } from '@/assets/icons/pedestrainWhite.svg';
+import { SectionType, TransportType } from '@/api/customer/branches';
 import { ReactComponent as AutomobileIcon } from '@/assets/icons/automobile.svg';
 import { ReactComponent as AutomobileWhiteIcon } from '@/assets/icons/automobileWhite.svg';
+import { ReactComponent as PedestrainIcon } from '@/assets/icons/pedestrain.svg';
+import { ReactComponent as PedestrainWhiteIcon } from '@/assets/icons/pedestrainWhite.svg';
+import { useMap } from '@/hooks/map-context';
+import useGetBranchRecommendList from '@/hooks/query/customer/useGetBranchRecommendList';
 import { useRef, useState } from 'react';
+import { Badge } from '../ui/badge';
 import {
   Select,
   SelectContent,
@@ -12,9 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import useGetBranchRecommendList from '@/hooks/query/customer/useGetBranchRecommendList';
-import { SectionType, TransportType } from '@/api/customer/branches';
-import { useMap } from '@/hooks/map-context';
+import { Skeleton } from '../ui/skeleton';
+import RecBranchBox from './RecBranchBox';
 
 function RecBranch() {
   const [transportType, setTransportType] = useState<TransportType>('WALK');
@@ -32,14 +33,6 @@ function RecBranch() {
     sectionType: sectionType.current,
   });
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
-
-  if (!branchRecommendList) {
-    return <>No Recommend</>;
-  }
-
   const convertValueToItem = (type: SectionType) => {
     if (type === 'DEPOSIT') {
       return '예금';
@@ -53,7 +46,7 @@ function RecBranch() {
   return (
     <div className='flex w-full flex-col items-start justify-center py-3 text-left'>
       <div className='flex w-full justify-between'>
-        <span className='font-regular text-[1.125rem]'>실시간 추천 영업점</span>
+        <span className='text-[1.25rem] font-bold'>실시간 추천 영업점</span>
         <div className='flex h-[90%] cursor-pointer items-center gap-1'>
           <Select
             onValueChange={(value: string) =>
@@ -73,7 +66,7 @@ function RecBranch() {
           </Select>
         </div>
       </div>
-      <span className='text-[0.75rem] text-[#666666]'>
+      <span className='text-[0.875rem] text-[#666666]'>
         혼잡도를 기준으로 업무를 가장 빠르게 보실 수 있는 영업점을 추천해드려요!
       </span>
       <Badge
@@ -116,8 +109,18 @@ function RecBranch() {
           </Badge>
         </div>
       </Badge>
-      <ul className='flex w-full items-stretch gap-4 overflow-x-scroll p-2'>
-        {branchRecommendList.recommend_list.length === 0 ? (
+      <ul className='custom-scrollbar flex h-full w-full items-stretch gap-4 overflow-x-scroll p-2'>
+        {isLoading || !branchRecommendList ? (
+          Array.from({ length: 3 }).map((_, index) => (
+            <li
+              key={index}
+              className='h-28 w-[40%] flex-shrink-0 animate-pulse items-stretch space-y-2 rounded-[15px] bg-white pt-3 shadow-[0px_0px_10px_5px_rgba(0,0,0,0.05)]'
+            >
+              <Skeleton className='mx-auto h-[20%] w-[80%] animate-pulse rounded-full bg-[#F2F2F2]' />
+              <Skeleton className='mx-auto h-[20%] w-[80%] animate-pulse rounded-full bg-[#F2F2F2]' />
+            </li>
+          ))
+        ) : branchRecommendList.recommend_list.length === 0 ? (
           <span className='mx-auto'>주변에 추천할 영업점이 없습니다.</span>
         ) : (
           branchRecommendList.recommend_list?.map(

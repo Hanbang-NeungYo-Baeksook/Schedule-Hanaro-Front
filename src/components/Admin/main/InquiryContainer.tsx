@@ -7,7 +7,7 @@ function InquiryContainer() {
   const [activeCategory, setActiveCategory] = useState<Category>('전체');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const { data: inquiries } = useGetInquiryList({ page: 0 });
+  const { data: inquiries } = useGetInquiryList({ page: 1 });
 
   if (!inquiries) {
     return <></>;

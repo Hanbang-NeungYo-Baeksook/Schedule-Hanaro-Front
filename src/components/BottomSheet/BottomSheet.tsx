@@ -17,6 +17,8 @@ To read more about using these font, please visit the Next.js documentation:
 - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
+import { BranchData, BranchOrder } from '@/api/customer/branches';
+import { ReactComponent as Refresh } from '@/assets/icons/refresh.svg';
 import { Button } from '@/components/ui/button';
 import {
   Drawer,
@@ -26,7 +28,14 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import { MAP_CHIPS } from '@/constants';
+import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useMap } from '@/hooks/map-context';
+import useGetBranchList from '@/hooks/query/customer/useGetBranchList';
+import { cn } from '@/lib/utils';
+import { branchOrderByAtom } from '@/stores';
+import { useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
 import { List, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import BranchCard from '../Map/BranchCard';
@@ -39,12 +48,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { BranchData, BranchOrder } from '@/api/customer/branches';
 import { Separator } from '../ui/separator';
-import { ReactComponent as Refresh } from '@/assets/icons/refresh.svg';
-import { useAtom } from 'jotai';
-import { branchOrderByAtom } from '@/stores';
-import useGetBranchList from '@/hooks/query/customer/useGetBranchList';
 
 export function BottomSheet() {
   const {
@@ -59,12 +63,20 @@ export function BottomSheet() {
   const [open, setOpen] = useState(false);
 
   const [branchOrderBy, setBranchOrderByAtom] = useAtom(branchOrderByAtom);
+  const queryClient = useQueryClient();
+  const [isSpinning, setIsSpinning] = useState(false);
 
-  const { data: branchList, isLoading } = useGetBranchList({
+  const {
+    data: branchList,
+    isLoading,
+    refetch,
+  } = useGetBranchList({
     latitude: getCurrentLatitude(),
     longitude: getCurrentLongitude(),
     order_by: branchOrderBy,
   });
+
+  const [now, setNow] = useState(Date.now());
 
   if (isLoading) {
     return <>Loading...</>;
@@ -84,6 +96,7 @@ export function BottomSheet() {
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
+  // 영업중 확인
   const isOpen = (business_hours: string) => {
     const date = new Date(Date.now());
 
@@ -97,6 +110,18 @@ export function BottomSheet() {
     return date.getHours() >= +startHour && date.getHours() < +endHour;
   };
 
+  // 새로고침 버튼 클릭 시
+  const handleRefresh = () => {
+    setIsSpinning(true);
+    refetch();
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEYS.BRANCH_RECOMMEND],
+    });
+    setNow(Date.now());
+
+    setTimeout(() => setIsSpinning(false), 500);
+  };
+
   const handleDetailPage = (branchId: number) => {
     toggleOpen();
     const targetBranch = selectedBranchList.find(
@@ -108,8 +133,6 @@ export function BottomSheet() {
       if (lat && lon) setFocus(+lon, +lat);
     }, 200);
   };
-
-  const now = new Date(Date.now());
 
   const convertValueToItem = (type: BranchOrder) => {
     if (type === 'distance') {
@@ -140,36 +163,46 @@ export function BottomSheet() {
             <div className='after:none mx-auto h-[90%] w-[90%]'>
               {/* <DrawerHeader> */}
               <DrawerDescription id='custom-description'></DrawerDescription>
-              <div className='flex items-center justify-between'>
-                <DrawerTitle className='w-full pt-6 text-center text-2xl font-bold'>
-                  <div className='flex flex-col items-center justify-center gap-4'>
-                    <Badge
-                      variant='outline'
-                      className='ml-[18px] flex w-fit cursor-default items-center justify-center gap-[0.3125rem] self-center border-border bg-[#F8F8F8] px-5 py-3 tracking-wider text-text'
-                    >
-                      <MapPin width='1.25rem' height='1.25rem' />
-                      <div className='flex flex-wrap justify-center gap-1'>
-                        <span className='text-[1rem] font-bold'>
-                          {topAddress}
-                        </span>
-                        <span className='text-[1rem] font-bold'>
-                          {bottomAdrress}
-                        </span>
-                      </div>
-                    </Badge>
-                    <div className='flex cursor-pointer items-center gap-2 self-end'>
-                      <Refresh />
-                      <span className='text-[1.25rem] font-normal text-[#666]'>
-                        {`${now.getHours()}:${now.getMinutes()}`}
+              <DrawerTitle className='w-full pt-6 text-center text-2xl font-bold'>
+                <div className='flex flex-col items-center justify-center gap-4'>
+                  <Badge
+                    variant='outline'
+                    className='ml-[18px] flex w-fit cursor-default items-center justify-center gap-[0.3125rem] self-center border-border bg-[#F8F8F8] px-5 py-3 tracking-wider text-text'
+                  >
+                    <MapPin width='1.25rem' height='1.25rem' />
+                    <div className='flex flex-wrap justify-center gap-1'>
+                      <span className='text-[1rem] font-bold'>
+                        {topAddress}
+                      </span>
+                      <span className='text-[1rem] font-bold'>
+                        {bottomAdrress}
                       </span>
                     </div>
+                  </Badge>
+                  <div
+                    className='flex cursor-pointer items-center gap-2 self-end'
+                    onClick={handleRefresh}
+                  >
+                    <div
+                      className={cn(
+                        `transition-transform duration-500 ease-in-out`,
+                        isSpinning ? 'animate-spin-once' : ''
+                      )}
+                    >
+                      <Refresh />
+                    </div>
+                    <span className='text-[1.25rem] font-normal text-[#666]'>
+                      {dayjs(now).format('HH:mm')}
+                    </span>
                   </div>
-                  <Separator className='mt-1' />
-                  {/* 추천 지점 */}
-
-                  <RecBranch />
-
-                  <div className='flex items-center justify-between py-3'>
+                </div>
+                <Separator className='mt-1' />
+              </DrawerTitle>
+              <div className='relative flex h-full flex-col overflow-auto scrollbar-hide'>
+                {/* 추천 지점 */}
+                <RecBranch />
+                <div className='z-10'>
+                  <div className='sticky top-0 flex items-center justify-between bg-white py-3'>
                     <span className='space-x-2'>
                       {MAP_CHIPS.map(
                         ({ id, txt }: { id: number; txt: string }) => (
@@ -204,43 +237,42 @@ export function BottomSheet() {
                       )}
                     </div>
                   </div>
-                </DrawerTitle>
+                  <ul className='h-full space-y-6 p-1'>
+                    {selectedBranchList
+                      .map(
+                        ({
+                          branch_id: id,
+                          branch_name: name,
+                          address,
+                          business_hours,
+                          branch_type: type,
+                          distance,
+                          section_types,
+                          wait_time,
+                          wait_amount,
+                        }) => {
+                          return (
+                            <li key={id} onClick={() => handleDetailPage(id)}>
+                              <BranchCard
+                                id={id.toString()}
+                                name={name}
+                                isOpen={isOpen(business_hours)}
+                                address={address}
+                                distance={distance.toString()}
+                                openTime={business_hours}
+                                sectionType={section_types}
+                                waitingNumber={wait_amount}
+                                waitingTime={wait_time}
+                                type={type == '방문점' ? 'branch' : 'atm'}
+                              />
+                            </li>
+                          );
+                        }
+                      )
+                      ?.sort((a, b) => +a.props.distance - +b.props.distance)}
+                  </ul>
+                </div>
               </div>
-              {/* </DrawerHeader> */}
-              <ul className='h-full space-y-6 overflow-y-auto p-1 scrollbar-hide'>
-                {selectedBranchList
-                  .map(
-                    ({
-                      branch_id: id,
-                      branch_name: name,
-                      address,
-                      business_hours,
-                      branch_type: type,
-                      distance,
-                      section_types,
-                      wait_time,
-                      wait_amount,
-                    }) => {
-                      return (
-                        <li key={id} onClick={() => handleDetailPage(id)}>
-                          <BranchCard
-                            id={id.toString()}
-                            name={name}
-                            isOpen={isOpen(business_hours)}
-                            address={address}
-                            distance={distance.toString()}
-                            openTime={business_hours}
-                            sectionType={section_types}
-                            waitingNumber={wait_amount}
-                            waitingTime={wait_time}
-                            type={type == '방문점' ? 'branch' : 'atm'}
-                          />
-                        </li>
-                      );
-                    }
-                  )
-                  ?.sort((a, b) => +a.props.distance - +b.props.distance)}
-              </ul>
             </div>
           </DrawerContent>
         </Drawer>
