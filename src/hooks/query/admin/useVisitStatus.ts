@@ -7,4 +7,4 @@ export const useVisitStatus = (sectionId: number) => {
     queryKey: [ADMIN_QUERY_KEYS.VISIT_STATUS_UPDATE, sectionId],
     queryFn: () => getVisitStatus(sectionId),
   });
-}; 
+};
