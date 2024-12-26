@@ -26,6 +26,8 @@ jobs:
 
       # Application 빌드
       - name: Generate wbuild
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: pnpm build
 
       # SSH 세팅팅
@@ -48,7 +50,6 @@ jobs:
         run: |
           ssh ec2-user@${{ secrets.WAS }} '
             rm -rf /var/www/docroot/dist
-            echo ${{secrets.API_URL}} > .env
             unzip -q /home/ec2-user/workspace/dist.zip -d /var/www/docroot
             sudo nginx -s reload
           '
