@@ -4,17 +4,17 @@ import Header from '@/components/Header/Header';
 import { AgreementCheckbox } from '@/components/Register/AgreementCheckbox';
 import { ConsultationSelect } from '@/components/Register/ConsultationSelect';
 import { DateAndTimePicker } from '@/components/Register/DateAndTimePicker';
-import { PhoneNumberInput } from '@/components/Register/PhoneNumberInput';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useAtomValue } from 'jotai';
-import { contentAtom } from '@/stores';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAtom, useSetAtom } from 'jotai';
+import { contentAtom, isLoadingAtom, postCallRequestAtom } from '@/stores';
 import useGetCallAvailability from '@/hooks/query/customer/useGetCallAvailability';
-import usePostCall from '@/hooks/query/customer/usePostCall';
 import { format } from 'date-fns';
+import usePostRecommendList from '@/hooks/query/customer/usePostRecommendList';
+import usePostCall from '@/hooks/query/customer/usePostCall';
 
 export type RegisterCallData = {
   phone: string;
@@ -33,15 +33,34 @@ export const showToast = (toast: any, description: string) => {
 };
 
 export function RegisterCallFormPage() {
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const from = searchParams.get('from');
+
+  const { mutate: postRecommendList } = usePostRecommendList();
   const { mutate: postCall } = usePostCall();
 
-  const content = useAtomValue(contentAtom);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const [content, setContent] = useAtom(contentAtom);
+  const setPostCallRequest = useSetAtom(postCallRequestAtom);
+  const setIsLoading = useSetAtom(isLoadingAtom);
+
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [timeSlots, setTimeSlots] = useState<string[]>([]);
+  const [isChecked1, setIsChecked1] = useState(false);
+  const [isChecked2, setIsChecked2] = useState(false);
+  const [, setReload] = useState(false);
+
+  useEffect(() => {
+    setContent('');
+    setReload((prev) => !prev);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const {
     control,
-    register,
     handleSubmit,
     formState: { errors },
     watch,
@@ -81,19 +100,29 @@ export function RegisterCallFormPage() {
       return;
     }
 
-    const dateTime = toFormatTimeData(reservationDate, reservationTime);
+    if (!textAreaRef.current) {
+      return;
+    }
 
-    postCall({
-      call_date: dateTime,
+    setContent(textAreaRef.current?.value);
+
+    setPostCallRequest({
+      call_date: toFormatTimeData(reservationDate, reservationTime),
       category: consultationType,
-      content: content,
+      content: textAreaRef.current?.value,
     } as PostCallRequest);
+    postRecommendList({ query: textAreaRef.current?.value });
+    setIsLoading(true);
+    if (from === 'ai') {
+      postCall({
+        call_date: toFormatTimeData(reservationDate, reservationTime),
+        category: consultationType,
+        content: textAreaRef.current?.value,
+      } as PostCallRequest);
+    } else {
+      navigate('/ai/answer/call');
+    }
   };
-
-  const [timeSlots, setTimeSlots] = useState<string[]>([]);
-
-  const [isChecked1, setIsChecked1] = useState(false);
-  const [isChecked2, setIsChecked2] = useState(false);
 
   const { data: callAvailability } = useGetCallAvailability({
     date: reservationDate ? format(reservationDate, 'yyyy-MM-dd') : '',
@@ -126,11 +155,6 @@ export function RegisterCallFormPage() {
           className='flex h-screen w-full flex-col justify-between gap-[5rem]'
         >
           <div className='flex w-full flex-col gap-[2rem]'>
-            <PhoneNumberInput
-              register={register}
-              name='phone'
-              error={errors.phone?.message}
-            />
             <ConsultationSelect
               control={control}
               error={errors.consultationType?.message}
@@ -151,8 +175,10 @@ export function RegisterCallFormPage() {
               </label>
               <textarea
                 className='mt-1 block w-full rounded border border-gray-300 p-2 text-gray-800'
-                defaultValue={content || '문의 내용을 입력해주세요.'}
+                placeholder='문의 내용을 입력해주세요.'
+                defaultValue={content}
                 rows={4}
+                ref={textAreaRef}
               />
             </div>
           </div>

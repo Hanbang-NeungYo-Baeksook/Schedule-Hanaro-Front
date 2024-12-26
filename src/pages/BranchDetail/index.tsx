@@ -32,6 +32,8 @@ export function BranchDetailPage() {
 
   const { data: branch, isLoading } = useGetBranchDetail({
     branch_id: +(branchId ?? -1),
+    latitude: currentCoord.latitude,
+    longitude: currentCoord.longitude,
   });
 
   if (isLoading) {

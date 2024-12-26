@@ -7,6 +7,7 @@ const BASE_URL = API_ROUTE.customer + '/inquiries';
 export type InquiryData = {
   inquiry_id: number;
   inquiry_num: number;
+  content: string;
   category: Category;
   status: InquiryStatus;
 };
@@ -27,7 +28,6 @@ export type GetInquiryDetailRequest = {
 
 export type GetInquiryDetailResponce = InquiryData & {
   customer_name: string;
-  content: string;
   tags: string[];
 };
 

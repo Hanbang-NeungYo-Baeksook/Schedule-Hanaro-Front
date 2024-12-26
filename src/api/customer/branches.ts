@@ -36,9 +36,13 @@ export type GetBranchListResponse = {
 
 export type GetBranchDetailRequest = {
   branch_id: number;
+  latitude: number;
+  longitude: number;
 };
 
-export type GetBranchDetailResponce = BranchData;
+export type GetBranchDetailResponce = BranchData & {
+  visit_id: number;
+};
 
 export type TransportType = 'WALK' | 'CAR';
 
@@ -75,9 +79,11 @@ export const getBranchList = async (
 
 export const getBranchDetail = async ({
   branch_id,
+  ...param
 }: GetBranchDetailRequest) => {
   return (await apiCall.get(
-    BASE_URL + '/' + branch_id
+    BASE_URL + '/' + branch_id,
+    param
   )) as GetBranchDetailResponce;
 };
 

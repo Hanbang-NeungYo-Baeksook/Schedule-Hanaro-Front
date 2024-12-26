@@ -1,17 +1,17 @@
 import { Button } from '@/components/ui/button';
-
 import { AgreementCheckbox } from '@/components/Register/AgreementCheckbox';
 import { ConsultationSelect } from '@/components/Register/ConsultationSelect';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Header from '@/components/Header/Header';
-import usePostVisit from '@/hooks/query/customer/usePostVisit';
 import { Category } from '@/api/customer/calls';
-import { useAtomValue } from 'jotai';
-import { contentAtom } from '@/stores';
+import { useAtom, useSetAtom } from 'jotai';
+import { contentAtom, isLoadingAtom, postVisitRequestAtom } from '@/stores';
+import usePostRecommendList from '@/hooks/query/customer/usePostRecommendList';
+import usePostVisit from '@/hooks/query/customer/usePostVisit';
 
 export type RegisterVisitData = {
   consultationType: Category;
@@ -30,12 +30,30 @@ const showToast = (toast: any, description: string) => {
 };
 
 export function RegisterVisitFormPage() {
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const from = searchParams.get('from');
+
   const { branchId } = useParams<{ branchId: string }>();
+
+  const { mutate: postRecommendList } = usePostRecommendList();
   const { mutate: postVisit } = usePostVisit();
 
-  const content = useAtomValue(contentAtom);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const [content, setContent] = useAtom(contentAtom);
+  const setPostVisitRequest = useSetAtom(postVisitRequestAtom);
+  const setIsLoading = useSetAtom(isLoadingAtom);
+
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [, setReload] = useState(false);
+
+  useEffect(() => {
+    setContent('');
+    setReload((prev) => !prev);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const {
     control,
@@ -48,13 +66,33 @@ export function RegisterVisitFormPage() {
 
   const onSubmit: SubmitHandler<RegisterVisitData> = ({
     consultationType: category,
-    content,
   }) => {
     if (!isChecked1 || !isChecked2) {
       showToast(toast, '개인정보 수집 및 이용에 동의해야 합니다.');
       return;
     }
-    postVisit({ branch_id: +(branchId ?? '0'), content, category });
+
+    if (!textAreaRef.current) {
+      return;
+    }
+
+    setContent(textAreaRef.current?.value);
+    setPostVisitRequest({
+      branch_id: +(branchId ?? '0'),
+      content: textAreaRef.current?.value,
+      category,
+    });
+    postRecommendList({ query: textAreaRef.current?.value });
+    setIsLoading(true);
+    if (from === 'ai') {
+      postVisit({
+        branch_id: +(branchId ?? '0'),
+        content: textAreaRef.current?.value,
+        category,
+      });
+    } else {
+      navigate('/ai/answer/visit');
+    }
   };
 
   const [isChecked1, setIsChecked1] = useState(false);
@@ -82,8 +120,10 @@ export function RegisterVisitFormPage() {
               </label>
               <textarea
                 className='mt-1 block w-full rounded border border-gray-300 p-2 text-gray-800'
-                defaultValue={content || '문의 내용을 입력해주세요.'}
+                placeholder='문의 내용을 입력해주세요.'
+                defaultValue={content}
                 rows={4}
+                ref={textAreaRef}
               />
             </div>
           </div>

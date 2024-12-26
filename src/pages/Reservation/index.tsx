@@ -3,11 +3,14 @@ import { RESERVATION_TYPE } from '@/constants/reservation';
 import '@/index.css';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export function ReservationPage() {
+  const [searchParams] = useSearchParams();
+  const registerType = searchParams.get('type');
+  const from = searchParams.get('from');
+
   const navigate = useNavigate();
-  const { registerType } = useParams();
   const [selectedRes, setSelectedRes] = useState('call');
 
   useEffect(() => {
@@ -16,7 +19,7 @@ export function ReservationPage() {
   }, []);
 
   const handlePage = () => {
-    navigate(`/register/${selectedRes}`);
+    navigate(`/register/${selectedRes}?from=${from}`);
   };
 
   return (

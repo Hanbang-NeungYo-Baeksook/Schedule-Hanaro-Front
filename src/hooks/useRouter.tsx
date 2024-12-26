@@ -44,7 +44,8 @@ import SignInPage from '@/pages/Signin';
 import { AdminMyPage } from '@/pages/Admin/online/mypage';
 import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
 import AdminLogin from '@/pages/Admin/Login';
-import ChatPage from '@/pages/Chat';
+import AiQuestion from '@/pages/AiQuestion';
+import AiAnswer from '@/pages/AiAnswer';
 export const useRouter = () =>
   createBrowserRouter([
     {
@@ -72,13 +73,20 @@ export const useRouter = () =>
           element: <BranchDetailPage />,
         },
         {
-          path: '/ai-question',
-          element: <ChatPage />,
+          path: '/ai',
+          element: <SignUpLayout />,
+          children: [
+            {
+              path: '/ai/question',
+              element: <AiQuestion />,
+            },
+            {
+              path: '/ai/answer/:registerType',
+              element: <AiAnswer />,
+            },
+          ],
         },
-        {
-          path: '/ai-answer/:registerType',
-          element: <ChatPage />,
-        },
+
         {
           path: '/signup',
           element: <SignUpLayout />,
@@ -140,9 +148,8 @@ export const useRouter = () =>
           path: '/register',
           element: <RegisterLayout />,
           children: [
-            { index: true, element: <ChatPage /> },
             {
-              path: '/register/type/:registerType',
+              path: '/register/selection',
               element: <ReservationPage />,
             },
             {

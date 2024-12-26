@@ -1,4 +1,3 @@
-import Header from '@/components/Header/Header';
 import Nav from '@/components/Nav/Nav';
 import { Button } from '@/components/ui/button';
 import { contentAtom, isLoadingAtom } from '@/stores';
@@ -8,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import ArrowAi from '@/assets/icons/arrowAI.svg';
 import usePostRecommendList from '@/hooks/query/customer/usePostRecommendList';
 import Loading from '@/components/Chat/Loading';
+import Header from '@/components/Header/Header';
 
 const recommendedQuestions = [
   '인터넷에서 신용대출을 신청했는데 언제 결과 확인이 가능합니까?',
@@ -26,27 +26,27 @@ export default function AiQuestion() {
 
   const [isExpanded] = useState(false);
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleInput = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = 'auto';
+      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
     }
   };
 
   const handleSend = () => {
-    if (textareaRef.current) {
-      const inputValue = textareaRef.current.value.trim();
+    if (textAreaRef.current) {
+      const inputValue = textAreaRef.current.value.trim();
       if (!inputValue) {
         return;
       }
       setContent(inputValue);
       setIsLoading(true);
       postRecommendList({
-        query: textareaRef.current?.value ?? '',
+        query: textAreaRef.current?.value ?? '',
       });
-      navigate('/ai-answer');
+      navigate('/ai/answer/else');
     }
   };
 
@@ -58,7 +58,6 @@ export default function AiQuestion() {
     <>
       <div className='flex min-h-screen flex-col items-center justify-between bg-white text-lg'>
         <Header title={'별꽁이에게 문의하기'} />
-
         <div className='flex min-h-screen w-full flex-col items-center justify-center gap-[2rem] text-lg'>
           <div className='h-80 w-80'>
             <object
@@ -82,8 +81,8 @@ export default function AiQuestion() {
                     size='sm'
                     variant='ghost'
                     onClick={() => {
-                      if (textareaRef.current) {
-                        textareaRef.current.value = question;
+                      if (textAreaRef.current) {
+                        textAreaRef.current.value = question;
                         handleInput();
                         handleSend();
                       }
@@ -96,7 +95,7 @@ export default function AiQuestion() {
             </div>
             <div className='relative w-[80%]'>
               <textarea
-                ref={textareaRef}
+                ref={textAreaRef}
                 className='h-fit w-full resize-none overflow-hidden rounded-3xl border-[.1875rem] border-main bg-white p-4 pr-12 shadow-[0_0_17px_0_rgba(0,132,133,0.25)] focus:outline-none'
                 placeholder='질문 내용을 입력하세요'
                 onInput={handleInput}

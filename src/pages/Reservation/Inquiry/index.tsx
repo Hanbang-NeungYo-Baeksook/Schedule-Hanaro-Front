@@ -1,4 +1,3 @@
-import { InquiryStatus } from '@/api/customer/inquires';
 import InquiryList from '@/components/Reservation/InquiryList';
 import { Toaster } from '@/components/ui/toaster';
 import useGetInquiryList from '@/hooks/query/customer/useGetInquiryList';
@@ -7,12 +6,6 @@ import { inquiryStatusAtom } from '@/stores';
 import { useAtomValue } from 'jotai';
 import { useEffect, useRef } from 'react';
 
-type ReservationInquiryParams = {
-  inquiry_id: number;
-  inquiry_num: number;
-  category: string;
-  status: InquiryStatus;
-};
 export function ReservationInquiryPage() {
   const status = useAtomValue(inquiryStatusAtom);
   const {
@@ -55,12 +48,7 @@ export function ReservationInquiryPage() {
           {inquires.pages.map((page) =>
             page.data.map(
               (
-                {
-                  inquiry_id,
-                  inquiry_num,
-                  category,
-                  status,
-                }: ReservationInquiryParams,
+                { inquiry_id, inquiry_num, content, category, status },
                 index
               ) => (
                 <InquiryList
@@ -68,7 +56,7 @@ export function ReservationInquiryPage() {
                   inquiryId={inquiry_id}
                   inquiryNumber={inquiry_num}
                   inquiryconsultationType={category}
-                  consultationContents={'content'}
+                  consultationContents={content}
                   responseStatus={status}
                 />
               )

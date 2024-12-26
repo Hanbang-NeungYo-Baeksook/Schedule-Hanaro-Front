@@ -54,10 +54,11 @@ export function BottomSheet() {
     getCurrentLatitude,
     getCurrentLongitude,
   } = useMap();
+
   const [selectedChipIdx, setSelectedChipIdx] = useState(0); // 영업점 | ATM chip
   const [open, setOpen] = useState(false);
+
   const [branchOrderBy, setBranchOrderByAtom] = useAtom(branchOrderByAtom);
-  console.log('🚀 ~ BottomSheet ~ branchOrderBy:', branchOrderBy);
 
   const { data: branchList, isLoading } = useGetBranchList({
     latitude: getCurrentLatitude(),

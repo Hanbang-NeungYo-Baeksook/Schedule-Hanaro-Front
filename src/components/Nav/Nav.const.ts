@@ -19,7 +19,7 @@ export const NavIcons: NavItem[] = [
   {
     name: '상담예약',
     icon: Calendar,
-    route: 'register',
+    route: 'register/type/call',
   },
   { name: '', icon: Home, route: '' },
   {

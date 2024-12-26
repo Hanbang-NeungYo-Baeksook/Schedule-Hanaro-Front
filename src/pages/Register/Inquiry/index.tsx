@@ -1,17 +1,18 @@
 import { Button } from '@/components/ui/button';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { ConsultationSelect } from '@/components/Register/ConsultationSelect';
 import { AgreementCheckbox } from '@/components/Register/AgreementCheckbox';
 import Header from '@/components/Header/Header';
 import { Category } from '@/api/customer/calls';
+import { useAtom, useSetAtom } from 'jotai';
+import { contentAtom, isLoadingAtom, postInquiryRequestAtom } from '@/stores';
+import usePostRecommendList from '@/hooks/query/customer/usePostRecommendList';
 import usePostInquiry from '@/hooks/query/customer/usePostInquiry';
-import { useAtomValue } from 'jotai';
-import { contentAtom } from '@/stores';
 
 export type RegisterInquiryData = {
   name: string;
@@ -31,11 +32,28 @@ const showToast = (toast: any, description: string) => {
 };
 
 export function RegisterInquiryFormPage() {
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const from = searchParams.get('from');
+
+  const { mutate: postRecommendList } = usePostRecommendList();
   const { mutate: postInquiry } = usePostInquiry();
 
-  const content = useAtomValue(contentAtom);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const [content, setContent] = useAtom(contentAtom);
+  const setPostInquiryRequest = useSetAtom(postInquiryRequestAtom);
+  const setIsLoading = useSetAtom(isLoadingAtom);
+
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [, setReload] = useState(false);
+
+  useEffect(() => {
+    setContent('');
+    setReload((prev) => !prev);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const {
     control,
@@ -53,7 +71,21 @@ export function RegisterInquiryFormPage() {
       showToast(toast, '개인정보 수집 및 이용에 동의해야 합니다.');
       return;
     }
-    postInquiry({ category, content });
+
+    if (!textAreaRef.current) {
+      return;
+    }
+
+    setContent(textAreaRef.current?.value);
+
+    setPostInquiryRequest({ category, content: textAreaRef.current?.value });
+    postRecommendList({ query: textAreaRef.current?.value });
+    setIsLoading(true);
+    if (from === 'ai') {
+      postInquiry({ category, content: textAreaRef.current?.value });
+    } else {
+      navigate('/ai/answer/inquiry');
+    }
   };
 
   const [isChecked1, setIsChecked1] = useState(false);
@@ -82,8 +114,10 @@ export function RegisterInquiryFormPage() {
               </label>
               <textarea
                 className='mt-1 block w-full rounded border border-gray-300 p-2 text-gray-800'
-                defaultValue={content || '문의 내용을 입력해주세요.'}
+                placeholder='문의 내용을 입력해주세요.'
+                defaultValue={content}
                 rows={4}
+                ref={textAreaRef}
               />
             </div>
           </div>

@@ -70,7 +70,6 @@ export type GetCallAvailabilityResponse = {
 
 export type PostCallRequest = {
   call_date: string;
-  // call_time: string;
   category: Category;
   content: string;
 };

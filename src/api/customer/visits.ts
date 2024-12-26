@@ -68,7 +68,7 @@ export const postVisit = async ({
 }: PostVisitRequest) => {
   return (await apiVisit.post(BASE_URL, {
     branch_id,
-    category: category == '예금' ? 'FUND' : 'LOAN',
+    category,
     content,
   })) as PostVisitResponse;
 };
