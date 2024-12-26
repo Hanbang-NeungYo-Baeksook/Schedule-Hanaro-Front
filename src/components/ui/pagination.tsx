@@ -4,10 +4,8 @@ import * as React from 'react';
 import { ButtonProps, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-const Pagination = ({
-  className,
-  ...props
-}: React.ComponentProps<'nav'> & { className: string }) => (
+// eslint-disable-next-line react/prop-types
+const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav
     role='navigation'
     aria-label='pagination'
@@ -19,7 +17,8 @@ Pagination.displayName = 'Pagination';
 
 const PaginationContent = React.forwardRef<
   HTMLUListElement,
-  React.ComponentProps<'ul'> & { className: string }
+  React.ComponentProps<'ul'>
+  // eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => (
   <ul
     ref={ref}
@@ -31,7 +30,8 @@ PaginationContent.displayName = 'PaginationContent';
 
 const PaginationItem = React.forwardRef<
   HTMLLIElement,
-  React.ComponentProps<'li'> & { className: string }
+  React.ComponentProps<'li'>
+  // eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => (
   <li ref={ref} className={cn('', className)} {...props} />
 ));
@@ -63,9 +63,10 @@ const PaginationLink = ({
 PaginationLink.displayName = 'PaginationLink';
 
 const PaginationPrevious = ({
+  // eslint-disable-next-line react/prop-types
   className,
   ...props
-}: React.ComponentProps<typeof PaginationLink> & { className: string }) => (
+}: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label='Go to previous page'
     size='default'
@@ -78,9 +79,10 @@ const PaginationPrevious = ({
 PaginationPrevious.displayName = 'PaginationPrevious';
 
 const PaginationNext = ({
+  // eslint-disable-next-line react/prop-types
   className,
   ...props
-}: React.ComponentProps<typeof PaginationLink> & { className: string }) => (
+}: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label='Go to next page'
     size='default'
@@ -93,9 +95,10 @@ const PaginationNext = ({
 PaginationNext.displayName = 'PaginationNext';
 
 const PaginationEllipsis = ({
+  // eslint-disable-next-line react/prop-types
   className,
   ...props
-}: React.ComponentProps<'span'> & { className: string }) => (
+}: React.ComponentProps<'span'>) => (
   <span
     aria-hidden
     className={cn('flex h-9 w-9 items-center justify-center', className)}
