@@ -1,12 +1,12 @@
-import '@/index.css';
-import Nav from '@/components/Nav/Nav';
-import { useParams } from 'react-router-dom';
-import ReservationDetailHeader from '@/components/Header/ReservationDetailHeader';
 import Modalbutton from '@/components/Direction/Modal';
-import useGetCallDetail from '@/hooks/query/customer/useGetCallDetail';
-import ReservationDetailInquiryTags from '../ReservationDetailInquiryTags';
+import ReservationDetailHeader from '@/components/Header/ReservationDetailHeader';
+import Nav from '@/components/Nav/Nav';
 import { Separator } from '@/components/ui/separator';
 import useDeleteCall from '@/hooks/query/customer/useDeleteCall';
+import useGetCallDetail from '@/hooks/query/customer/useGetCallDetail';
+import '@/index.css';
+import { useParams } from 'react-router-dom';
+import ReservationDetailInquiryTags from '../ReservationDetailInquiryTags';
 export function ReservationDetailCallPage() {
   const { callId } = useParams<{ callId: string }>();
 
@@ -23,8 +23,6 @@ export function ReservationDetailCallPage() {
   if (!call) {
     return <div>예약 정보를 찾을 수 없습니다.</div>;
   }
-
-  console.log('🚀 ~ ReservationDetailCallPage ~ call:', call);
 
   const {
     call_date,
