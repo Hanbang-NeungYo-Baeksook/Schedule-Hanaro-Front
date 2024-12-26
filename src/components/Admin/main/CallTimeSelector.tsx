@@ -12,10 +12,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { generateTimeSlots, storeOperatingHours } from '@/pages';
 import dayjs from 'dayjs';
 import { CalendarIcon } from 'lucide-react';
 import { useState } from 'react';
+
+// 영업점 운영 시간 데이터
+const storeOperatingHours = {
+  startTime: '09:00',
+  endTime: '18:00',
+};
+
+// 1시간 단위의 시간 생성
+function generateTimeSlots(startTime: string, endTime: string) {
+  const slots: string[] = [];
+  let current = new Date(`1970-01-01T${startTime}:00`);
+  const end = new Date(`1970-01-01T${endTime}:00`);
+
+  while (current < end) {
+    const next = new Date(current);
+    next.setMinutes(current.getMinutes() + 30);
+    slots.push(
+      `${current.toTimeString().slice(0, 5)}~${next.toTimeString().slice(0, 5)}`
+    );
+    current = next;
+  }
+
+  return slots;
+}
 
 function CallTimeSelector() {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);

@@ -17,3 +17,21 @@ export const formatElapsedTime = (created_at: string): string => {
     return `${Math.floor(elapsedMinutes / minutesADay)}일 전`;
   }
 };
+
+// 시간 계산 함수
+export const formatArriveTime = (end_at: string): string => {
+  const minutesAHour = 60; // 1시간 = 60분
+  const minutesADay = 1440;
+
+  const now = dayjs();
+  const endTime = dayjs(end_at);
+  const elapsedMinutes = endTime.diff(now, 'minute'); // 경과 시간(분)
+
+  if (elapsedMinutes < minutesAHour) {
+    return `${elapsedMinutes}분 후`;
+  } else if (elapsedMinutes < minutesADay) {
+    return `${Math.floor(elapsedMinutes / minutesAHour)}시간 후`;
+  } else {
+    return `${Math.floor(elapsedMinutes / minutesADay)}일 후`;
+  }
+};

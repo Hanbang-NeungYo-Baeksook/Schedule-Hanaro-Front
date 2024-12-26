@@ -3,7 +3,7 @@ import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useQuery } from '@tanstack/react-query';
 
 const useGetCallList = ({
-  status = '대기중',
+  status = 'PENDING',
   page = 0,
   size = 0,
 }: GetCallListRequest) => {

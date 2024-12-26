@@ -7,14 +7,15 @@ import { DateAndTimePicker } from '@/components/Register/DateAndTimePicker';
 import { PhoneNumberInput } from '@/components/Register/PhoneNumberInput';
 import { ReusableInput } from '@/components/Register/ReusableInput';
 import { Toaster } from '@/components/ui/toaster';
-import usePostCall from '@/hooks/query/customer/usePostCall';
 import { useToast } from '@/hooks/use-toast';
-import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { contentAtom } from '@/stores';
+import useGetCallAvailability from '@/hooks/query/customer/useGetCallAvailability';
+import usePostCall from '@/hooks/query/customer/usePostCall';
+import { format } from 'date-fns';
 
 export type RegisterCallData = {
   name: string;
@@ -33,36 +34,12 @@ export const showToast = (toast: any, description: string) => {
   });
 };
 
-// 영업점 운영 시간 데이터
-export const storeOperatingHours = {
-  startTime: '09:00',
-  endTime: '18:00',
-};
-
-// 1시간 단위의 시간 생성
-export function generateTimeSlots(startTime: string, endTime: string) {
-  const slots: string[] = [];
-  let current = new Date(`1970-01-01T${startTime}:00`);
-  const end = new Date(`1970-01-01T${endTime}:00`);
-
-  while (current < end) {
-    const next = new Date(current);
-    next.setMinutes(current.getMinutes() + 30);
-    slots.push(
-      `${current.toTimeString().slice(0, 5)}~${next.toTimeString().slice(0, 5)}`
-    );
-    current = next;
-  }
-
-  return slots;
-}
-
 export function RegisterCallFormPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { mutate: postCall } = usePostCall();
 
-  const [content] = useAtom(contentAtom);
+  const content = useAtomValue(contentAtom);
 
   const {
     control,
@@ -76,6 +53,26 @@ export function RegisterCallFormPage() {
   const reservationTime = watch('reservationTime');
   const consultationType = watch('consultationType');
 
+  const toFormatTimeData = (
+    reservationDate: Date | undefined,
+    reservationTime: string | undefined
+  ) => {
+    const selectedHour = (reservationTime ?? '00:00-00:00')
+      .split('-')[0]
+      .split(':')[0];
+    const selectedMinute = (reservationTime ?? '00:00-00:00')
+      .split('-')[0]
+      .split(':')[1];
+
+    const date = reservationDate ?? new Date(Date.now());
+
+    date.setHours(+selectedHour);
+    date.setMinutes(+selectedMinute);
+
+    const localeString = format(date, 'yyyy-MM-dd HH:mm:ss');
+    return localeString.split(' ').join('T');
+  };
+
   const onSubmit: SubmitHandler<RegisterCallData> = ({
     reservationDate,
     reservationTime,
@@ -86,19 +83,7 @@ export function RegisterCallFormPage() {
       return;
     }
 
-    const selectedHour = (reservationTime ?? '00:00~00:00 100명')
-      .split('~')[0]
-      .split(':')[0];
-    const selectedMinute = (reservationTime ?? '00:00~00:00 100명')
-      .split('~')[0]
-      .split(':')[1];
-
-    const date = reservationDate ?? new Date(Date.now());
-    date.setHours(+selectedHour);
-    date.setMinutes(+selectedMinute);
-
-    const localeString = format(date, 'yyyy-MM-dd HH:mm:ss');
-    const dateTime = localeString.split(' ').join('T');
+    const dateTime = toFormatTimeData(reservationDate, reservationTime);
 
     postCall({
       call_date: dateTime,
@@ -112,13 +97,20 @@ export function RegisterCallFormPage() {
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
 
+  const { data: callAvailability } = useGetCallAvailability({
+    date: reservationDate ? format(reservationDate, 'yyyy-MM-dd') : '',
+  });
+
   useEffect(() => {
-    const slots = generateTimeSlots(
-      storeOperatingHours.startTime,
-      storeOperatingHours.endTime
+    if (!callAvailability) {
+      return;
+    }
+    const slots = callAvailability.data.map(
+      ({ time_slot, available_slots }) => time_slot + ' ' + available_slots
     );
+
     setTimeSlots(slots);
-  }, []);
+  }, [callAvailability]);
 
   const isFormComplete =
     reservationDate &&

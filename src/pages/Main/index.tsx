@@ -3,6 +3,7 @@ import { ReactComponent as StarGgonge } from '@/assets/icons/StarGgonge.svg';
 import Map from '@/assets/images/map.png';
 import { useNavigate } from 'react-router-dom';
 import MyCard from './MyCard';
+import { Toaster } from '@/components/ui/toaster';
 
 export function MainPage() {
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ export function MainPage() {
         <div className='bg-white pb-[100px]'></div>
         <div className='navbar fixed bottom-0 z-[0] bg-white pb-[30rem] min-[1000px]:pb-[29rem]'></div>
       </div>
+      <Toaster />
     </>
   );
 }

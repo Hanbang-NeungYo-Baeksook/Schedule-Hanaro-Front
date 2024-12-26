@@ -4,8 +4,9 @@ import Tabs from '../Tabs/Tabs';
 import { ReactComponent as DropButton } from '@/assets/icons/reservation/minidown.svg';
 import Header from '@/components/Header/Header';
 import { useAtom } from 'jotai';
-import { callStatusAtom } from '@/stores';
+import { callStatusAtom, inquiryStatusAtom } from '@/stores';
 import { Status } from '@/api/customer/calls';
+import { InquiryStatus } from '@/api/customer/inquires';
 
 type Props = {
   tabLocation: 'visit' | 'call';
@@ -15,6 +16,10 @@ function ReservationHeader({ tabLocation }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState('전화 상담 내역');
   const [activeTab, setActiveTab] = useState<'visit' | 'call'>(tabLocation);
+  const [selectedStatus, setSelectedStatus] = useState('대기 중인 상담'); // 상담 상태
+  const [, setCallStatusAtom] = useAtom(callStatusAtom);
+  const [, setInquiryStatusAtom] = useAtom(inquiryStatusAtom);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 상태
 
   const toggleCallList = () => {
     setIsOpen(!isOpen);
@@ -29,10 +34,6 @@ function ReservationHeader({ tabLocation }: Props) {
     setActiveTab(tabName);
   };
 
-  const [selectedStatus, setSelectedStatus] = useState('대기 중인 상담'); // 상담 상태
-  const [, setStatusAtom] = useAtom(callStatusAtom);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 상태
-
   const toggleInquiryList = () => {
     setIsOpen(!isOpen);
   };
@@ -43,13 +44,21 @@ function ReservationHeader({ tabLocation }: Props) {
 
   const handleStatusChange = (status: '대기 중인 상담' | '완료된 상담') => {
     setSelectedStatus(status); // 상태 변경
-    setStatusAtom(statusConverter[status] as Status);
+    setCallStatusAtom(callStatusConverter(status));
+    setInquiryStatusAtom(inquiryStatusConverter(status));
     setIsDropdownOpen(false); // 선택 후 드롭다운 닫기
   };
 
-  const statusConverter = {
-    '대기 중인 상담': '대기중',
-    '완료된 상담': '완료',
+  const callStatusConverter: (
+    str: '대기 중인 상담' | '완료된 상담'
+  ) => Status = (str) => {
+    return str === '완료된 상담' ? 'COMPLETE' : 'PENDING';
+  };
+
+  const inquiryStatusConverter: (
+    str: '대기 중인 상담' | '완료된 상담'
+  ) => InquiryStatus = (str) => {
+    return str === '완료된 상담' ? 'REGISTRATIONCOMPLETE' : 'PENDING';
   };
 
   return (

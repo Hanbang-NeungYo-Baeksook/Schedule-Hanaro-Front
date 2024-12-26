@@ -20,6 +20,8 @@ export function ReservationInquiryPage() {
     size: 20,
   });
 
+  console.log(status);
+
   if (isLoading || !inquires) {
     return <>Loading...</>;
   }

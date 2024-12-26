@@ -11,7 +11,7 @@ import { ReusableInput } from '@/components/Register/ReusableInput';
 import Header from '@/components/Header/Header';
 import { Category } from '@/api/customer/calls';
 import usePostInquiry from '@/hooks/query/customer/usePostInquiry';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { contentAtom } from '@/stores';
 
 export type RegisterInquiryData = {
@@ -36,7 +36,7 @@ export function RegisterInquiryFormPage() {
   const navigate = useNavigate();
   const { mutate: postInquiry } = usePostInquiry();
 
-  const [content] = useAtom(contentAtom);
+  const content = useAtomValue(contentAtom);
 
   const {
     control,
@@ -50,7 +50,6 @@ export function RegisterInquiryFormPage() {
 
   const onSubmit: SubmitHandler<RegisterInquiryData> = ({
     consultationType: category,
-    inquiryContent: content,
   }) => {
     if (!isChecked1 || !isChecked2) {
       showToast(toast, '개인정보 수집 및 이용에 동의해야 합니다.');

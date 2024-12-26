@@ -1,5 +1,6 @@
 import ReservationHeader from '@/components/Header/ReservationHeader';
 import Nav from '@/components/Nav/Nav';
+import { Toaster } from '@/components/ui/toaster';
 import { Outlet, useLocation } from 'react-router-dom';
 
 export function ReservationLayout() {
@@ -25,6 +26,7 @@ export function ReservationLayout() {
       <ReservationHeader tabLocation={tabLocation} key={tabLocation} />
       <Outlet />
       <Nav />
+      <Toaster />
     </div>
   );
 }

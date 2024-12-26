@@ -33,7 +33,7 @@ export function InquiryDetailPage() {
               <div className='text-lg text-[#464646]'>{content}</div>
             </div>
             <Separator />
-            {status == '답변완료' ? (
+            {status == 'REGISTRATIONCOMPLETE' ? (
               <div className='flex flex-col gap-[0.5rem] text-left'>
                 <label className='text-2xl font-bold'>답변 내용</label>
                 <div className='text-lg text-[#464646]'>{reply}</div>

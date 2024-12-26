@@ -6,6 +6,7 @@ export const QUERY_KEYS = {
   CALL_DETAIL: 'call-detail',
   CALL_ADD: 'call-add',
   CALL_DEL: 'call-del',
+  CALL_AVL: 'call-avl',
 
   INQUIRY_LIST: 'inquiry-list',
   INQUIRY_DETAIL: 'inquiry-detail',
@@ -24,6 +25,8 @@ export const QUERY_KEYS = {
   VISIT_DEL: 'visit-del',
 
   RECOMMEND: 'recommend',
+
+  CUSTOMER_DETAIL: 'customer-detail',
 };
 
 export const ADMIN_QUERY_KEYS = {

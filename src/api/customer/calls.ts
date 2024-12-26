@@ -24,7 +24,7 @@ export const CATEGORY = [
 
 export type Category = (typeof CATEGORY)[number];
 
-export type Status = '대기중' | '진행중' | '완료' | '취소';
+export type Status = 'PENDING' | 'PROGRESS' | 'COMPLETE' | 'CANCELED';
 
 export type CallData = {
   call_id: number;
@@ -55,6 +55,19 @@ export type GetCallDetailResponse = CallData & {
   tags: string[];
 };
 
+export type GetCallAvailabilityRequest = {
+  date: string;
+};
+
+export type TimeSlot = {
+  time_slot: string;
+  available_slots: number;
+};
+
+export type GetCallAvailabilityResponse = {
+  data: TimeSlot[];
+};
+
 export type PostCallRequest = {
   call_date: string;
   // call_time: string;
@@ -82,8 +95,7 @@ export const getCallList = async ({
         }
       : status
         ? {
-            // TODO: 수정 필요
-            status: 'PENDING',
+            status,
           }
         : {};
   return (await apiCall.get(BASE_URL, param)) as GetCallListResponse;
@@ -93,6 +105,15 @@ export const getCallDetail = async ({ call_id }: GetCallDetailRequest) => {
   return (await apiCall.get(BASE_URL + '/' + call_id)) as GetCallDetailResponse;
 };
 
+export const getCallAvailability = async (
+  getCallAvailabilityRequest: GetCallAvailabilityRequest
+) => {
+  return (await apiCall.post(
+    BASE_URL + '/availability',
+    getCallAvailabilityRequest
+  )) as GetCallAvailabilityResponse;
+};
+
 export const postCall = async ({
   call_date,
   category,
@@ -100,8 +121,7 @@ export const postCall = async ({
 }: PostCallRequest) => {
   return (await apiCall.post(BASE_URL, {
     call_date,
-    // TODO: 수정 필요
-    category: category == '예금' ? 'FUND' : 'LOAN',
+    category,
     content,
   })) as PostCallResponse;
 };
