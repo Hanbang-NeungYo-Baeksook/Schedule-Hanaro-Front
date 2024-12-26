@@ -4,10 +4,13 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../use-toast';
 import { postCall } from '@/api/customer/calls';
+import { useSetAtom } from 'jotai';
+import { contentAtom } from '@/stores';
 
 const usePostCall = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const setContent = useSetAtom(contentAtom);
 
   return useMutation({
     mutationKey: [QUERY_KEYS.CALL_ADD],
@@ -15,9 +18,13 @@ const usePostCall = () => {
     onSuccess: ({ call_id }) => {
       console.log(call_id);
       showToast(toast, '예약 완료되었습니다!');
+      setContent('');
       setTimeout(() => {
         navigate(`/reservation/call/${call_id}`);
       }, 300);
+    },
+    onError: () => {
+      showToast(toast, '예약 실패! 동일한 시간에 예약되었습니다.');
     },
   });
 };

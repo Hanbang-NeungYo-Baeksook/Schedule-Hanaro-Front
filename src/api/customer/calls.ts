@@ -70,7 +70,6 @@ export type GetCallAvailabilityResponse = {
 
 export type PostCallRequest = {
   call_date: string;
-  // call_time: string;
   category: Category;
   content: string;
 };
@@ -86,18 +85,7 @@ export const getCallList = async ({
   page,
   size,
 }: GetCallListRequest) => {
-  const param =
-    status && page != 0 && size != 0
-      ? {
-          status,
-          page,
-          size,
-        }
-      : status
-        ? {
-            status,
-          }
-        : {};
+  const param = { status, page, size };
   return (await apiCall.get(BASE_URL, param)) as GetCallListResponse;
 };
 

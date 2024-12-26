@@ -7,6 +7,7 @@ const BASE_URL = API_ROUTE.customer + '/inquiries';
 export type InquiryData = {
   inquiry_id: number;
   inquiry_num: number;
+  content: string;
   category: Category;
   status: InquiryStatus;
 };
@@ -27,7 +28,6 @@ export type GetInquiryDetailRequest = {
 
 export type GetInquiryDetailResponce = InquiryData & {
   customer_name: string;
-  content: string;
   tags: string[];
 };
 
@@ -56,18 +56,11 @@ export const getInquiryList = async ({
   page,
   size,
 }: GetInquiryListRequest) => {
-  const param =
-    status && page != 0 && size != 0
-      ? {
-          status,
-          page,
-          size,
-        }
-      : status
-        ? {
-            status,
-          }
-        : {};
+  const param = {
+    status,
+    page,
+    size,
+  };
   return (await apiCall.get(BASE_URL, param)) as GetInquiryListResponse;
 };
 

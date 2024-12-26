@@ -2,14 +2,19 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import Modalbutton from '../Modal';
 import useGetBranchDetail from '@/hooks/query/customer/useGetBranchDetail';
+import { useMap } from '@/hooks/map-context';
+import useDeleteVisit from '@/hooks/query/customer/useDeleteVisit';
 
 export default function ReservationButton({ branchId }: { branchId: number }) {
+  const { getCurrentLatitude, getCurrentLongitude } = useMap();
+
   const { data: branch, isLoading } = useGetBranchDetail({
     branch_id: branchId,
+    latitude: getCurrentLatitude(),
+    longitude: getCurrentLongitude(),
   });
 
-  // TODO:
-  // const { mutate: deleteVisit } = useDeleteVisit();
+  const { mutate: deleteVisit } = useDeleteVisit();
 
   const navigate = useNavigate();
 
@@ -21,7 +26,7 @@ export default function ReservationButton({ branchId }: { branchId: number }) {
     return <>No branch</>;
   }
 
-  const { reserved } = branch;
+  const { reserved, visit_id } = branch;
 
   const handlePage =
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => (url: string) => {
@@ -40,12 +45,12 @@ export default function ReservationButton({ branchId }: { branchId: number }) {
             modalDescription1='취소 시 30분 후부터 재예약이 가능합니다.'
             modalDescription2=''
             modalButtonTitle='확인'
-            onClick={() => {}}
+            onClick={() => deleteVisit({ visit_id })}
           ></Modalbutton>
           <Button
             className='w-3/4 font-bold'
             // TODO: visit_id로 수정
-            onClick={(e) => handlePage(e)('/reservation/visit/1')}
+            onClick={(e) => handlePage(e)(`/reservation/visit/${visit_id}`)}
           >
             예약 상세보기
           </Button>

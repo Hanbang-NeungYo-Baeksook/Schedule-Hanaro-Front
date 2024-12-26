@@ -7,10 +7,12 @@ export default function DepartureArrivalAddress({
 }: {
   branchId: string;
 }) {
-  const { startAddress } = useMap();
+  const { startAddress, getCurrentLatitude, getCurrentLongitude } = useMap();
 
   const { data: branch, isLoading } = useGetBranchDetail({
     branch_id: +branchId,
+    latitude: getCurrentLatitude(),
+    longitude: getCurrentLongitude(),
   });
 
   if (isLoading) {

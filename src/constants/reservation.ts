@@ -18,7 +18,7 @@ export const RESERVATION_TYPE = [
     ],
   },
   // {
-  //   id: 2,
+  //   id: 'visit',
   //   title: '방문 상담',
   //   subTitle: [
   //     '영업점 방문점 번호표 발급을 통해',

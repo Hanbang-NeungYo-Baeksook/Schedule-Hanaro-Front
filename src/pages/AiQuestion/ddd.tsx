@@ -1,5 +1,6 @@
 import { ReactComponent as DownVector } from '@/assets/icons/DownVector.svg';
 import { ReactComponent as UpVector } from '@/assets/icons/UpVector.svg';
+import ArrowAi from '@/assets/icons/arrowAI.svg';
 import Feedback from '@/components/Chat/Feedback';
 import Loading from '@/components/Chat/Loading';
 import Header from '@/components/Header/Header';
@@ -15,6 +16,7 @@ import {
 } from '@/stores';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const recommendedQuestions = [
   '통장 비밀번호는 숫자만 사용할 수 있나요?',
@@ -23,8 +25,9 @@ const recommendedQuestions = [
   '인터넷으로 신용 대출 신청을 완료했는데, 결과를 확인할 수 있는 시점이 언제인지 알고 싶습니다.',
 ];
 
-const ChatPage = () => {
+const ChatPageCopy = () => {
   const [recommendList, setRecommendList] = useAtom(recommendListAtom);
+  const { registerType } = useParams();
   const tagList = useAtomValue(tagListAtom);
   const { mutate: postRecommendList } = usePostRecommendList();
 
@@ -48,6 +51,7 @@ const ChatPage = () => {
       }
       setInputContent(inputValue);
       setContent(inputValue);
+      setIsLoading(true);
       postRecommendList({ query: inputValue });
     }
   };
@@ -134,7 +138,7 @@ const ChatPage = () => {
                   rows={1}
                 />
                 <img
-                  src='src/assets/icons/arrowAI.svg'
+                  src={ArrowAi}
                   alt='Send'
                   className={`absolute right-4 h-7 w-7 cursor-pointer object-contain transition-all ${
                     isExpanded ? 'bottom-5' : 'bottom-3 -translate-y-1/2'
@@ -242,7 +246,7 @@ const ChatPage = () => {
                 </div>
               ))}
             </div>
-            <Feedback />
+            <Feedback resigterType={registerType ?? 'call'} />
           </div>
         )}
       </div>
@@ -251,4 +255,4 @@ const ChatPage = () => {
   );
 };
 
-export default ChatPage;
+export default ChatPageCopy;

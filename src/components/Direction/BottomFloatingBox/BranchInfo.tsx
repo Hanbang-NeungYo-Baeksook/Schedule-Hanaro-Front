@@ -27,6 +27,8 @@ export default function BranchInfo({
   const navigate = useNavigate();
   const { data: targetBranch, isLoading } = useGetBranchDetail({
     branch_id: +branchId,
+    latitude: getCurrentLatitude(),
+    longitude: getCurrentLongitude(),
   });
 
   if (isLoading) {
