@@ -5,7 +5,6 @@ import { AgreementCheckbox } from '@/components/Register/AgreementCheckbox';
 import { ConsultationSelect } from '@/components/Register/ConsultationSelect';
 import { DateAndTimePicker } from '@/components/Register/DateAndTimePicker';
 import { PhoneNumberInput } from '@/components/Register/PhoneNumberInput';
-import { ReusableInput } from '@/components/Register/ReusableInput';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
@@ -18,7 +17,6 @@ import usePostCall from '@/hooks/query/customer/usePostCall';
 import { format } from 'date-fns';
 
 export type RegisterCallData = {
-  name: string;
   phone: string;
   consultationType: Category;
   reservationDate: Date | undefined;
@@ -128,14 +126,6 @@ export function RegisterCallFormPage() {
           className='flex h-screen w-full flex-col justify-between gap-[5rem]'
         >
           <div className='flex w-full flex-col gap-[2rem]'>
-            <ReusableInput
-              register={register}
-              fieldName='name'
-              error={errors.name?.message}
-              label='이름'
-              placeholder='ex) 김하나'
-              type='text'
-            />
             <PhoneNumberInput
               register={register}
               name='phone'
@@ -159,9 +149,11 @@ export function RegisterCallFormPage() {
               <label className='mb-1 block pb-2 text-left text-lg font-semibold'>
                 문의 내용
               </label>
-              <span className='mt-1 block text-left text-gray-800'>
-                {content || '문의 내용이 없습니다.'}
-              </span>
+              <textarea
+                className='mt-1 block w-full rounded border border-gray-300 p-2 text-gray-800'
+                defaultValue={content || '문의 내용을 입력해주세요.'}
+                rows={4}
+              />
             </div>
           </div>
 

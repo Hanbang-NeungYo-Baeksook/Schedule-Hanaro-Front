@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 
 import { AgreementCheckbox } from '@/components/Register/AgreementCheckbox';
 import { ConsultationSelect } from '@/components/Register/ConsultationSelect';
-import { ReusableInput } from '@/components/Register/ReusableInput';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
@@ -15,7 +14,6 @@ import { useAtomValue } from 'jotai';
 import { contentAtom } from '@/stores';
 
 export type RegisterVisitData = {
-  name: string;
   consultationType: Category;
   reservationDate: Date | undefined;
   reservationTime: string;
@@ -41,7 +39,6 @@ export function RegisterVisitFormPage() {
 
   const {
     control,
-    register,
     handleSubmit,
     formState: { errors },
     watch,
@@ -74,27 +71,20 @@ export function RegisterVisitFormPage() {
           className='flex min-h-screen w-full flex-col justify-between gap-[1rem] pt-[5rem]'
         >
           <div className='flex flex-col gap-[2rem]'>
-            <ReusableInput
-              register={register}
-              fieldName='name'
-              error={errors.name?.message}
-              label='이름'
-              placeholder='ex) 김하나'
-              type='text'
-            />
             <ConsultationSelect
               control={control}
               error={errors.consultationType?.message}
               fieldName={'consultationType'}
             />
-
             <div>
               <label className='mb-1 block pb-2 text-left text-lg font-semibold'>
                 문의 내용
               </label>
-              <span className='mt-1 block text-left text-gray-800'>
-                {content || '문의 내용이 없습니다.'}
-              </span>
+              <textarea
+                className='mt-1 block w-full rounded border border-gray-300 p-2 text-gray-800'
+                defaultValue={content || '문의 내용을 입력해주세요.'}
+                rows={4}
+              />
             </div>
           </div>
 
