@@ -3,6 +3,7 @@ import CustomerInfo from '@/components/Admin/Inquiry/DetailCustomerInfo';
 import { Badge } from '@/components/ui/badge';
 import useGetInquiryDetail from '@/hooks/query/admin/useGetInquiryDetail';
 import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export function AnswerDetail() {
@@ -37,17 +38,16 @@ export function AnswerDetail() {
         <span className='text-[1.2rem] font-bold text-[#464646]'>뒤로가기</span>
       </button>
       <CustomerInfo
-        className='mb-[2rem] w-full rounded-[1.875rem] bg-[#f9f9f9] p-[1.5rem] shadow-[0_4px_10px_0_rgba(0,0,0,0.1)]'
         name={name}
         phoneNumber={phone_number}
         start_time={
           recommended_entry_time
-            ? format(new Date(recommended_entry_time), 'MM월 dd일 HH시 mm분')
+            ? dayjs(recommended_entry_time).format('MM월 DD일 HH시 mm분')
             : ''
         }
         end_time={
-          recommended_entry_time
-            ? format(new Date(recommended_entry_time), 'MM월 dd일 HH시 mm분')
+          reply_created_at
+            ? dayjs(reply_created_at).format('MM월 DD일 HH시 mm분')
             : ''
         }
       />

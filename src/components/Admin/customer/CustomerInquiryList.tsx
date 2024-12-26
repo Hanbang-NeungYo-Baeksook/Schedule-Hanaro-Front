@@ -92,61 +92,67 @@ function CustomerInquiryList({ customerId }: { customerId: number }) {
 
       {activeCategory === '전화문의' && (
         <div className='rounded bg-white'>
-          {historyData?.phone_inquiries.map(
-            (
-              {
-                call_id,
-                category,
-                content,
-              }: Omit<Params, 'idx'> & { call_id: number },
-              idx
-            ) => (
-              <li
-                key={call_id}
-                onClick={() =>
-                  handlePage(ADMIN_ROUTE.online.call_detail(call_id ?? 1))
-                }
-                className='list-none'
-              >
-                <CallComponent
-                  idx={idx}
-                  call_id={call_id}
-                  category={category}
-                  content={content}
-                />
-              </li>
-            )
-          )}
+          {historyData?.phone_inquiries
+            .filter((_, idx) => idx < 10)
+            .map(
+              (
+                {
+                  call_id,
+                  category,
+                  content,
+                }: Omit<Params, 'idx'> & { call_id: number },
+                idx
+              ) => (
+                <li
+                  key={call_id}
+                  onClick={() =>
+                    handlePage(ADMIN_ROUTE.online.call_detail(call_id ?? 1))
+                  }
+                  className='list-none'
+                >
+                  <CallComponent
+                    idx={idx + 1}
+                    call_id={call_id}
+                    category={category}
+                    content={content}
+                  />
+                </li>
+              )
+            )}
         </div>
       )}
 
       {activeCategory === '1:1문의' && (
         <div className='rounded bg-white'>
-          {historyData?.one_to_one_inquiries?.map(
-            (
-              {
-                inquiry_id,
-                category,
-                content,
-              }: Omit<Params, 'idx'> & { inquiry_id: number },
-              idx
-            ) => (
-              <li
-                key={inquiry_id}
-                onClick={() =>
-                  handlePage(ADMIN_ROUTE.online.inquiry_detail(inquiry_id ?? 1))
-                }
-                className='list-none'
-              >
-                <InquiryComponent
-                  idx={idx}
-                  inquiry_id={inquiry_id}
-                  category={category}
-                  content={content}
-                />
-              </li>
-            )
-          )}
+          {historyData?.one_to_one_inquiries
+            .filter((_, idx) => idx < 10)
+            .map(
+              (
+                {
+                  inquiry_id,
+                  category,
+                  content,
+                }: Omit<Params, 'idx'> & { inquiry_id: number },
+                idx
+              ) => (
+                <li
+                  key={inquiry_id}
+                  onClick={() =>
+                    handlePage(
+                      ADMIN_ROUTE.online.inquiry_detail(inquiry_id ?? 1)
+                    )
+                  }
+                  className='list-none'
+                >
+                  <InquiryComponent
+                    idx={idx + 1}
+                    inquiry_id={inquiry_id}
+                    category={category}
+                    content={content}
+                  />
+                </li>
+              )
+            )}
         </div>
       )}
     </div>

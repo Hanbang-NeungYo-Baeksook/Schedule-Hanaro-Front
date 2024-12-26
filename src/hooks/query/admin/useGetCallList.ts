@@ -13,6 +13,7 @@ const useGetCallList = (searchConditions: SearchConditions) => {
       { page, startedAt, endedAt, category, keyword },
     ],
     queryFn: () => getCallList({ page, startedAt, endedAt, category, keyword }),
+    staleTime: 5 * 60 * 1000,
   });
 };
 

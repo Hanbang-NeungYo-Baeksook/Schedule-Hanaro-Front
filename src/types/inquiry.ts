@@ -24,7 +24,13 @@ export type AdminInquiryDetail = {
   reply_created_at?: string;
 };
 
-export type AdminInquiry = PageData<AdminInquiryData[], TotalPagination>;
+export type AdminInquiry = {
+  data: AdminInquiryData[];
+  current_page: number;
+  page_size: number;
+  total_items: number;
+  total_pages: number;
+};
 
 export type AdminInquiryData = {
   category: Category;

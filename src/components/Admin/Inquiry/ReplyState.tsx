@@ -1,4 +1,4 @@
-import { InquiryStatus } from '@/types/enum';
+import { ActiveTab } from '@/types/inquiry';
 import React from 'react';
 
 function ReplyState({
@@ -6,9 +6,9 @@ function ReplyState({
   setActiveTab,
   tabs,
 }: {
-  activeTab: InquiryStatus;
-  setActiveTab: React.Dispatch<React.SetStateAction<InquiryStatus>>;
-  tabs: InquiryStatus[];
+  activeTab: ActiveTab;
+  setActiveTab: React.Dispatch<React.SetStateAction<ActiveTab>>;
+  tabs: ActiveTab[];
 }) {
   return (
     <div className='relative flex h-[3rem] w-full rounded-full bg-white p-1 shadow-[0_2px_15px_0_rgba(0,0,0,0.15)]'>
