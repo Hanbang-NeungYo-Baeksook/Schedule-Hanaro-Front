@@ -10,10 +10,14 @@ const useUpdateVisitStatusMutation = () => {
     mutationFn: (visitId: number) => updateVisitStatus(visitId),
     onSuccess: () => {
       // 관련된 쿼리들 무효화
-      queryClient.invalidateQueries({ queryKey: [ADMIN_QUERY_KEYS.VISIT_DETAIL] });
-      queryClient.invalidateQueries({ queryKey: [ADMIN_QUERY_KEYS.CURRENT_VISIT] });
+      queryClient.invalidateQueries({
+        queryKey: [ADMIN_QUERY_KEYS.VISIT_DETAIL],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [ADMIN_QUERY_KEYS.CURRENT_VISIT],
+      });
     },
   });
 };
 
-export default useUpdateVisitStatusMutation; 
+export default useUpdateVisitStatusMutation;
