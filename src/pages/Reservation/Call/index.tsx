@@ -40,7 +40,7 @@ export function ReservationCallPage() {
   return (
     <div className='mx-auto flex h-screen w-[100%] flex-col justify-between overflow-visible pb-[120px]'>
       <div className='flex h-full w-full flex-col space-y-[1.5rem] overflow-auto py-[1rem] scrollbar-hide'>
-        {!calls || isLoading ? (
+        {!calls || !calls.pages || isLoading ? (
           <>
             {Array.from({ length: 3 }).map((_, index) => (
               <div
@@ -52,7 +52,7 @@ export function ReservationCallPage() {
               </div>
             ))}
           </>
-        ) : calls.pages.length > 0 ? (
+        ) : calls.pages[0].data?.length > 0 ? (
           <>
             {calls.pages.map((page) =>
               page.data.map((call: CallData) => (

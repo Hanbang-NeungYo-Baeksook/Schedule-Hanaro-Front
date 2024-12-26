@@ -38,10 +38,6 @@ export function ReservationInquiryPage() {
     };
   }, [hasNextPage, fetchNextPage]);
 
-  if (isLoading || !inquires) {
-    return <>Loading...</>;
-  }
-
   return (
     <>
       <div className='mx-auto flex h-screen w-[100%] flex-col pb-[120px]'>
@@ -58,7 +54,7 @@ export function ReservationInquiryPage() {
                 </div>
               ))}
             </>
-          ) : inquires.pages && inquires.pages.length > 0 ? (
+          ) : inquires.pages[0].data.length > 0 ? (
             inquires.pages.map((page) =>
               page.data.map(
                 ({ inquiry_id, inquiry_num, content, category, status }) => (

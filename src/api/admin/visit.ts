@@ -1,9 +1,9 @@
 import { API_ROUTE } from '@/constants/route';
+import { AxiosError } from 'axios';
 import {
   AdminVisitInquiryInfoResponse,
   AdminVisitStatusUpdateResponse,
 } from '../../types/Visit';
-import { AxiosError } from 'axios';
 import apiCall from '../Api';
 
 const BASE_URL = API_ROUTE.admin + '/visits';
