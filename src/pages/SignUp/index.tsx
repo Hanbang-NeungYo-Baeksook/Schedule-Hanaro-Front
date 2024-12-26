@@ -1,7 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { ReusableInput } from '@/components/Register/ReusableInput';
 import Header from '@/components/Header/Header';
@@ -10,6 +8,7 @@ import { BirthdayPicker } from '@/components/SignUp/BirthdayPicker';
 import { PasswordInput } from '@/components/SignUp/PasswordInput';
 import { ConfirmPasswordInput } from '@/components/SignUp/ConfirmPasswordInput';
 import { GenderSelect } from '@/components/SignUp/GenderSelect';
+import usePostSignUp from '@/hooks/query/customer/usePostSignUp';
 
 export type SignUpData = {
   name: string;
@@ -24,17 +23,9 @@ export type SignUpData = {
   gender: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const showToast = (toast: any, description: string) => {
-  toast({
-    description,
-    duration: 3000,
-  });
-};
-
 export function SignUpPage() {
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const { mutate: postSignUp } = usePostSignUp();
+
   const {
     trigger,
     register,
@@ -44,12 +35,23 @@ export function SignUpPage() {
     formState: { errors },
   } = useForm<SignUpData>();
 
-  const onSubmit: SubmitHandler<SignUpData> = (data) => {
-    console.log('폼 데이터:', data);
-    showToast(toast, '회원가입 완료되었습니다!');
-    setTimeout(() => {
-      navigate('/');
-    }, 1000);
+  const onSubmit: SubmitHandler<SignUpData> = ({
+    id: authId,
+    name,
+    password,
+    phone: phoneNum,
+    birthday: birth,
+    gender,
+  }) => {
+    const rawPhone = phoneNum.split('-').join('');
+    postSignUp({
+      authId,
+      name,
+      password,
+      phoneNum: rawPhone,
+      birth: birth.toString(),
+      gender: gender === '남자' ? 'MALE' : 'FEMALE',
+    });
   };
 
   return (

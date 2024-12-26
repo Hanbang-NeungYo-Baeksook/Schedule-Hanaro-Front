@@ -29,7 +29,6 @@ import useMarker from './useMarker';
 import { defaultMarkers, Markers } from '@/types/markers';
 import { PolyLine } from '@/components/Map/Polyline';
 import { Coords, defaultCoords } from '@/types/coords';
-import { BranchInfo } from '@/types/branch';
 import { Marker } from '@/components/Map/Marker';
 import {
   defaultRoutesRequest,
@@ -38,6 +37,12 @@ import {
   RoutesRequest,
   RoutesResponse,
 } from '@/types/routesPedestrainData';
+import { GetBranchListResponse } from '@/api/customer/branches';
+
+const defaultBranchList = {
+  bank_list: [],
+  atm_list: [],
+};
 
 type MapContextProps = {
   mapRef: RefObject<HTMLDivElement> | null;
@@ -48,7 +53,8 @@ type MapContextProps = {
   setEndCoord: (latitude: number, longitude: number) => void;
   selectedBranchId: string | null;
   setSelectedBranchId: (branchId: string | null) => void;
-  setBranchList: (branchList: BranchInfo[]) => void;
+  branchList: GetBranchListResponse;
+  setBranchList: (branchList: GetBranchListResponse) => void;
   routesPedestrainResponse: RoutesResponse | null;
   routesAutomobileResponse: RoutesResponse | null;
   setFocus: (latitude?: number, longitude?: number) => void;
@@ -70,6 +76,7 @@ const MapContext = createContext<MapContextProps>({
   setEndCoord: () => {},
   selectedBranchId: '',
   setSelectedBranchId: () => {},
+  branchList: defaultBranchList,
   setBranchList: () => {},
   routesPedestrainResponse: null,
   routesAutomobileResponse: null,
@@ -118,7 +125,8 @@ export const MapProvider = ({
   const [coords, setCoords] = useState<Coords>(defaultCoords);
   const [markers, setMarkers] = useState<Markers>(defaultMarkers);
   const [selectedBranchId, setSelectedBranchId] = useState<string | null>(null);
-  const [branchList, setBranchList] = useState<BranchInfo[]>([]);
+  const [branchList, setBranchList] =
+    useState<GetBranchListResponse>(defaultBranchList);
   const [routesData, dispatchRoutesData] = useReducer(
     routesReducer,
     defaultRoutesRequest
@@ -379,19 +387,52 @@ export const MapProvider = ({
       if (selectedBranchId !== id) setSelectedBranchId(id);
     };
 
-    branchList.forEach(
-      ({ id, name, position_x: longitude, position_y: latitude, type }) => {
+    const { bank_list: bankList, atm_list: atmList } = branchList;
+
+    bankList.forEach(
+      ({
+        branch_id: id,
+        branch_name: name,
+        x_position: longitude,
+        y_position: latitude,
+        branch_type: type,
+      }) => {
         if (mapInstance && latitude && longitude) {
           console.log(type);
           const position = new Tmapv3.LatLng(+latitude, +longitude);
           const marker = Marker({
             mapContent: mapInstance,
             position,
-            theme: type,
+            theme: 'branch',
             labelText: name,
           });
           marker.on('Click', () => {
-            onClickMarker(id);
+            onClickMarker(id.toString());
+            setFocus(+latitude, +longitude);
+          });
+        }
+      }
+    );
+
+    atmList.forEach(
+      ({
+        branch_id: id,
+        branch_name: name,
+        x_position: longitude,
+        y_position: latitude,
+        branch_type: type,
+      }) => {
+        if (mapInstance && latitude && longitude) {
+          console.log(type);
+          const position = new Tmapv3.LatLng(+latitude, +longitude);
+          const marker = Marker({
+            mapContent: mapInstance,
+            position,
+            theme: 'atm',
+            labelText: name,
+          });
+          marker.on('Click', () => {
+            onClickMarker(id.toString());
             setFocus(+latitude, +longitude);
           });
         }
@@ -567,6 +608,7 @@ export const MapProvider = ({
         setEndCoord,
         selectedBranchId,
         setSelectedBranchId,
+        branchList,
         setBranchList,
         routesPedestrainResponse,
         routesAutomobileResponse,

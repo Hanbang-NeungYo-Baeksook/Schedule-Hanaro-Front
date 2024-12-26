@@ -17,7 +17,8 @@ To read more about using these font, please visit the Next.js documentation:
 - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
-import { ReactComponent as Close } from '@/assets/icons/close.svg';
+import { BranchData, BranchOrder } from '@/api/customer/branches';
+import { ReactComponent as Refresh } from '@/assets/icons/refresh.svg';
 import { Button } from '@/components/ui/button';
 import {
   Drawer,
@@ -27,9 +28,14 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import { MAP_CHIPS } from '@/constants';
+import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useMap } from '@/hooks/map-context';
-import { BRANCH_MOCK, BRANCH_STATE_MOCK } from '@/mock/branch_mock';
-import { BranchInfo } from '@/types/branch';
+import useGetBranchList from '@/hooks/query/customer/useGetBranchList';
+import { cn } from '@/lib/utils';
+import { branchOrderByAtom } from '@/stores';
+import { useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
 import { List, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import BranchCard from '../Map/BranchCard';
@@ -42,44 +48,105 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import { Separator } from '../ui/separator';
 
 export function BottomSheet() {
-  const { currentAddress, setSelectedBranchId, setFocus } = useMap();
+  const {
+    currentAddress,
+    setSelectedBranchId,
+    setFocus,
+    getCurrentLatitude,
+    getCurrentLongitude,
+  } = useMap();
+
   const [selectedChipIdx, setSelectedChipIdx] = useState(0); // 영업점 | ATM chip
+  const [open, setOpen] = useState(false);
+
+  const [branchOrderBy, setBranchOrderByAtom] = useAtom(branchOrderByAtom);
+  const queryClient = useQueryClient();
+  const [isSpinning, setIsSpinning] = useState(false);
+
+  const {
+    data: branchList,
+    isLoading,
+    refetch,
+  } = useGetBranchList({
+    latitude: getCurrentLatitude(),
+    longitude: getCurrentLongitude(),
+    order_by: branchOrderBy,
+  });
+
+  const [now, setNow] = useState(Date.now());
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
+
+  if (!branchList) {
+    return <>주변에 영업점이 없습니다.</>;
+  }
+
+  const selectedBranchList: BranchData[] =
+    selectedChipIdx === 0 ? branchList.bank_list : branchList.atm_list;
 
   const [firstAddress, secondAddress, ...lastAddress] =
     currentAddress.split(' ');
   const topAddress = firstAddress + ' ' + secondAddress;
   const bottomAdrress = lastAddress.join(' ');
 
-  const [open, setOpen] = useState(false);
   const toggleOpen = () => setOpen((prev) => !prev);
 
-  const handleDetailPage = (branchId: string) => {
+  // 영업중 확인
+  const isOpen = (business_hours: string) => {
+    const date = new Date(Date.now());
+
+    if (date.getDay() === 0 || date.getDay() === 6) {
+      return false;
+    }
+
+    const [startTime, endTime] = business_hours.split('~');
+    const startHour = startTime.split(':')[0];
+    const endHour = endTime.split(':')[0];
+    return date.getHours() >= +startHour && date.getHours() < +endHour;
+  };
+
+  // 새로고침 버튼 클릭 시
+  const handleRefresh = () => {
+    setIsSpinning(true);
+    refetch();
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEYS.BRANCH_RECOMMEND],
+    });
+    setNow(Date.now());
+
+    setTimeout(() => setIsSpinning(false), 500);
+  };
+
+  const handleDetailPage = (branchId: number) => {
     toggleOpen();
-    const targetBranch = BRANCH_MOCK.find(
-      ({ id }) => id === branchId
-    ) as BranchInfo;
-    const { position_x: lat, position_y: lon } = targetBranch;
+    const targetBranch = selectedBranchList.find(
+      ({ branch_id }) => branch_id === branchId
+    ) as BranchData;
+    const { x_position: lat, y_position: lon } = targetBranch;
     setTimeout(() => {
-      setSelectedBranchId(branchId);
+      setSelectedBranchId(branchId.toString());
       if (lat && lon) setFocus(+lon, +lat);
     }, 200);
   };
 
-  const findWaitingInfo = (branchId: string) => {
-    const targetBranch = BRANCH_STATE_MOCK.find(({ id }) => id === branchId);
-    return {
-      waiting_number: targetBranch?.waiting_number ?? '-1',
-      waiting_time: targetBranch?.waiting_time ?? '-1',
-    };
+  const convertValueToItem = (type: BranchOrder) => {
+    if (type === 'distance') {
+      return '거리순';
+    } else if (type === 'wait') {
+      return '대기시간순';
+    }
   };
 
   return (
     <>
       {/* TODO: 검색 화면 구현시 SearchInput 설정 */}
       {/* <SearchInput /> */}
-      <div className='navbar fixed bottom-24 left-1/2 z-10 -translate-x-1/2'>
+      <div className='navbar fixed bottom-24 left-1/2 z-[60] -translate-x-1/2'>
         <Drawer open={open} onOpenChange={setOpen} snapPoints={[0.4, 1]}>
           <DrawerTrigger asChild>
             <Button className='mb-4 w-fit rounded-full bg-white px-6 py-2 shadow-[2px_4px_4px_0px_rgba(0,0,0,0.15)] hover:bg-[#F9F9F9]'>
@@ -96,45 +163,52 @@ export function BottomSheet() {
             <div className='after:none mx-auto h-[90%] w-[90%]'>
               {/* <DrawerHeader> */}
               <DrawerDescription id='custom-description'></DrawerDescription>
-              <div className='flex items-center justify-between'>
-                <DrawerTitle className='w-full pt-6 text-center text-2xl font-bold'>
-                  <div className='flex items-center justify-between'>
-                    <div></div>
-                    <Badge
-                      variant='outline'
-                      className='ml-[18px] flex w-fit items-center justify-center gap-[0.3125rem] border-border bg-[#F8F8F8] px-5 py-3 tracking-wider text-text'
+              <DrawerTitle className='w-full pt-6 text-center text-2xl font-bold'>
+                <div className='flex flex-col items-center justify-center gap-4'>
+                  <Badge
+                    variant='outline'
+                    className='ml-[18px] flex w-fit cursor-default items-center justify-center gap-[0.3125rem] self-center border-border bg-[#F8F8F8] px-5 py-3 tracking-wider text-text'
+                  >
+                    <MapPin width='1.25rem' height='1.25rem' />
+                    <div className='flex flex-wrap justify-center gap-1'>
+                      <span className='text-[1rem] font-bold'>
+                        {topAddress}
+                      </span>
+                      <span className='text-[1rem] font-bold'>
+                        {bottomAdrress}
+                      </span>
+                    </div>
+                  </Badge>
+                  <div
+                    className='flex cursor-pointer items-center gap-2 self-end'
+                    onClick={handleRefresh}
+                  >
+                    <div
+                      className={cn(
+                        `transition-transform duration-500 ease-in-out`,
+                        isSpinning ? 'animate-spin-once' : ''
+                      )}
                     >
-                      <MapPin width='1.25rem' height='1.25rem' />
-                      <div className='flex flex-wrap justify-center gap-1'>
-                        <span className='text-[1rem] font-bold'>
-                          {topAddress}
-                        </span>
-                        <span className='text-[1rem] font-bold'>
-                          {bottomAdrress}
-                        </span>
-                      </div>
-                    </Badge>
-                    <Close
-                      width={18}
-                      height={18}
-                      className='ml-4 cursor-pointer'
-                      onClick={toggleOpen}
-                    />
+                      <Refresh />
+                    </div>
+                    <span className='text-[1.25rem] font-normal text-[#666]'>
+                      {dayjs(now).format('HH:mm')}
+                    </span>
                   </div>
-
-                  {/* 추천 지점 */}
-
-                  <RecBranch />
-
-                  <div className='flex items-center justify-between py-5'>
+                </div>
+                <Separator className='mt-1' />
+              </DrawerTitle>
+              <div className='relative flex h-full flex-col overflow-auto scrollbar-hide'>
+                {/* 추천 지점 */}
+                <RecBranch />
+                <div className='z-10'>
+                  <div className='sticky top-0 flex items-center justify-between bg-white py-3'>
                     <span className='space-x-2'>
                       {MAP_CHIPS.map(
                         ({ id, txt }: { id: number; txt: string }) => (
                           <Badge
                             key={id}
-                            variant={
-                              selectedChipIdx === id ? 'active' : 'noactive'
-                            }
+                            variant={selectedChipIdx === id ? 'dark' : 'white'}
                             className='px-6 py-1 text-[0.875rem] tracking-wider'
                             onClick={() => setSelectedChipIdx(id)}
                           >
@@ -145,50 +219,60 @@ export function BottomSheet() {
                     </span>
                     <div className='flex h-[90%] cursor-pointer items-center gap-1'>
                       {selectedChipIdx === 0 && (
-                        <Select>
-                          <SelectTrigger className='space-x-1 border-none text-lightGrey'>
-                            <SelectValue placeholder='거리순' />
+                        <Select
+                          onValueChange={(value) =>
+                            setBranchOrderByAtom(value as BranchOrder)
+                          }
+                        >
+                          <SelectTrigger className='z-[61] space-x-1 border-none text-lightGrey'>
+                            <SelectValue
+                              placeholder={convertValueToItem(branchOrderBy)}
+                            />
                           </SelectTrigger>
-                          <SelectContent className='right-8'>
-                            <SelectItem value='거리순'>거리순</SelectItem>
-                            <SelectItem value='대기시간순'>
-                              대기시간순
-                            </SelectItem>
+                          <SelectContent className='right-8 z-[61]'>
+                            <SelectItem value='diatance'>거리순</SelectItem>
+                            <SelectItem value='wait'>대기시간순</SelectItem>
                           </SelectContent>
                         </Select>
                       )}
                     </div>
                   </div>
-                </DrawerTitle>
+                  <ul className='h-full space-y-6 p-1'>
+                    {selectedBranchList
+                      .map(
+                        ({
+                          branch_id: id,
+                          branch_name: name,
+                          address,
+                          business_hours,
+                          branch_type: type,
+                          distance,
+                          section_types,
+                          wait_time,
+                          wait_amount,
+                        }) => {
+                          return (
+                            <li key={id} onClick={() => handleDetailPage(id)}>
+                              <BranchCard
+                                id={id.toString()}
+                                name={name}
+                                isOpen={isOpen(business_hours)}
+                                address={address}
+                                distance={distance.toString()}
+                                openTime={business_hours}
+                                sectionType={section_types}
+                                waitingNumber={wait_amount}
+                                waitingTime={wait_time}
+                                type={type == '방문점' ? 'branch' : 'atm'}
+                              />
+                            </li>
+                          );
+                        }
+                      )
+                      ?.sort((a, b) => +a.props.distance - +b.props.distance)}
+                  </ul>
+                </div>
               </div>
-              {/* </DrawerHeader> */}
-              <ul className='h-full space-y-6 overflow-y-auto p-1 scrollbar-hide'>
-                {BRANCH_MOCK?.filter(({ type }) => {
-                  const stype = selectedChipIdx === 0 ? 'branch' : 'atm';
-                  return type === stype;
-                })
-                  ?.map(({ id, name, address, business_hours, type }) => {
-                    // TODO: waiting_number -> distance로 수정
-                    const { waiting_number, waiting_time } =
-                      findWaitingInfo(id);
-                    return (
-                      <li key={id} onClick={() => handleDetailPage(id)}>
-                        <BranchCard
-                          id={id}
-                          name={name}
-                          isOpen={true}
-                          address={address}
-                          distance={waiting_number}
-                          openTime={business_hours}
-                          waitingNumber={waiting_number}
-                          waitingTime={waiting_time}
-                          type={type}
-                        />
-                      </li>
-                    );
-                  })
-                  ?.sort((a, b) => +a.props.distance - +b.props.distance)}
-              </ul>
             </div>
           </DrawerContent>
         </Drawer>

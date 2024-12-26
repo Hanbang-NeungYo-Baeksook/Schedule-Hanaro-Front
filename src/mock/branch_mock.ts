@@ -744,20 +744,20 @@ export const REC_BRANCH_MOCK: RecBranch[] = [
     branchName: 'SKT 신사옥 지하 1층',
     location: '성수로1가 17',
     distance: 503,
-    congestion: 11,
+    waitingTime: 11,
   },
   {
     branchId: 1,
     branchName: '성수역점',
     location: '성수로1가 17',
     distance: 1023,
-    congestion: 11,
+    waitingTime: 11,
   },
   {
     branchId: 2,
     branchName: 'SKT 신사옥 지하 1층',
     location: '성수로1가 17',
     distance: 503,
-    congestion: 8,
+    waitingTime: 8,
   },
 ];

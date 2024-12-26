@@ -6,9 +6,15 @@ type WaitingNumberProps = {
   numbers: number[];
   angle: number;
   displayNum: number[];
+  categories: string[];
 };
 
-function WaitingNumber({ numbers, angle, displayNum }: WaitingNumberProps) {
+function WaitingNumber({
+  numbers,
+  angle,
+  displayNum,
+  categories,
+}: WaitingNumberProps) {
   const [isRow] = useState(false);
   const rotateAngle = 45;
   const radian = (rotateAngle / 2) * (Math.PI / 180);
@@ -60,14 +66,17 @@ function WaitingNumber({ numbers, angle, displayNum }: WaitingNumberProps) {
                 key={idx}
                 className='carousel-card absolute flex h-[7.5rem] flex-col items-center justify-center bg-white opacity-90 transition-all duration-500'
               >
-                {/* <span className='text-sm text-gray-400 md:text-lg'></span> */}
                 <span
-                  className={`text-4xl font-bold text-[#000000] md:text-6xl ${displayNum.includes(idx) ? '' : 'hidden'}`}
+                  className={`text-4xl font-bold text-[#000000] md:text-6xl ${
+                    displayNum.includes(idx) && number !== 0 ? '' : 'hidden'
+                  }`}
                 >
                   {number}
                 </span>
-                <div className={`${displayNum.includes(idx) ? '' : 'hidden'}`}>
-                  <CategoryButton category={'예금'} />
+                <div
+                  className={`${displayNum.includes(idx) && number !== 0 ? '' : 'hidden'}`}
+                >
+                  <CategoryButton category={categories[idx] || '예금'} />
                 </div>
               </div>
             ))}

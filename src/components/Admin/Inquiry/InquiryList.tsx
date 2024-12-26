@@ -1,5 +1,7 @@
-import { ActiveTab } from '@/types/inquiry';
-import { InquiryDetail } from '@/types/inquiryDetail';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Category } from '@/types/enum';
+import { AdminInquiryData } from '@/types/inquiry';
+import { formatElapsedTime } from '@/utils/timeUtil';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import rightArrow from '../../../assets/icons/right_arrow.svg';
@@ -14,90 +16,89 @@ import { Button } from '../../ui/button';
 import FilterAndSearch from './FilterAndSearch';
 
 type InquiryListProps = {
-  activeTab: ActiveTab;
-  activeCategory: string;
-  setActiveCategory: (category: string) => void;
-  searchQuery: string; // 검색어 추가
-  setSearchQuery: (query: string) => void; // 검색 상태 업데이트 함수 추가
-  inquiries: InquiryDetail[];
+  activeCategory: Category;
+  setActiveCategory: (category: Category) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  inquiries: AdminInquiryData[];
+  totalItems?: number;
+  currentPage?: number;
 };
-const minutesAHour = 60; // 1시간 = 60분
-const minutesADay = 1440;
-const msecAMinute = 60000;
 
 function InquiryList({
-  activeTab,
   activeCategory,
   setActiveCategory,
   inquiries,
   searchQuery,
   setSearchQuery,
+  totalItems,
+  currentPage,
 }: InquiryListProps) {
-  const formattedInquiries = inquiries.map(
-    ({ id, status, category, start_time, tags = [], content, name }) => {
-      // 시간 계산 함수
-      const formatElapsedTime = (start_time: number): string => {
-        const now = Date.now();
-        const elapsedMilliseconds = now - start_time; // 경과 시간(밀리초)
-        const elapsedMinutes = Math.floor(elapsedMilliseconds / msecAMinute); // 분으로 변환
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-        return elapsedMinutes < 60
-          ? `${elapsedMinutes}분 전`
-          : elapsedMinutes < 1440
-            ? `${Math.floor(elapsedMinutes / minutesAHour)}시간 전`
-            : `${Math.floor(elapsedMinutes / minutesADay)}일 전`;
-      };
+  if (!inquiries)
+    return (
+      <>
+        <Skeleton />
+      </>
+    );
 
+  const formattedInquiries = inquiries?.map(
+    ({
+      inquiry_id,
+      // inquiry_num,
+      status,
+      category,
+      tags = [],
+      content,
+      created_at,
+      customer_name,
+    }) => {
       return {
-        id: String(id),
-        status: status as ActiveTab,
+        id: String(inquiry_id),
+        status,
         category: category,
-        time: formatElapsedTime(start_time), // 경과 시간을 포맷하여 출력
+        time: formatElapsedTime(created_at),
         content: content,
         name: name,
         tags: [...tags],
+        customer_name,
       };
     }
   );
 
-  const filteredInquiries = formattedInquiries.filter(
-    ({ status, category, content, name, tags }) =>
-      status === activeTab &&
-      (activeCategory === '전체' || category === activeCategory) &&
-      (searchQuery === '' ||
-        category.includes(searchQuery) ||
-        content.includes(searchQuery) || // 문의 내용에 검색어 포함
-        name.includes(searchQuery) || // 고객명에 검색어 포함
-        tags.some((tag) => tag.includes(searchQuery))) // 태그에 검색어 포함
-  );
-
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
-  const navigate = useNavigate();
-
   return (
     <div className='font-inter mx-auto w-full rounded-lg border-gray-200 bg-white p-6 text-[1.25rem] font-bold leading-normal shadow-custom'>
       <div className='font-inter mb-0 flex items-center justify-between border-b pb-4 font-normal leading-normal'>
-        <h2 className='text-[1.125rem] font-bold text-gray-800'>
-          총{' '}
+        <h2 className='space-x-1 text-[1.125rem] font-bold text-gray-800'>
+          <span>총</span>
           <span className='text-[1.4rem] font-extrabold text-teal-600'>
-            {filteredInquiries.length}
+            {totalItems}
           </span>
-          건
+          <span>건</span>
         </h2>
         <FilterAndSearch
+          activeCategory={activeCategory}
           setActiveCategory={setActiveCategory}
+          searchQuery={searchQuery}
           setSearchQuery={setSearchQuery} // 검색 상태 전달
         />
       </div>
 
       <Accordion type='single' collapsible>
-        {filteredInquiries.map(
-          ({ id, status, category, time, tags, content, name }, index) => (
+        {formattedInquiries.map(
+          (
+            { id, status, category, tags, customer_name, time, content },
+            index
+          ) => (
             <AccordionItem key={id} value={id}>
               <div className='font-inter flex items-center justify-between py-4 font-normal leading-normal'>
                 <div className='flex items-center space-x-2'>
                   <span className='ml-5 mr-5 font-medium text-gray-700'>
-                    {index + 1}
+                    {currentPage
+                      ? (currentPage - 1) * 10 + index + 1
+                      : index + 1}
                   </span>
                   <span className='pr-2 font-semibold text-gray-800'>
                     {content.length <= 15
@@ -107,7 +108,7 @@ function InquiryList({
                   <Badge
                     variant='lightSolid'
                     className={`font-inter h-[1.8rem] w-auto justify-center rounded-full px-4 py-0.5 text-[0.8rem] font-normal leading-normal ${
-                      status === '답변대기'
+                      status === 'PENDING'
                         ? 'bg-teal-50 text-teal-600'
                         : 'bg-gray-200 text-gray-600'
                     }`}
@@ -115,7 +116,7 @@ function InquiryList({
                     {category}
                   </Badge>
                 </div>
-                {status === '답변완료' ? (
+                {status === 'REGISTRATIONCOMPLETE' ? (
                   <span
                     className='mr-6 flex cursor-pointer items-center pb-[1.05rem] pt-[1rem] text-sm font-medium text-black'
                     onClick={() => navigate(`/admin/online/inquiry/${id}`)}
@@ -155,7 +156,7 @@ function InquiryList({
                         ))}
                     </p>
 
-                    {status === '답변대기' && (
+                    {status === 'PENDING' && (
                       <Button
                         variant='default'
                         className='font-inter h-[2.8rem] w-[9rem] rounded-full bg-main px-4 py-1 align-middle text-base font-extrabold text-white'
@@ -175,7 +176,7 @@ function InquiryList({
 
                   {/* 하단 정보 (오른쪽 정렬) */}
                   <div className='absolute bottom-4 right-4 text-right text-[0.95rem] font-medium text-gray-400'>
-                    {name} · {time} · {category}
+                    {customer_name} · {time} · {category}
                   </div>
                 </div>
               </AccordionContent>

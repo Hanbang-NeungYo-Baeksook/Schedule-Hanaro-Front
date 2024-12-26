@@ -1,26 +1,20 @@
-/* eslint-disable react/prop-types */
-export type HashTag = {
-  id: number;
-  label: string;
-};
-
 type ReservationDetailTagProps = {
-  tags: HashTag[];
+  tags: string[];
 };
 
-const ReservationDetailInquiryTags: React.FC<ReservationDetailTagProps> = ({
-  tags,
-}) => {
+const ReservationDetailInquiryTags = ({ tags }: ReservationDetailTagProps) => {
+  console.log('🚀 ~ ReservationDetailInquiryTags ~ tags:', tags);
+
   return (
     <div className='flex w-full items-center'>
       <div className='flex space-x-2'>
-        {tags.map(({ id, label }) => (
-          <span
-            key={id}
+        {tags?.map((label, index) => (
+          <div
+            key={index}
             className='rounded-full bg-[#008485]/15 px-3 py-1 text-sm text-[#008485]'
           >
             #{label}
-          </span>
+          </div>
         ))}
       </div>
     </div>

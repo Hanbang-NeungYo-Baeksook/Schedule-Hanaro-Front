@@ -3,13 +3,15 @@ import { DirectionButton } from '@/components/ui/direction';
 import { Separator } from '@/components/ui/separator';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
-import { BRANCH_MOCK, BRANCH_STATE_MOCK } from '@/mock/branch_mock';
 import { showToast } from '@/pages';
 import { useNavigate } from 'react-router-dom';
 import { FloatingType } from '.';
 import { useMap } from '@/hooks/map-context';
 import { useState } from 'react';
 import { ChangeToggle } from './ChangeToggle';
+import useGetBranchDetail from '@/hooks/query/customer/useGetBranchDetail';
+import { WaitingInfo } from '@/components/Map/BranchCard';
+import { Badge } from '@/components/ui/badge';
 
 export default function BranchInfo({
   type,
@@ -23,16 +25,50 @@ export default function BranchInfo({
   );
 
   const navigate = useNavigate();
-  const targetBranch = BRANCH_MOCK.find(({ id }) => id === branchId);
-  const targetBranchState = BRANCH_STATE_MOCK.find(({ id }) => id === branchId);
+  const { data: targetBranch, isLoading } = useGetBranchDetail({
+    branch_id: +branchId,
+    latitude: getCurrentLatitude(),
+    longitude: getCurrentLongitude(),
+  });
+
+  if (isLoading) {
+    <>Loading...</>;
+  }
+
+  if (!targetBranch) {
+    return <>영업점이 존재하지 않습니다.</>;
+  }
+
+  const {
+    x_position: longitude,
+    y_position: latitude,
+    branch_name: name,
+    address,
+    distance,
+    section_types: sectionType,
+    wait_amount: waitingNumber,
+    wait_time: waitingTime,
+    branch_type: branchType,
+  } = targetBranch;
+
+  const [topName, bottomName] = name.split(' ');
+
+  const waitingInfos: WaitingInfo[] = [];
+  if (branchType === '방문점' && sectionType) {
+    for (let i = 0; i < sectionType?.length; i++) {
+      waitingInfos.push({
+        section: sectionType?.at(i) ?? '',
+        waitingAmount: waitingNumber?.at(i) ?? 0,
+        waitingTime: waitingTime?.at(i) ?? 0,
+      });
+    }
+  }
 
   const handleDirection = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
     if (targetBranch) {
-      const { position_x: longitude, position_y: latitude } = targetBranch;
-      // TODO: startLat, startLon 현 위치로 수정
       navigate(
         `/direction?startLat=${getCurrentLatitude()}&startLon=${getCurrentLongitude()}&endLat=${latitude}&endLon=${longitude}&branchId=${branchId}`
       );
@@ -49,62 +85,89 @@ export default function BranchInfo({
     setIsOpen(false);
   };
 
-  const [topName, bottomName] = targetBranch
-    ? targetBranch.name.split(' ')
-    : ['', ''];
-
   return (
     <>
       <div className='flex items-center justify-between'>
-        <div className='flex flex-col items-start justify-center gap-1'>
-          <div
-            className='flex items-center justify-center gap-2'
-            onClick={handlePage(`/branch/${branchId}`)}
-          >
-            <div className='flex flex-wrap justify-center gap-1'>
-              <span className='flex text-2xl font-extrabold'>{topName}</span>
-              <span className='flex text-2xl font-extrabold'>{bottomName}</span>
+        <div className='flex w-full flex-col items-start justify-center gap-1 pr-4'>
+          <div className='flex w-full justify-between'>
+            <div className='flex flex-col items-start justify-center'>
+              <div
+                className='flex items-center justify-center gap-2'
+                onClick={handlePage(`/branch/${branchId}`)}
+              >
+                <div className='flex flex-wrap justify-center gap-1'>
+                  <span className='flex text-2xl font-extrabold'>
+                    {topName}
+                  </span>
+                  <span className='flex text-2xl font-extrabold'>
+                    {bottomName}
+                  </span>
+                </div>
+                <Hyperlink />
+              </div>
+              <div className='flex flex-wrap items-center justify-center gap-2'>
+                <span className='text-[1rem] text-lightGrey'>
+                  {address ?? ''}
+                </span>
+                <div className='flex items-center'>
+                  <Separator orientation='vertical' className='h-[0.6875rem]' />
+                </div>
+                <span className='text-[1rem] font-bold text-lightGrey'>
+                  {distance}m
+                </span>
+              </div>
             </div>
-            <Hyperlink />
+            {type === 'map' ? (
+              <DirectionButton
+                variant='square'
+                onClick={handleDirection}
+                className='self-start'
+              />
+            ) : (
+              <span className='mb-2 flex self-start'>
+                <ChangeToggle
+                  isOpen={isOpen}
+                  onToggle={() => {
+                    setIsOpen((cur) => !cur);
+                  }}
+                  selectedTab={selectedTab}
+                  onSelect={selectTab}
+                />
+              </span>
+            )}
           </div>
-          <div className='flex flex-wrap items-center justify-center gap-2'>
-            <span className='text-[1rem] text-lightGrey'>
-              {targetBranch?.address ?? ''}
-            </span>
-            <div className='flex items-center'>
-              <Separator orientation='vertical' className='h-[0.6875rem]' />
-            </div>
-            <span className='text-[1.125rem] font-bold'>202m</span>
+
+          <Separator className='my-2' />
+          <div className='flex w-full items-center gap-4'>
+            {waitingInfos.map((waitingInfo, index) => (
+              <Badge
+                variant='outline'
+                className='w-full gap-2 rounded-[8px] bg-[#]'
+                key={index}
+              >
+                <div className='flex w-full flex-col gap-1 py-2'>
+                  <span className='text-[0.85rem]'>{waitingInfo.section}</span>
+                  <div className='flex w-full justify-between'>
+                    <span>대기인원</span>
+                    <div className='flex gap-[0.05rem]'>
+                      <span>{waitingInfo.waitingAmount}</span>
+                      <span>명</span>
+                    </div>
+                  </div>
+                  <div className='flex w-full justify-between'>
+                    <span>대기시간</span>
+                    <div className='flex gap-[0.05rem]'>
+                      <span>{waitingInfo.waitingTime}</span>
+                      <span>분</span>
+                    </div>
+                  </div>
+                </div>
+              </Badge>
+            ))}
           </div>
         </div>
-        {type === 'map' ? (
-          <DirectionButton variant='square' onClick={handleDirection} />
-        ) : (
-          <span className='mb-2 flex justify-end'>
-            <ChangeToggle
-              isOpen={isOpen}
-              onToggle={() => {
-                setIsOpen((cur) => !cur);
-              }}
-              selectedTab={selectedTab}
-              onSelect={selectTab}
-            />
-          </span>
-        )}
       </div>
-      <div className='my-3 flex gap-5'>
-        <div className='flex items-end gap-3'>
-          <span className='text-sm'>대기인원</span>
-          <span className='text-md font-bold'>{`${targetBranchState?.waiting_number ?? 0}명`}</span>
-        </div>
-        <div className='flex items-center'>
-          <Separator orientation='vertical' className='h-[0.6875rem]' />
-        </div>
-        <div className='flex items-end gap-3'>
-          <span className='text-sm'>예상대기시간</span>
-          <span className='text-md font-bold'>{`${targetBranchState?.waiting_time ?? 0}분`}</span>
-        </div>
-      </div>
+      <div className='my-3 flex gap-3'></div>
       <Toaster />
     </>
   );

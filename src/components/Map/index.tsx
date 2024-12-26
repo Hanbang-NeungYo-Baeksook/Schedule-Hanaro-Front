@@ -1,22 +1,35 @@
 import { useMap } from '@/hooks/map-context';
-import { BRANCH_MOCK } from '@/mock/branch_mock';
 import { useEffect } from 'react';
 import { BottomSheet } from '../BottomSheet/BottomSheet';
 import BottomFloatingBox from '../Direction/BottomFloatingBox';
 import Nav from '../Nav/Nav';
 import { MyLocation } from './MyLocation';
+import useGetBranchList from '@/hooks/query/customer/useGetBranchList';
 
 export function Map() {
-  // Test용 위치 추가 및 기존 코드 삭제
-  const branchList = [...BRANCH_MOCK];
+  const {
+    mapRef,
+    mapFocusOnly,
+    selectedBranchId,
+    setBranchList,
+    setFocus,
+    getCurrentLatitude,
+    getCurrentLongitude,
+  } = useMap();
 
-  const { mapRef, mapFocusOnly, selectedBranchId, setBranchList, setFocus } =
-    useMap();
+  const { data: branches, isLoading } = useGetBranchList({
+    latitude: getCurrentLatitude(),
+    longitude: getCurrentLongitude(),
+    order_by: 'distance',
+  });
 
   useEffect(() => {
-    setBranchList(branchList);
+    if (isLoading || !branches) {
+      return;
+    }
+    setBranchList(branches);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isLoading]);
 
   return (
     <>

@@ -39,12 +39,13 @@ import { RegisterVisitFormPage } from '@/pages/Register/Visit';
 import { createBrowserRouter } from 'react-router-dom';
 import { SignUpPage } from '@/pages/SignUp';
 import { SignUpLayout } from '@/components/Layout/SignUp';
-import ChatPage from '@/pages/Chat';
-import SigninPage from '@/pages/Signin';
+import SignInPage from '@/pages/Signin';
 
 import { AdminMyPage } from '@/pages/Admin/online/mypage';
 import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
 import AdminLogin from '@/pages/Admin/Login';
+import AiQuestion from '@/pages/AiQuestion';
+import AiAnswer from '@/pages/AiAnswer';
 export const useRouter = () =>
   createBrowserRouter([
     {
@@ -72,13 +73,29 @@ export const useRouter = () =>
           element: <BranchDetailPage />,
         },
         {
-          path: '/chat',
-          element: <ChatPage />,
+          path: '/ai',
+          element: <SignUpLayout />,
+          children: [
+            {
+              path: '/ai/question',
+              element: <AiQuestion />,
+            },
+            {
+              path: '/ai/answer/:registerType',
+              element: <AiAnswer />,
+            },
+          ],
         },
+
         {
           path: '/signup',
           element: <SignUpLayout />,
           children: [{ index: true, element: <SignUpPage /> }],
+        },
+        {
+          path: '/signin',
+          element: <SignUpLayout />,
+          children: [{ index: true, element: <SignInPage /> }],
         },
         {
           path: '/reservation',
@@ -90,7 +107,7 @@ export const useRouter = () =>
               children: [
                 { index: true, element: <ReservationCallPage /> },
                 {
-                  path: '/reservation/call/:id',
+                  path: '/reservation/call/:callId',
                   children: [
                     { index: true, element: <ReservationDetailCallPage /> },
                   ],
@@ -102,7 +119,7 @@ export const useRouter = () =>
               children: [
                 { index: true, element: <ReservationInquiryPage /> },
                 {
-                  path: '/reservation/inquiry/:id',
+                  path: '/reservation/inquiry/:inquiryId',
                   children: [
                     { index: true, element: <ReservationDetailInquiryPage /> },
                   ],
@@ -118,7 +135,7 @@ export const useRouter = () =>
               children: [
                 { index: true, element: <ReservationVisitPage /> },
                 {
-                  path: '/reservation/visit/:branchId',
+                  path: '/reservation/visit/:visitId',
                   children: [
                     { index: true, element: <ReservationDetailVisitPage /> },
                   ],
@@ -131,8 +148,10 @@ export const useRouter = () =>
           path: '/register',
           element: <RegisterLayout />,
           children: [
-            { index: true, element: <ChatPage /> },
-            { path: '/register/type', element: <ReservationPage /> },
+            {
+              path: '/register/selection',
+              element: <ReservationPage />,
+            },
             {
               path: '/register/call',
               element: <RegisterCallFormPage />,
@@ -142,7 +161,7 @@ export const useRouter = () =>
               element: <RegisterInquiryFormPage />,
             },
             {
-              path: '/register/visit',
+              path: '/register/visit/:branchId',
               element: <RegisterVisitFormPage />,
             },
           ],
@@ -154,7 +173,7 @@ export const useRouter = () =>
         },
         {
           path: '/signin',
-          element: <SigninPage />,
+          element: <SignInPage />,
         },
       ],
     },

@@ -1,6 +1,6 @@
 import { ReactComponent as ChangeButton } from '@/assets/icons/reservation/change.svg';
-import { ReactComponent as UpButton } from '@/assets/icons/reservation/up.svg';
 import { ReactComponent as DownButton } from '@/assets/icons/reservation/down.svg';
+import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 
 type ChangeToggleProps = {
@@ -23,10 +23,21 @@ export function ChangeToggle({
         onClick={onToggle}
       >
         <span className='mr-[0.5rem]'>{selectedTab}</span>
-        {isOpen ? <UpButton /> : <DownButton />}
+        <span
+          className={cn(
+            'transform transition-transform duration-300',
+            isOpen ? 'rotate-180' : 'rotate-0'
+          )}
+        >
+          <DownButton />
+        </span>
       </button>
       {isOpen && (
-        <div className='absolute z-50 mt-[2rem] w-[15.5rem] rounded-[.9375rem] bg-white drop-shadow'>
+        <div
+          className={`absolute z-50 mt-[2rem] w-[15.5rem] rounded-[.9375rem] bg-white drop-shadow transition-all ${
+            isOpen ? 'animate-slideDown' : 'animate-slideUp'
+          }`}
+        >
           <div className='py-[0.75rem]'>
             <ChangeToggleOption
               label='전화 상담 내역'

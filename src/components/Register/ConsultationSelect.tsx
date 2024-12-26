@@ -8,6 +8,8 @@ import {
 } from '@/components/ui/select';
 import { RegisterCallData, RegisterInquiryData } from '@/pages';
 import { FormErrorMessage } from './FormErrorMessage';
+import { CATEGORY } from '@/api/customer/calls';
+import { RegisterVisitData } from '@/pages/Register/Visit';
 
 type ConsultationSelectProps<T extends FieldValues> = {
   control: Control<T>;
@@ -16,7 +18,7 @@ type ConsultationSelectProps<T extends FieldValues> = {
 };
 
 export function ConsultationSelect<
-  T extends RegisterCallData | RegisterInquiryData,
+  T extends RegisterCallData | RegisterInquiryData | RegisterVisitData,
 >({ control, error, fieldName }: ConsultationSelectProps<T>) {
   return (
     <div>
@@ -43,13 +45,7 @@ export function ConsultationSelect<
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                {[
-                  '예금',
-                  '펀드',
-                  '대출',
-                  '외환',
-                  '마이데이터/모바일/인터넷뱅킹',
-                ].map((type) => (
+                {CATEGORY.map((type) => (
                   <SelectItem key={type} value={type}>
                     {type}
                   </SelectItem>

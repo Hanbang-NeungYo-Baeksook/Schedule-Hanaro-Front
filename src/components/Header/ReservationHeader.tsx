@@ -1,8 +1,13 @@
+import { Status } from '@/api/customer/calls';
+import { InquiryStatus } from '@/api/customer/inquires';
+import { ReactComponent as DropButton } from '@/assets/icons/reservation/minidown.svg';
+import Header from '@/components/Header/Header';
+import { cn } from '@/lib/utils';
+import { callStatusAtom, inquiryStatusAtom } from '@/stores';
+import { useAtom } from 'jotai';
 import { useState } from 'react';
 import { ChangeToggle } from '../Reservation/ChangeToggle';
 import Tabs from '../Tabs/Tabs';
-import { ReactComponent as DropButton } from '@/assets/icons/reservation/minidown.svg';
-import Header from '@/components/Header/Header';
 
 type Props = {
   tabLocation: 'visit' | 'call';
@@ -12,6 +17,10 @@ function ReservationHeader({ tabLocation }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState('전화 상담 내역');
   const [activeTab, setActiveTab] = useState<'visit' | 'call'>(tabLocation);
+  const [selectedStatus, setSelectedStatus] = useState('대기 중인 상담'); // 상담 상태
+  const [, setCallStatusAtom] = useAtom(callStatusAtom);
+  const [, setInquiryStatusAtom] = useAtom(inquiryStatusAtom);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 상태
 
   const toggleCallList = () => {
     setIsOpen(!isOpen);
@@ -26,9 +35,6 @@ function ReservationHeader({ tabLocation }: Props) {
     setActiveTab(tabName);
   };
 
-  const [selectedStatus, setSelectedStatus] = useState('대기 중인 상담'); // 상담 상태
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 상태
-
   const toggleInquiryList = () => {
     setIsOpen(!isOpen);
   };
@@ -37,9 +43,23 @@ function ReservationHeader({ tabLocation }: Props) {
     setIsDropdownOpen(!isDropdownOpen); // 드롭다운 열기/닫기
   };
 
-  const handleStatusChange = (status: string) => {
+  const handleStatusChange = (status: '대기 중인 상담' | '완료된 상담') => {
     setSelectedStatus(status); // 상태 변경
+    setCallStatusAtom(callStatusConverter(status));
+    setInquiryStatusAtom(inquiryStatusConverter(status));
     setIsDropdownOpen(false); // 선택 후 드롭다운 닫기
+  };
+
+  const callStatusConverter: (
+    str: '대기 중인 상담' | '완료된 상담'
+  ) => Status = (str) => {
+    return str === '완료된 상담' ? 'COMPLETE' : 'PENDING';
+  };
+
+  const inquiryStatusConverter: (
+    str: '대기 중인 상담' | '완료된 상담'
+  ) => InquiryStatus = (str) => {
+    return str === '완료된 상담' ? 'REGISTRATIONCOMPLETE' : 'PENDING';
   };
 
   return (
@@ -78,12 +98,22 @@ function ReservationHeader({ tabLocation }: Props) {
                 onClick={toggleDropdown}
               >
                 {selectedStatus}
-                <div className='pl-[0.25rem]'>
+                <div
+                  className={cn(
+                    'transform pl-[0.25rem] transition-transform duration-300',
+                    isDropdownOpen ? 'rotate-180' : 'rotate-0'
+                  )}
+                >
                   <DropButton />
                 </div>
               </button>
               {isDropdownOpen && (
-                <ul className='absolute right-0 z-50 w-[10rem]'>
+                <ul
+                  className={cn(
+                    'absolute right-0 z-50 w-[10rem] transition-all duration-300 ease-in-out',
+                    isDropdownOpen ? 'animate-slideDown' : 'animate-slideUp'
+                  )}
+                >
                   {selectedStatus === '대기 중인 상담' ? (
                     <li
                       className='cursor-pointer whitespace-nowrap pl-[3.1rem] text-[#b3b3b3]'
@@ -121,12 +151,22 @@ function ReservationHeader({ tabLocation }: Props) {
                 onClick={toggleDropdown}
               >
                 {selectedStatus}
-                <div className='pl-[0.25rem]'>
+                <div
+                  className={cn(
+                    'transform pl-[0.25rem] transition-transform duration-300',
+                    isDropdownOpen ? 'rotate-180' : 'rotate-0'
+                  )}
+                >
                   <DropButton />
                 </div>
               </button>
               {isDropdownOpen && (
-                <ul className='absolute right-0 z-50 w-[10rem]'>
+                <ul
+                  className={cn(
+                    'absolute right-0 z-50 w-[10rem] transition-all duration-300 ease-in-out',
+                    isDropdownOpen ? 'animate-slideDown' : 'animate-slideUp'
+                  )}
+                >
                   {selectedStatus === '대기 중인 상담' ? (
                     <li
                       className='cursor-pointer whitespace-nowrap pl-[3.1rem] text-[#b3b3b3]'

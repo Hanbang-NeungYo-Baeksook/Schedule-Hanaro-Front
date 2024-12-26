@@ -1,70 +1,65 @@
+import DetailCustomerInfo from '@/components/Admin/Inquiry/DetailCustomerInfo';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { useEffect, useState } from 'react';
+import { ADMIN_ROUTE } from '@/constants/route';
+import useGetInquiryDetail from '@/hooks/query/admin/useGetInquiryDetail';
+import usePostInquiryReply from '@/hooks/query/admin/usePostInquiryReply';
+import dayjs from 'dayjs';
+import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { InquiryDetail } from '@/types/inquiryDetail';
-import { mockInquiryData } from '@/mock/adminInquiry';
-import CustomerInfo from '@/components/Admin/Inquiry/InputCustomerInfo'; // 고객정보 컴포넌트 경로
-import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
-import { ActiveTab } from '@/types/inquiry';
 
 export function AnswerInput() {
-  const [answer, setAnswer] = useState('');
+  const replyRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const [inquiries, setInquiries] = useState<InquiryDetail[]>(mockInquiryData);
-  const [inquiryData, setInquiryData] = useState<InquiryDetail | null>(null);
-  useEffect(() => {
-    const inquiry = inquiries.find((item) => item.id === Number(id)); // ID로 데이터 찾기
-    setInquiryData(inquiry || null);
-  }, [id, inquiries]);
+  const { id: inquiryId } = useParams<{ id: string }>();
+
+  const { data: inquiryData } = useGetInquiryDetail(+(inquiryId ?? 1));
+  const { mutate: postReply } = usePostInquiryReply();
 
   if (!inquiryData) {
     return <div>Loading...</div>;
   }
 
+  const {
+    customer_name,
+    phone_number,
+    category,
+    tags,
+    inquiry_content,
+    inquiry_created_at,
+  } = inquiryData;
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!answer.trim()) {
+    if (!replyRef?.current?.value) {
       alert('답변을 입력하세요');
       return;
     }
 
-    const updatedInquiries = inquiries.map((item) => {
-      if (item.id === inquiryData.id) {
-        return {
-          ...item,
-          reply_content: answer, // 답변 저장
-          status: '답변완료' as ActiveTab, // 상태 변경
-          end_time: Date.now(), // 현재 시간 저장
-        };
-      }
-      return item;
-    });
+    const body = {
+      content: replyRef.current.value,
+    };
 
-    setInquiries(updatedInquiries); // 상태 업데이트
-    console.log('답변 등록 완료:', { id: inquiryData.id, answer });
-    alert('답변이 등록되었습니다.');
-    setAnswer('');
-    navigate('/admin/inquiry'); // 등록 후 페이지 이동
+    postReply({ inquiryId: +(inquiryId ?? 1), body });
   };
 
   const handleCancel = () => {
-    navigate('/admin/inquiry');
+    navigate(ADMIN_ROUTE.online.inquiry);
   };
 
   return (
     <div className='mx-auto w-full max-w-[1300px]'>
       {/* 고객 정보 컴포넌트 */}
-      <CustomerInfo
-        className='mb-[1rem] w-full rounded-[1.875rem] bg-[#f9f9f9] p-[1.5rem] shadow-[0_4px_10px_0_rgba(0,0,0,0.1)]'
-        name={inquiryData.name}
-        phoneNumber={inquiryData.phone_number}
-        start_time={format(
-          new Date(inquiryData.start_time),
-          'MM월 dd일 HH시 mm분'
-        )}
+      <DetailCustomerInfo
+        name={customer_name}
+        phoneNumber={phone_number}
+        start_time={
+          inquiry_created_at
+            ? dayjs(inquiry_created_at).format('MM월 DD일 HH시 mm분')
+            : ''
+        }
+        // end_time={format(new Date(inquiry_created_at), 'MM월 dd일 HH시 mm분')}
       />
 
       {/* 하얀색 상자 내부 */}
@@ -82,7 +77,7 @@ export function AnswerInput() {
               variant='lightSolid'
               className='rounded-full bg-teal-50 px-3 py-0.5 text-[1rem] font-normal text-teal-600'
             >
-              {inquiryData.category}
+              {category}
             </Badge>
           </div>
         </div>
@@ -90,7 +85,7 @@ export function AnswerInput() {
         <div className='mt-[1rem] flex items-center'>
           <p className='font-semibold text-gray-800'>
             {Array.isArray(inquiryData.tags) &&
-              inquiryData.tags.map((tag, idx) => (
+              tags.map((tag, idx) => (
                 <Badge
                   key={idx}
                   variant='lightSolid'
@@ -102,7 +97,7 @@ export function AnswerInput() {
           </p>
         </div>
         <div className='overflow-wrap break-word mb-[1rem] mt-[1rem] flex flex-wrap whitespace-pre-wrap text-left text-[1.2rem] font-medium text-[#666666]'>
-          {inquiryData.content}
+          {inquiry_content}
         </div>
 
         {/* 답변 입력 */}
@@ -112,8 +107,7 @@ export function AnswerInput() {
         <Textarea
           className='mt-[1rem] h-[55%] w-full resize-none rounded-[1.875rem] border border-[#d9d9d9] p-[1rem] text-[1.2rem]'
           placeholder='답변을 입력하세요...'
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
+          ref={replyRef}
           aria-label='답변 입력'
         />
         <div className='mt-[1rem] flex justify-end'>

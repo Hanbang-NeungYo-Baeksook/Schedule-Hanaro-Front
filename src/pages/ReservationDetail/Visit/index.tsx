@@ -4,34 +4,60 @@ import Modalbutton from '@/components/Direction/Modal';
 import ReservationDetailHeader from '@/components/Header/ReservationDetailHeader';
 import Nav from '@/components/Nav/Nav';
 import { DirectionButton } from '@/components/ui/direction';
-import { useMap } from '@/hooks/map-context';
+import useDeleteVisit from '@/hooks/query/customer/useDeleteVisit';
+import useGetVisitDetail from '@/hooks/query/customer/useGetVisitDetail';
 import { useToast } from '@/hooks/use-toast';
+import getMyLocation from '@/hooks/useMyLocation';
 import '@/index.css';
-import { BRANCH_MOCK } from '@/mock/branch_mock';
 import { showToast } from '@/pages/Register/Call';
+import { Coord } from '@/stores';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 export function ReservationDetailVisitPage() {
-  const { getCurrentLatitude, getCurrentLongitude } = useMap();
   const { toast } = useToast();
   const [load, setLoad] = useState(true);
+  const currentCoord: Coord = { latitude: 0, longitude: 0 };
+
+  getMyLocation((latitude: number, longitude: number) => {
+    currentCoord.latitude = latitude;
+    currentCoord.longitude = longitude;
+  });
+
   const navigate = useNavigate();
-  const { branchId } = useParams();
-  if (!branchId) {
-    return;
+  const { visitId } = useParams();
+
+  const { data: visit, isLoading } = useGetVisitDetail({
+    visit_id: +(visitId ?? 0),
+  });
+
+  const { mutate: deleteVisit } = useDeleteVisit();
+
+  if (isLoading) {
+    return <>Loading...</>;
   }
 
-  const branch = BRANCH_MOCK.find(({ id }) => id === branchId);
+  if (!visit) {
+    return <>방문 예약 없음</>;
+  }
+
+  const {
+    branch_id: branchId,
+    branch_name: branchName,
+    visit_num: visitNum,
+    waiting_amount: waitAmount,
+    waiting_time: waitTime,
+    current_num: currentNum,
+    x_position: longitude,
+    y_position: latitude,
+  } = visit;
 
   const handleDirection = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    if (branch) {
-      const { position_x: longitude, position_y: latitude } = branch;
-      // TODO: startLat, startLon 현 위치로 수정
+    if (visit) {
       navigate(
-        `/direction?startLat=${getCurrentLatitude()}&startLon=${getCurrentLongitude()}&endLat=${latitude}&endLon=${longitude}&branchId=${branchId}`
+        `/direction?startLat=${currentCoord?.latitude}&startLon=${currentCoord?.longitude}&endLat=${latitude}&endLon=${longitude}&branchId=${branchId}`
       );
       showToast(toast, '길 안내를 시작합니다.');
     }
@@ -68,17 +94,17 @@ export function ReservationDetailVisitPage() {
             <div className='mt-4 text-center text-lg font-medium'>
               현재 대기 번호는{' '}
               <span className='text-3xl font-bold text-[#008485]/80'>
-                {branchId}
+                {currentNum}
               </span>
               번 입니다.
             </div>
             <div className='mb-4 mt-2 text-8xl font-bold'>
-              {branchId}
+              {visitNum}
               <span className='text-[2rem] font-bold'>번</span>
             </div>
             <div className='mt-2 flex w-full justify-center gap-6 align-middle'>
               <div className='flex items-center text-2xl font-semibold'>
-                하나은행 성수역점
+                {branchName}
               </div>
               <DirectionButton onClick={handleDirection} />
             </div>
@@ -89,13 +115,17 @@ export function ReservationDetailVisitPage() {
                 <div className='text-lg font-medium text-[#666666]'>
                   현재 대기 인원
                 </div>
-                <div className='text-lg font-bold text-[#464646]'>10명</div>
+                <div className='text-lg font-bold text-[#464646]'>
+                  {waitAmount}명
+                </div>
               </div>
               <div className='mt-4 flex justify-between'>
                 <div className='text-lg font-medium text-[#666666]'>
                   예상 대기 시간
                 </div>
-                <div className='text-lg font-bold text-[#464646]'>15분</div>
+                <div className='text-lg font-bold text-[#464646]'>
+                  {waitTime}분
+                </div>
               </div>
             </div>
           </div>
@@ -108,6 +138,11 @@ export function ReservationDetailVisitPage() {
               modalDescription1='취소 시 30분 후부터 재예약이 가능합니다.'
               modalDescription2=''
               modalButtonTitle='확인'
+              onClick={() =>
+                deleteVisit({
+                  visit_id: +(visitId ?? 0),
+                })
+              }
             ></Modalbutton>
           </div>
         </div>

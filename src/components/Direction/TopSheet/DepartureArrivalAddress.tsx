@@ -1,15 +1,27 @@
 import { Separator } from '@/components/ui/separator';
 import { useMap } from '@/hooks/map-context';
-import { BRANCH_MOCK } from '@/mock/branch_mock';
+import useGetBranchDetail from '@/hooks/query/customer/useGetBranchDetail';
 
 export default function DepartureArrivalAddress({
   branchId,
 }: {
   branchId: string;
 }) {
-  const { startAddress } = useMap();
+  const { startAddress, getCurrentLatitude, getCurrentLongitude } = useMap();
 
-  const branchIdx = BRANCH_MOCK.findIndex(({ id }) => id === branchId);
+  const { data: branch, isLoading } = useGetBranchDetail({
+    branch_id: +branchId,
+    latitude: getCurrentLatitude(),
+    longitude: getCurrentLongitude(),
+  });
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
+
+  if (!branch) {
+    <>영업점 없음</>;
+  }
 
   return (
     <div className='flex w-fit flex-col justify-between gap-1 text-left'>
@@ -21,9 +33,7 @@ export default function DepartureArrivalAddress({
       <Separator />
       <div className='flex flex-col'>
         <div className='text-xs text-gray-400'>도착지</div>
-        <div className='font-bold'>
-          {branchIdx === -1 ? '' : BRANCH_MOCK[branchIdx].name}
-        </div>
+        <div className='font-bold'>{branch?.address}</div>
       </div>
     </div>
   );

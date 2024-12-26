@@ -1,31 +1,59 @@
 import { ReactComponent as PersonIcon } from '@/assets/icons/Person.svg';
 import { ReactComponent as PhoneIcon } from '@/assets/icons/phone.svg';
 import InquiryCard from '@/components/Admin/Inquiry/InquiryCard';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ADMIN_ROUTE } from '@/constants/route';
+import useGetAdminInfo from '@/hooks/query/admin/useGetAdminInfo';
 import { useNavigate } from 'react-router-dom';
 
 export function AdminMyPage() {
   const navigate = useNavigate();
+  const { data: adminInfo } = useGetAdminInfo();
 
+  if (
+    !adminInfo ||
+    !adminInfo.adminInfo ||
+    !adminInfo.phoneInquiryStats ||
+    !adminInfo.oneToOneInquiryStats
+  ) {
+    return (
+      <>
+        <Skeleton />
+      </>
+    );
+  }
+
+  const {
+    today: callToday,
+    weekly: callWeekly,
+    monthly: callMonthly,
+    total: callTotal,
+  } = adminInfo.phoneInquiryStats;
   const phoneStats = {
     inquiry: '전화문의',
-    today: 10,
-    transferred: 28,
-    reserved: 88,
-    total: 888,
+    today: callToday,
+    transferred: callWeekly,
+    reserved: callMonthly,
+    total: callTotal,
   };
 
+  const {
+    today: inquiryToday,
+    weekly: inquiryWeekly,
+    monthly: inquiryMonthly,
+    total: inquiryTotal,
+  } = adminInfo.oneToOneInquiryStats;
   const oneToOneStats = {
     inquiry: '1 : 1 문의',
-    today: 10,
-    transferred: 28,
-    reserved: 88,
-    total: 888,
+    today: inquiryToday,
+    transferred: inquiryWeekly,
+    reserved: inquiryMonthly,
+    total: inquiryTotal,
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('accountname');
-    navigate('/admin/login');
+    localStorage.removeItem('adminAccessToken');
+    navigate(ADMIN_ROUTE.login);
   };
 
   return (
@@ -46,7 +74,7 @@ export function AdminMyPage() {
             />
           </div>
           <div className='mt-[2rem] text-[1.5625rem] font-bold text-[#464646]'>
-            강능요 사원
+            {adminInfo.adminInfo.name} 사원
           </div>
         </div>
 
@@ -58,7 +86,7 @@ export function AdminMyPage() {
 
       <div
         onClick={handleLogout}
-        className='absolute bottom-[-22rem] right-0 cursor-pointer text-[1.5625rem] font-extrabold'
+        className='absolute bottom-[-16rem] right-0 cursor-pointer text-[1.5625rem] font-extrabold'
       >
         로그아웃
       </div>

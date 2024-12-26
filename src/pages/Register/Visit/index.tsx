@@ -1,22 +1,24 @@
 import { Button } from '@/components/ui/button';
-
 import { AgreementCheckbox } from '@/components/Register/AgreementCheckbox';
 import { ConsultationSelect } from '@/components/Register/ConsultationSelect';
-import { ReusableInput } from '@/components/Register/ReusableInput';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Header from '@/components/Header/Header';
+import { Category } from '@/api/customer/calls';
+import { useAtom, useSetAtom } from 'jotai';
+import { contentAtom, isLoadingAtom, postVisitRequestAtom } from '@/stores';
+import usePostRecommendList from '@/hooks/query/customer/usePostRecommendList';
+import usePostVisit from '@/hooks/query/customer/usePostVisit';
 
 export type RegisterVisitData = {
-  name: string;
-  consultationType: string;
+  consultationType: Category;
   reservationDate: Date | undefined;
   reservationTime: string;
-  inquiryTitle: string;
-  inquiryContent: string;
+  title: string;
+  content: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,12 +30,33 @@ const showToast = (toast: any, description: string) => {
 };
 
 export function RegisterVisitFormPage() {
+  const [searchParams] = useSearchParams();
+  const from = searchParams.get('from');
+
+  const { branchId } = useParams<{ branchId: string }>();
+
+  const { mutate: postRecommendList } = usePostRecommendList();
+  const { mutate: postVisit } = usePostVisit();
+
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+
+  const [content, setContent] = useAtom(contentAtom);
+  const setPostVisitRequest = useSetAtom(postVisitRequestAtom);
+  const setIsLoading = useSetAtom(isLoadingAtom);
+
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [, setReload] = useState(false);
+
+  useEffect(() => {
+    setContent('');
+    setReload((prev) => !prev);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const {
     control,
-    register,
     handleSubmit,
     formState: { errors },
     watch,
@@ -41,24 +64,35 @@ export function RegisterVisitFormPage() {
 
   const consultationType = watch('consultationType');
 
-  const onSubmit: SubmitHandler<RegisterVisitData> = (data) => {
+  const onSubmit: SubmitHandler<RegisterVisitData> = ({
+    consultationType: category,
+  }) => {
     if (!isChecked1 || !isChecked2) {
       showToast(toast, '개인정보 수집 및 이용에 동의해야 합니다.');
       return;
     }
-    console.log('예약 정보:', {
-      ...data,
-      consultationType: data.consultationType,
-      reservationDate: data.reservationDate,
-      reservationTime: data.reservationTime,
-      inquiryTitle: data.inquiryTitle,
-      inquiryContent: data.inquiryContent,
-    });
 
-    showToast(toast, '예약 완료되었습니다!');
-    setTimeout(() => {
-      navigate(`/reservation/visit/${id}`);
-    }, 1000);
+    if (!textAreaRef.current) {
+      return;
+    }
+
+    setContent(textAreaRef.current?.value);
+    setPostVisitRequest({
+      branch_id: +(branchId ?? '0'),
+      content: textAreaRef.current?.value,
+      category,
+    });
+    postRecommendList({ query: textAreaRef.current?.value });
+    setIsLoading(true);
+    if (from === 'ai') {
+      postVisit({
+        branch_id: +(branchId ?? '0'),
+        content: textAreaRef.current?.value,
+        category,
+      });
+    } else {
+      navigate('/ai/answer/visit');
+    }
   };
 
   const [isChecked1, setIsChecked1] = useState(false);
@@ -75,28 +109,23 @@ export function RegisterVisitFormPage() {
           className='flex min-h-screen w-full flex-col justify-between gap-[1rem] pt-[5rem]'
         >
           <div className='flex flex-col gap-[2rem]'>
-            <ReusableInput
-              register={register}
-              fieldName='name'
-              error={errors.name?.message}
-              label='이름'
-              placeholder='ex) 김하나'
-              type='text'
-            />
             <ConsultationSelect
               control={control}
               error={errors.consultationType?.message}
               fieldName={'consultationType'}
             />
-
-            <ReusableInput
-              register={register}
-              fieldName='inquiryContent'
-              error={errors.inquiryContent?.message}
-              label='문의 내용'
-              placeholder='내용을 입력하세요.'
-              type='textarea'
-            />
+            <div>
+              <label className='mb-1 block pb-2 text-left text-lg font-semibold'>
+                문의 내용
+              </label>
+              <textarea
+                className='mt-1 block w-full rounded border border-gray-300 p-2 text-gray-800'
+                placeholder='문의 내용을 입력해주세요.'
+                defaultValue={content}
+                rows={4}
+                ref={textAreaRef}
+              />
+            </div>
           </div>
 
           <div className='flex flex-col'>

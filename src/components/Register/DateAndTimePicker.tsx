@@ -11,15 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { MAX_CAPACITY } from '@/constants/reservation';
-import { mockReservations } from '@/mock/mockReservationsCall';
 import { format } from 'date-fns';
 import { CalendarIcon, ClockIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 import { Button } from '../ui/button';
 import { FormErrorMessage } from './FormErrorMessage';
-import { ReservationSlots } from '@/types/reservation';
 
 type DateAndTimePickerProps<T extends FieldValues> = {
   control: Control<T>;
@@ -46,11 +43,6 @@ export function DateAndTimePicker<T extends FieldValues>({
       chevron.remove();
     }
   }, []);
-
-  const getRemainingCapacity = (slot: keyof ReservationSlots): number => {
-    const reserved = mockReservations[slot as number] || 0;
-    return MAX_CAPACITY - reserved;
-  };
 
   return (
     <div>
@@ -124,19 +116,19 @@ export function DateAndTimePicker<T extends FieldValues>({
                     <ClockIcon className='clock-icon ml-2 h-5 w-5 text-gray-400' />
                   </SelectTrigger>
                   <SelectContent>
-                    {timeSlots.map((slot) => (
-                      <SelectItem
-                        key={slot}
-                        value={`${slot} ${getRemainingCapacity(slot)}명`}
-                      >
-                        <div className='flex w-[12.5rem] justify-between'>
-                          <div>{slot}</div>
-                          <div className='font-bold text-main'>
-                            {getRemainingCapacity(slot)}명
+                    {timeSlots.map((slot) => {
+                      const [time, availability] = slot.split(' ');
+                      return (
+                        <SelectItem key={slot} value={`${time}`}>
+                          <div className='flex w-[12.5rem] justify-between'>
+                            <div>{time}</div>
+                            <div className='font-bold text-main'>
+                              {availability}명
+                            </div>
                           </div>
-                        </div>
-                      </SelectItem>
-                    ))}
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
               )}

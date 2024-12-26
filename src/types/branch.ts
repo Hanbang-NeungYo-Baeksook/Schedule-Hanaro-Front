@@ -22,5 +22,5 @@ export type RecBranch = {
   branchName: string;
   location: string;
   distance: number;
-  congestion: number;
+  waitingTime: number;
 };

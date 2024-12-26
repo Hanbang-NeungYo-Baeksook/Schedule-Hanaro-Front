@@ -3,6 +3,7 @@ import { ReactComponent as StarGgonge } from '@/assets/icons/StarGgonge.svg';
 import Map from '@/assets/images/map.png';
 import { useNavigate } from 'react-router-dom';
 import MyCard from './MyCard';
+import { Toaster } from '@/components/ui/toaster';
 
 export function MainPage() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ export function MainPage() {
                   </div>
                   <div
                     className='relative flex h-[3.5rem] w-full cursor-pointer items-center gap-4 rounded-3xl border-[3px] border-main bg-white p-4 pr-12 shadow-[0_0_17px_0_rgba(0,132,133,0.25)] focus:outline-none'
-                    onClick={() => navigate('/chat')}
+                    onClick={() => navigate('/ai/question')}
                   >
                     <StarGgonge className='mb-1' />
                     <div className='text-[1.05rem] text-lightText'>
@@ -43,12 +44,12 @@ export function MainPage() {
                     <MyCard
                       title='전화상담'
                       contents={['상담사를 통한', '전화 상담 서비스']}
-                      onClick={() => navigate('/chat')}
+                      onClick={() => navigate('/register/call')}
                     />
                     <MyCard
                       title='1:1 상담'
                       contents={['1:1 상담을을 통한', '1:1 상담 상담 서비스']}
-                      onClick={() => navigate('/chat')}
+                      onClick={() => navigate('/register/inquiry')}
                     />
                   </div>
                 </div>
@@ -68,6 +69,7 @@ export function MainPage() {
         <div className='bg-white pb-[100px]'></div>
         <div className='navbar fixed bottom-0 z-[0] bg-white pb-[30rem] min-[1000px]:pb-[29rem]'></div>
       </div>
+      <Toaster />
     </>
   );
 }

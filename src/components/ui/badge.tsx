@@ -19,6 +19,8 @@ const badgeVariants = cva(
         active: 'badge hover:bg-[main/90] active:bg-[main/90] cursor-pointer',
         noactive:
           'text-[#C9C9C9] border-border bg-white cursor-pointer hover:bg-secondary/80',
+        dark: 'bg-[#3C3C3C] text-white',
+        white: 'bg-white text-[#484848]',
       },
     },
     defaultVariants: {
