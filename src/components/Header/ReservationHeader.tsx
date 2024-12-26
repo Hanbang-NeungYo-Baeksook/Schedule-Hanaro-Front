@@ -1,12 +1,13 @@
+import { Status } from '@/api/customer/calls';
+import { InquiryStatus } from '@/api/customer/inquires';
+import { ReactComponent as DropButton } from '@/assets/icons/reservation/minidown.svg';
+import Header from '@/components/Header/Header';
+import { cn } from '@/lib/utils';
+import { callStatusAtom, inquiryStatusAtom } from '@/stores';
+import { useAtom } from 'jotai';
 import { useState } from 'react';
 import { ChangeToggle } from '../Reservation/ChangeToggle';
 import Tabs from '../Tabs/Tabs';
-import { ReactComponent as DropButton } from '@/assets/icons/reservation/minidown.svg';
-import Header from '@/components/Header/Header';
-import { useAtom } from 'jotai';
-import { callStatusAtom, inquiryStatusAtom } from '@/stores';
-import { Status } from '@/api/customer/calls';
-import { InquiryStatus } from '@/api/customer/inquires';
 
 type Props = {
   tabLocation: 'visit' | 'call';
@@ -97,12 +98,22 @@ function ReservationHeader({ tabLocation }: Props) {
                 onClick={toggleDropdown}
               >
                 {selectedStatus}
-                <div className='pl-[0.25rem]'>
+                <div
+                  className={cn(
+                    'transform pl-[0.25rem] transition-transform duration-300',
+                    isDropdownOpen ? 'rotate-180' : 'rotate-0'
+                  )}
+                >
                   <DropButton />
                 </div>
               </button>
               {isDropdownOpen && (
-                <ul className='absolute right-0 z-50 w-[10rem]'>
+                <ul
+                  className={cn(
+                    'absolute right-0 z-50 w-[10rem] transition-all duration-300 ease-in-out',
+                    isDropdownOpen ? 'animate-slideDown' : 'animate-slideUp'
+                  )}
+                >
                   {selectedStatus === '대기 중인 상담' ? (
                     <li
                       className='cursor-pointer whitespace-nowrap pl-[3.1rem] text-[#b3b3b3]'
@@ -140,12 +151,22 @@ function ReservationHeader({ tabLocation }: Props) {
                 onClick={toggleDropdown}
               >
                 {selectedStatus}
-                <div className='pl-[0.25rem]'>
+                <div
+                  className={cn(
+                    'transform pl-[0.25rem] transition-transform duration-300',
+                    isDropdownOpen ? 'rotate-180' : 'rotate-0'
+                  )}
+                >
                   <DropButton />
                 </div>
               </button>
               {isDropdownOpen && (
-                <ul className='absolute right-0 z-50 w-[10rem]'>
+                <ul
+                  className={cn(
+                    'absolute right-0 z-50 w-[10rem] transition-all duration-300 ease-in-out',
+                    isDropdownOpen ? 'animate-slideDown' : 'animate-slideUp'
+                  )}
+                >
                   {selectedStatus === '대기 중인 상담' ? (
                     <li
                       className='cursor-pointer whitespace-nowrap pl-[3.1rem] text-[#b3b3b3]'

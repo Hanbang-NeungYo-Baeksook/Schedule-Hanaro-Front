@@ -139,7 +139,7 @@ export default function AiAnswer() {
               </div>
               {dropdownIndex === index && (
                 <div className='relative z-10 -mt-4 w-full rounded-[.9375rem] border-[.125rem] border-[#d9d9d9] bg-white px-4 pb-3 pt-6'>
-                  <p className='text-left text-[1rem] font-bold text-[#464646]'>
+                  <p className='whitespace-pre-line text-left text-[1rem] font-bold text-[#464646]'>
                     {answer.response}
                   </p>
                 </div>

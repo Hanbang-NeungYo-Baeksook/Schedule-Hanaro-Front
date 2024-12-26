@@ -4,7 +4,6 @@ import ArrowAi from '@/assets/icons/arrowAI.svg';
 import Feedback from '@/components/Chat/Feedback';
 import Loading from '@/components/Chat/Loading';
 import Header from '@/components/Header/Header';
-import Nav from '@/components/Nav/Nav';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import usePostRecommendList from '@/hooks/query/customer/usePostRecommendList';
@@ -237,8 +236,11 @@ const ChatPageCopy = () => {
                     )}
                   </div>
                   {dropdownIndex === index && (
-                    <div className='relative z-10 -mt-4 w-full rounded-[.9375rem] border-[.125rem] border-[#d9d9d9] bg-white px-4 pb-3 pt-6'>
-                      <p className='text-left text-[1rem] font-bold text-[#464646]'>
+                    <div className='relative z-10 -mt-4 flex w-full flex-col items-start justify-center space-y-3 rounded-[.9375rem] border-[.125rem] border-[#d9d9d9] bg-white px-4 pb-3 pt-6'>
+                      <Badge className='rounded-[10px] border-[1px] border-[#DADFF3] bg-[#F2F4FB] text-[1rem] text-[#0022AC]'>
+                        유사도 {answer.similarity}%
+                      </Badge>
+                      <p className='whitespace-pre-line text-left text-[1rem] font-bold text-[#464646]'>
                         {answer.response}
                       </p>
                     </div>
@@ -250,7 +252,6 @@ const ChatPageCopy = () => {
           </div>
         )}
       </div>
-      <Nav />
     </>
   );
 };

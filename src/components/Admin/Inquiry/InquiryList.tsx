@@ -96,7 +96,9 @@ function InquiryList({
               <div className='font-inter flex items-center justify-between py-4 font-normal leading-normal'>
                 <div className='flex items-center space-x-2'>
                   <span className='ml-5 mr-5 font-medium text-gray-700'>
-                    {currentPage ? currentPage * 10 + index + 1 : index + 1}
+                    {currentPage
+                      ? (currentPage - 1) * 10 + index + 1
+                      : index + 1}
                   </span>
                   <span className='pr-2 font-semibold text-gray-800'>
                     {content.length <= 15

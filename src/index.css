@@ -95,6 +95,21 @@
     /* background-color: rgba(theme('colors.main'), 0.2); 투명도 10% */
     background-color: theme('colors.main'); /* 투명도 10% */
   }
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #000000;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+    background-color: #fff;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #000000;
+    border-radius: 10px;
+  }
 
   @media (min-height: 100dvh) {
     #root {
