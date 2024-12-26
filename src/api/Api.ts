@@ -1,3 +1,6 @@
+import { ADMIN_ROUTE } from '@/constants/route';
+import { postReissueAccessToken } from './admin/auth';
+
 const BASE_URL = 'http://localhost:8080';
 
 type HeadersProps = {
@@ -14,6 +17,8 @@ type ConfigProps = {
 };
 
 export type TokenNames = 'adminAccessToken' | 'customerAccessToken';
+
+let reissueAccessToken = false;
 
 const fetcher = async ({
   url,
@@ -62,7 +67,7 @@ const fetcher = async ({
     const response = await fetch(`${BASE_URL}${url}${queryString}`, options);
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw handleError(response, { url, method, headers, data, params });
     }
 
     return response.json();
@@ -70,6 +75,54 @@ const fetcher = async ({
     console.error('API call error:', error);
     throw error;
   }
+};
+
+const handleError = async (response: Response, requestProps: ConfigProps) => {
+  const responseString = await response.clone().text();
+  const errorCode = JSON.parse(responseString).bangggoodCode;
+
+  if (response.status === 401 && errorCode === 'EXPIRED_ACCESS_TOKEN') {
+    return handleUnauthorizedError(response, requestProps);
+  }
+
+  throw new Error(response.statusText);
+};
+
+const handleUnauthorizedError = async (
+  response: Response,
+  requestProps: ConfigProps
+) => {
+  if (reissueAccessToken) {
+    throw new Error(response.statusText);
+  }
+
+  reissueAccessToken = true;
+  try {
+    const accessTokenReissueResult = await postReissueAccessToken();
+    if (accessTokenReissueResult && accessTokenReissueResult?.accessToken) {
+      reissueAccessToken = false;
+      const isAdmin = requestProps.url.startsWith('/admin');
+      setToken(
+        isAdmin ? 'ADMIN' : 'CUSTOMER',
+        accessTokenReissueResult.accessToken
+      );
+      window.location.href = isAdmin ? ADMIN_ROUTE.online.main : '/';
+      return await fetcher(requestProps);
+    }
+  } catch (err) {
+    console.error(err);
+    const isAdmin = requestProps.url.startsWith('/admin');
+    removeToken(isAdmin ? 'ADMIN' : 'CUSTOMER');
+    window.location.href = isAdmin ? ADMIN_ROUTE.login : '/login';
+  }
+};
+
+const setToken = (type: 'CUSTOMER' | 'ADMIN', token: string) => {
+  window.localStorage.setItem(`${type.toLowerCase()}AccessToken`, token);
+};
+
+const removeToken = (type: 'CUSTOMER' | 'ADMIN') => {
+  window.localStorage.removeItem(`${type.toLowerCase()}AccessToken`);
 };
 
 const apiCall = {
