@@ -49,6 +49,12 @@ function SignInPage() {
     });
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !isButtonDisabled) {
+      handleLogin();
+    }
+  };
+
   return (
     <div className='flex min-h-screen flex-col items-center justify-center bg-white'>
       <div className='mb-8'>
@@ -62,8 +68,9 @@ function SignInPage() {
           </label>
           <input
             ref={idRef}
-            placeholder='hanaro@hanaro.com'
+            placeholder='hanaro'
             className='w-full border-b border-gray-300 px-[0.75rem] py-[0.5rem] leading-tight text-[#464646] focus:border-[#666666] focus:outline-none'
+            onKeyDown={handleKeyPress}
           />
         </div>
 
@@ -77,6 +84,8 @@ function SignInPage() {
           <input
             ref={passwordRef}
             className='w-full border-b border-gray-300 px-[0.75rem] py-[0.5rem] leading-tight text-[#464646] focus:border-[#666666] focus:outline-none'
+            type='password'
+            onKeyDown={handleKeyPress}
           />
         </div>
 
@@ -98,4 +107,5 @@ function SignInPage() {
     </div>
   );
 }
+
 export default SignInPage;
