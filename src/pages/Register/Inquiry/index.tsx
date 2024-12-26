@@ -50,7 +50,6 @@ export function RegisterInquiryFormPage() {
 
   const onSubmit: SubmitHandler<RegisterInquiryData> = ({
     consultationType: category,
-    inquiryContent: content,
   }) => {
     if (!isChecked1 || !isChecked2) {
       showToast(toast, '개인정보 수집 및 이용에 동의해야 합니다.');

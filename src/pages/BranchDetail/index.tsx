@@ -114,7 +114,7 @@ export function BranchDetailPage() {
           <Separator />
           <div className='w-[90%] justify-self-center py-8'>
             <div className='text-left text-xl font-bold'>대기 정보</div>
-            <div className='mt-4 flex items-center gap-4'>
+            <div className='mb-10 mt-4 flex items-center gap-4'>
               {waitingInfos.map((waitingInfo, index) => (
                 <Badge
                   variant='outline'
@@ -143,8 +143,8 @@ export function BranchDetailPage() {
                 </Badge>
               ))}
             </div>
+            <ReservationButton branchId={+(branchId ?? 0)} />
           </div>
-          <ReservationButton branchId={+(branchId ?? 0)} />
         </div>
         <Toaster />
       </div>

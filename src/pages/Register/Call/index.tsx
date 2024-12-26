@@ -57,14 +57,15 @@ export function RegisterCallFormPage() {
     reservationDate: Date | undefined,
     reservationTime: string | undefined
   ) => {
-    const selectedHour = (reservationTime ?? '00:00~00:00')
-      .split('~')[0]
+    const selectedHour = (reservationTime ?? '00:00-00:00')
+      .split('-')[0]
       .split(':')[0];
-    const selectedMinute = (reservationTime ?? '00:00~00:00')
-      .split('~')[0]
+    const selectedMinute = (reservationTime ?? '00:00-00:00')
+      .split('-')[0]
       .split(':')[1];
 
     const date = reservationDate ?? new Date(Date.now());
+
     date.setHours(+selectedHour);
     date.setMinutes(+selectedMinute);
 

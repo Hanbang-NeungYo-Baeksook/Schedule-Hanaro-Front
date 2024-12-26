@@ -83,6 +83,7 @@ export const postInquiry = async ({
   category,
   content,
 }: PostInquiryRequest) => {
+  console.log(content);
   return (await apiCall.post(BASE_URL, {
     category,
     content,

@@ -73,6 +73,8 @@ const ChatPage = () => {
 
   useEffect(() => {
     setRecommendList([]);
+    setContent('');
+    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
