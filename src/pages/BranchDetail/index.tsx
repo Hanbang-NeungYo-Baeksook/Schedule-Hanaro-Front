@@ -78,6 +78,26 @@ export function BranchDetailPage() {
     }
   };
 
+  const formatPhoneNumber = (phone: string): string => {
+    // 10자리: 지역번호(2자리) + 8자리 번호 (예: 021231234 -> 02-123-1234)
+    if (/^02\d{7,8}$/.test(phone)) {
+      return phone.replace(/^(\d{2})(\d{3,4})(\d{4})$/, '$1-$2-$3');
+    }
+
+    // 10자리: 지역번호(3자리) + 7자리 번호 (예: 0511234567 -> 051-123-4567)
+    if (/^\d{10}$/.test(phone)) {
+      return phone.replace(/^(\d{3})(\d{3})(\d{4})$/, '$1-$2-$3');
+    }
+
+    // 11자리: 휴대폰 번호 (예: 01012345678 -> 010-1234-5678)
+    if (/^\d{11}$/.test(phone)) {
+      return phone.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
+    }
+
+    // 유효하지 않은 전화번호 형식
+    throw new Error('유효하지 않은 전화번호 형식입니다.');
+  };
+
   return (
     <>
       <BranchDetailHeader branchName={branchName ?? ''} />
@@ -106,7 +126,7 @@ export function BranchDetailPage() {
               <li className='mt-4 flex items-center justify-start gap-2'>
                 <Tel width={16} height={20} />
                 <span className="font-['Inter'] text-base font-semibold text-[#464646]">
-                  {tel}
+                  {formatPhoneNumber(tel)}
                 </span>
               </li>
             </ul>
@@ -118,7 +138,7 @@ export function BranchDetailPage() {
               {waitingInfos.map((waitingInfo, index) => (
                 <Badge
                   variant='outline'
-                  className='w-full gap-2 rounded-[8px] bg-[#]'
+                  className='w-full cursor-default gap-2 rounded-[8px] bg-[#] hover:bg-white'
                   key={index}
                 >
                   <div className='flex w-full flex-col gap-1 py-2'>

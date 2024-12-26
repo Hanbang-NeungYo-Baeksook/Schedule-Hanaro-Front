@@ -1,7 +1,7 @@
 import { ADMIN_ROUTE } from '@/constants/route';
 import { postReissueAccessToken } from './admin/auth';
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://schedule-hanaro.topician.com:8080';
 
 type HeadersProps = {
   'Content-Type': string;

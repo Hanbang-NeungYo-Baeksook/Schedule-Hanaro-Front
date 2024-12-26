@@ -1,15 +1,25 @@
-import { getCallList, GetCallListRequest } from '@/api/customer/calls';
+import {
+  getCallList,
+  GetCallListRequest,
+  GetCallListResponse,
+} from '@/api/customer/calls';
 import { QUERY_KEYS } from '@/constants/queryKeys';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 const useGetCallList = ({
   status = 'PENDING',
-  page = 0,
-  size = 0,
+  page,
+  size = 10,
 }: GetCallListRequest) => {
-  return useQuery({
+  return useInfiniteQuery<GetCallListResponse>({
     queryKey: [QUERY_KEYS.CALL_LIST, status, page, size],
-    queryFn: () => getCallList({ status, page, size }),
+    queryFn: ({ pageParam = 1 }) =>
+      getCallList({ status, page: pageParam as number, size }),
+    getNextPageParam: (getCallListResponse): number | undefined => {
+      const nextPage = getCallListResponse.pagination.currentPage + 1;
+      return getCallListResponse.pagination.hasNext ? nextPage : undefined;
+    },
+    initialPageParam: 1,
   });
 };
 

@@ -39,12 +39,12 @@ import { RegisterVisitFormPage } from '@/pages/Register/Visit';
 import { createBrowserRouter } from 'react-router-dom';
 import { SignUpPage } from '@/pages/SignUp';
 import { SignUpLayout } from '@/components/Layout/SignUp';
-import ChatPage from '@/pages/Chat';
 import SignInPage from '@/pages/Signin';
 
 import { AdminMyPage } from '@/pages/Admin/online/mypage';
 import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
 import AdminLogin from '@/pages/Admin/Login';
+import ChatPage from '@/pages/Chat';
 export const useRouter = () =>
   createBrowserRouter([
     {
@@ -72,7 +72,11 @@ export const useRouter = () =>
           element: <BranchDetailPage />,
         },
         {
-          path: '/chat',
+          path: '/ai-question',
+          element: <ChatPage />,
+        },
+        {
+          path: '/ai-answer/:registerType',
           element: <ChatPage />,
         },
         {
@@ -137,7 +141,10 @@ export const useRouter = () =>
           element: <RegisterLayout />,
           children: [
             { index: true, element: <ChatPage /> },
-            { path: '/register/type', element: <ReservationPage /> },
+            {
+              path: '/register/type/:registerType',
+              element: <ReservationPage />,
+            },
             {
               path: '/register/call',
               element: <RegisterCallFormPage />,

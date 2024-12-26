@@ -1,5 +1,6 @@
 import { ReactComponent as DownVector } from '@/assets/icons/DownVector.svg';
 import { ReactComponent as UpVector } from '@/assets/icons/UpVector.svg';
+import ArrowAi from '@/assets/icons/arrowAI.svg';
 import Feedback from '@/components/Chat/Feedback';
 import Loading from '@/components/Chat/Loading';
 import Header from '@/components/Header/Header';
@@ -15,6 +16,7 @@ import {
 } from '@/stores';
 import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const recommendedQuestions = [
   '통장 비밀번호는 숫자만 사용할 수 있나요?',
@@ -25,6 +27,7 @@ const recommendedQuestions = [
 
 const ChatPage = () => {
   const [recommendList, setRecommendList] = useAtom(recommendListAtom);
+  const { registerType } = useParams();
   const tagList = useAtomValue(tagListAtom);
   const { mutate: postRecommendList } = usePostRecommendList();
 
@@ -48,6 +51,7 @@ const ChatPage = () => {
       }
       setInputContent(inputValue);
       setContent(inputValue);
+      setIsLoading(true);
       postRecommendList({ query: inputValue });
     }
   };
@@ -134,7 +138,7 @@ const ChatPage = () => {
                   rows={1}
                 />
                 <img
-                  src='src/assets/icons/arrowAI.svg'
+                  src={ArrowAi}
                   alt='Send'
                   className={`absolute right-4 h-7 w-7 cursor-pointer object-contain transition-all ${
                     isExpanded ? 'bottom-5' : 'bottom-3 -translate-y-1/2'
@@ -242,7 +246,7 @@ const ChatPage = () => {
                 </div>
               ))}
             </div>
-            <Feedback />
+            <Feedback resigterType={registerType ?? 'call'} />
           </div>
         )}
       </div>

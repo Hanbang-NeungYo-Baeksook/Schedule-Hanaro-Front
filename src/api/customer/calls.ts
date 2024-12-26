@@ -86,18 +86,7 @@ export const getCallList = async ({
   page,
   size,
 }: GetCallListRequest) => {
-  const param =
-    status && page != 0 && size != 0
-      ? {
-          status,
-          page,
-          size,
-        }
-      : status
-        ? {
-            status,
-          }
-        : {};
+  const param = { status, page, size };
   return (await apiCall.get(BASE_URL, param)) as GetCallListResponse;
 };
 

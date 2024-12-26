@@ -59,7 +59,7 @@ export default function ReservationButton({ branchId }: { branchId: number }) {
           modalDescription1='방문 예약 후 1시간 이내 미방문 시'
           modalDescription2=' 예약이 취소될 수 있습니다.'
           modalButtonTitle='예약'
-          onClick={() => navigate(`/register/visit/${branchId}`)}
+          onClick={() => navigate(`/chat/visit`)}
         ></Modalbutton>
       )}
     </div>

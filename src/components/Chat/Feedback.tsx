@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 
-const Feedback = () => {
+const Feedback = ({ resigterType }: { resigterType: string }) => {
   const navigate = useNavigate();
 
   const handlePositiveFeedback = () => {
@@ -9,7 +9,7 @@ const Feedback = () => {
   };
 
   const handleNegativeFeedback = () => {
-    navigate('/register/type');
+    navigate(`/register/type/${resigterType}`);
   };
 
   return (

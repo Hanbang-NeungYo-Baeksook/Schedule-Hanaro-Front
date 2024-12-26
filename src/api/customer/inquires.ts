@@ -56,18 +56,11 @@ export const getInquiryList = async ({
   page,
   size,
 }: GetInquiryListRequest) => {
-  const param =
-    status && page != 0 && size != 0
-      ? {
-          status,
-          page,
-          size,
-        }
-      : status
-        ? {
-            status,
-          }
-        : {};
+  const param = {
+    status,
+    page,
+    size,
+  };
   return (await apiCall.get(BASE_URL, param)) as GetInquiryListResponse;
 };
 

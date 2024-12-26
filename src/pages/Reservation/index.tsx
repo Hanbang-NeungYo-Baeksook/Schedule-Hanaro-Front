@@ -2,15 +2,23 @@ import { Button } from '@/components/ui/button';
 import { RESERVATION_TYPE } from '@/constants/reservation';
 import '@/index.css';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function ReservationPage() {
   const navigate = useNavigate();
+  const { registerType } = useParams();
   const [selectedRes, setSelectedRes] = useState('call');
+
+  useEffect(() => {
+    setSelectedRes(registerType ?? 'call');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handlePage = () => {
     navigate(`/register/${selectedRes}`);
   };
+
   return (
     <>
       <div className='mx-auto flex h-screen w-[90%] flex-col justify-between pb-[7rem] pt-[4rem]'>
