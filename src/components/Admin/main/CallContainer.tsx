@@ -5,6 +5,7 @@ import useGetCallWaitListQuery from '@/hooks/query/admin/useGetCallWaitList';
 import usePatchCallProgress from '@/hooks/query/admin/usePatchCallProgress';
 import { cn } from '@/lib/utils';
 import { useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
 import CallInfoBox from './CallInfoBox';
 import CallMemoForm from './CallMemoForm';
@@ -17,11 +18,17 @@ function CallContainer() {
   const toggleOpenCallMemo = () => setOpenCallMemo((prev) => !prev);
   const closeCallMemo = () => setOpenCallMemo(false);
 
-  const { data: waits } = useGetCallWaitListQuery();
-  const { mutate: patchStart } = usePatchCallProgress();
-
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const changeIdx = (idx: number) => setSelectedIdx(idx);
+
+  const [dateValue, setDateValue] = useState<Date | undefined>(undefined);
+  const [timeValue, setTimeValue] = useState<string | undefined>(undefined);
+
+  const { data: waits } = useGetCallWaitListQuery({
+    date: dateValue && dayjs(dateValue).format('YYYY-MM-DD'),
+    time: timeValue && timeValue?.split('~')[0],
+  });
+  const { mutate: patchStart } = usePatchCallProgress();
 
   // Web socket
   const webSocket = useRef<WebSocket | null>(null);
@@ -75,7 +82,12 @@ function CallContainer() {
       </div>
 
       <div className='flex w-full items-center justify-between'>
-        <CallTimeSelector />
+        <CallTimeSelector
+          dateValue={dateValue}
+          setDateValue={setDateValue}
+          timeValue={timeValue}
+          setTimeValue={setTimeValue}
+        />
         {!waits.progress && (
           <Button
             className='w-fit rounded-[20px] bg-gray-800 px-10 py-2 text-white hover:bg-gray-700'
@@ -86,7 +98,7 @@ function CallContainer() {
         )}
       </div>
 
-      <div className='flex w-full items-stretch gap-5'>
+      <div className='flex w-full items-stretch space-x-5'>
         <div className='flex w-[70%] flex-grow items-stretch gap-3 bg-[#F2F2F2] p-3'>
           <WaitingList
             selectedIdx={selectedIdx ?? -1}
@@ -111,9 +123,7 @@ function CallContainer() {
         </div>
         {waits.progress ? (
           <CurrentBox progress={waits.progress} toggleOpen={closeCallMemo} />
-        ) : (
-          <Skeleton />
-        )}
+        ) : null}
       </div>
       <div
         className={cn(

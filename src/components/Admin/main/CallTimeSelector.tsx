@@ -40,14 +40,25 @@ function generateTimeSlots(startTime: string, endTime: string) {
   return slots;
 }
 
-function CallTimeSelector() {
+export type Params = {
+  dateValue?: Date;
+  setDateValue: (date: Date) => void;
+  timeValue?: string;
+  setTimeValue: (time: string) => void;
+};
+
+function CallTimeSelector({
+  dateValue,
+  setDateValue,
+  timeValue,
+  setTimeValue,
+}: Params) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const timeSlots = generateTimeSlots(
     storeOperatingHours.startTime,
     storeOperatingHours.endTime
   );
-  const [timeValue, setTimeValue] = useState<Date>(new Date(timeSlots[0]));
 
   return (
     <div className='flex w-[40%] min-w-52 items-center justify-center space-x-2'>
@@ -62,13 +73,13 @@ function CallTimeSelector() {
                 variant='outline'
                 className='text-lightGray h-10 w-full justify-start border-input py-5 pl-3 text-left'
               >
-                {timeValue ? (
+                {dateValue ? (
                   <span className='text-lightGray text-base font-normal'>
-                    {dayjs(timeValue).format('YYYY-MM-DD')}
+                    {dayjs(dateValue).format('YYYY-MM-DD')}
                   </span>
                 ) : (
                   <span className='text-lightGray text-base font-normal'>
-                    예약일 선택
+                    전체 날짜
                   </span>
                 )}
                 <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
@@ -77,9 +88,9 @@ function CallTimeSelector() {
             <PopoverContent className='min-h-[360px] w-auto py-5' align='start'>
               <Calendar
                 mode='single'
-                selected={timeValue}
+                selected={dateValue}
                 onSelect={(date) => {
-                  setTimeValue(date ?? new Date(timeSlots[0]));
+                  setDateValue(date ?? new Date());
                   setIsPopoverOpen(false);
                 }}
                 disabled={(date) =>
@@ -88,25 +99,23 @@ function CallTimeSelector() {
               />
             </PopoverContent>
           </Popover>
-          {/* <FormErrorMessage error={dateError} /> */}
         </div>
         <div className='w-full flex-1'>
           <Select
-            onValueChange={(value) => setTimeValue(new Date(value))}
-            value={timeValue.toString() || ''}
+            onValueChange={(value) => setTimeValue(value)}
+            value={timeValue}
           >
             <SelectTrigger className='time-select w-full'>
-              <SelectValue
-                placeholder='시간대를 선택하세요'
-                className='text-base'
-              >
-                {timeValue
-                  ? dayjs(timeValue).format('HH:mm')
-                  : '시간대를 선택하세요'}
+              <SelectValue placeholder='전체 시간대' className='text-base'>
+                {timeValue ? timeValue : '전체'}
               </SelectValue>
-              {/* <ClockIcon className='clock-icon ml-2 h-5 w-5 text-gray-400' /> */}
             </SelectTrigger>
             <SelectContent>
+              <SelectItem key={'total'} value={'전체 시간대'}>
+                <div className='flex w-fit justify-between'>
+                  <div>전체 시간대</div>
+                </div>
+              </SelectItem>
               {timeSlots.map((slot) => (
                 <SelectItem key={slot} value={slot}>
                   <div className='flex w-fit justify-between'>
@@ -116,16 +125,14 @@ function CallTimeSelector() {
               ))}
             </SelectContent>
           </Select>
-
-          {/* <FormErrorMessage error={timeError} /> */}
         </div>
       </div>
-      <Button
+      {/* <Button
         variant='default'
         className='w-fit bg-lightText px-8 hover:bg-lightGrey'
       >
         적용
-      </Button>
+      </Button> */}
     </div>
   );
 }
