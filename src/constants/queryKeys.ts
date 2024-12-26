@@ -48,4 +48,7 @@ export const ADMIN_QUERY_KEYS = {
   CUSTOMER_HISTORY: 'customer-history',
 
   ADMIN_INFO: 'admin-info',
+  VISIT_DETAIL: 'visit-detail',
+  CURRENT_VISIT: 'current-visit',
+  VISIT_STATUS_UPDATE: 'visit-status-update',
 };
