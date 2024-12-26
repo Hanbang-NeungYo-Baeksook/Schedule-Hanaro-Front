@@ -4,7 +4,7 @@ type InputCustomerInfoProps = {
   name: string;
   phoneNumber: string;
   start_time: string; // 상담 시간 추가
-  end_time: string;
+  end_time?: string;
   className?: string; // 외부 스타일
 };
 
@@ -46,9 +46,11 @@ function InputCustomerInfo({
           <span className='font-inter pl-16 text-[1.4rem] font-semibold text-gray-800'>
             {dayjs(start_time).format('MM월 DD일 HH:MM:SS')}
           </span>
-          <span className='font-inter pl-16 text-[1.4rem] font-semibold text-gray-800'>
-            {dayjs(end_time).format('MM월 DD일 HH:MM:SS')}
-          </span>
+          {end_time ? (
+            <span className='font-inter pl-16 text-[1.4rem] font-semibold text-gray-800'>
+              {dayjs(end_time).format('MM월 DD일 HH:MM:SS')}
+            </span>
+          ) : null}
         </div>
       </div>
     </div>

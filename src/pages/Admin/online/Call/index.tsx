@@ -2,32 +2,63 @@
 
 import ListOfCallInquiry from '@/components/Admin/Call/ListOfCallInquiry';
 import SearchConditionSetting from '@/components/Admin/Call/SearchConditionSetting';
+import ListPagination from '@/components/Admin/ListPagination';
 import { Skeleton } from '@/components/ui/skeleton';
 import useGetCallList from '@/hooks/query/admin/useGetCallList';
-import { useState } from 'react';
+import { Category } from '@/types/enum';
+import { useEffect, useState } from 'react';
 
 export type SearchConditions = {
   page: number;
   startedAt?: string;
   endedAt?: string;
-  category?: string;
+  category?: Category;
   keyword?: string;
 };
 
 function CallPage() {
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchConditions, setSearchConditions] = useState<SearchConditions>({
-    page: 1,
+    page: currentPage ?? 1,
     startedAt: undefined,
     endedAt: undefined,
     category: undefined,
     keyword: undefined,
   });
 
+  useEffect(() => {
+    setSearchConditions((prevConditions) => ({
+      ...prevConditions,
+      page: currentPage,
+    }));
+  }, [currentPage]);
+
   const { data: calls } = useGetCallList(searchConditions);
 
+  if (!calls) {
+    return <>Loading...</>;
+  }
+
   // 검색
-  const handleSearch = (conditions: SearchConditions) =>
+  const handleSearch = (conditions: SearchConditions) => {
     setSearchConditions(conditions);
+    setCurrentPage(1);
+  };
+
+  // 이전 페이지
+  const onPrev = () => {
+    const prevPage = currentPage - 1 > 0 ? currentPage - 1 : 1;
+    setCurrentPage(prevPage);
+  };
+
+  // 다음 페이지
+  const onNext = () => {
+    const nextPage =
+      currentPage + 1 < calls?.pagination?.pageSize
+        ? currentPage + 1
+        : calls?.pagination?.pageSize;
+    setCurrentPage(nextPage);
+  };
 
   return (
     <div className='mx-auto max-w-[1300px] px-4'>
@@ -41,11 +72,23 @@ function CallPage() {
         <h1 className='mb-4 w-full text-left text-xl font-extrabold text-black'>
           검색 목록
         </h1>
-        {calls && calls.data ? (
-          <ListOfCallInquiry inquiries={calls.data} />
+        {calls.data ? (
+          <ListOfCallInquiry calls={calls.data} currentPage={currentPage} />
         ) : (
           <Skeleton />
         )}
+        <div className='my-6'>
+          {calls.data && (
+            <ListPagination
+              firstPage={1}
+              currentPage={currentPage - 1}
+              setCurrentPage={setCurrentPage}
+              totalPage={calls?.pagination?.pageSize ?? 1}
+              onPrev={onPrev}
+              onNext={onNext}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

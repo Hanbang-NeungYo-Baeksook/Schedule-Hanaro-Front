@@ -1,4 +1,10 @@
-export type AdminCustomer = PageData<AdminCustomerData[], TotalPagination>;
+export type AdminCustomer = {
+  data: AdminCustomerData[];
+  current_page: number;
+  page_size: number;
+  total_items: number;
+  total_pages: number;
+};
 
 export type AdminCustomerDetail = Omit<AdminCustomerData, 'customer_id'>;
 

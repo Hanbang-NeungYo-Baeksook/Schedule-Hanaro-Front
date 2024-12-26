@@ -45,13 +45,6 @@ declare global {
     pageSize: number;
     hasNext: boolean;
   };
-
-  type TotalPagination = {
-    current_page: number;
-    page_size: number;
-    total_items: number;
-    total_pages: number;
-  };
 }
 
 export {};

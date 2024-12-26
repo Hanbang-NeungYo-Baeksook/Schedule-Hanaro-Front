@@ -1,5 +1,6 @@
 import { SELECT_ITEMS } from '@/constants';
 import { SearchConditions } from '@/pages/Admin';
+import { Category } from '@/types/enum';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 import arrowDown from '../../../assets/icons/arrow_down.svg';
@@ -54,9 +55,7 @@ function SearchConditionSetting({
         <h2 className='text-xl font-extrabold text-black'>검색 조건 설정</h2>
       </div>
 
-      {/* 검색 조건 */}
       <div className='mb-6 grid grid-cols-3 items-start gap-6'>
-        {/* 기간 선택 */}
         <div className='flex flex-col items-start'>
           <label className='mb-1 self-start text-base font-semibold text-black'>
             기간
@@ -93,7 +92,6 @@ function SearchConditionSetting({
           </div>
         </div>
 
-        {/* 카테고리 선택 */}
         <div className='flex flex-col pl-7'>
           <label className='mb-1 self-start text-base font-semibold text-black'>
             카테고리
@@ -104,7 +102,9 @@ function SearchConditionSetting({
           >
             <Select
               value={tmpFilterConditions.category}
-              onValueChange={(value) => onInputChange('category', value)}
+              onValueChange={(value) =>
+                onInputChange('category', value as Category)
+              }
             >
               <SelectTrigger className='relative h-[3rem] w-[14rem] rounded-full border-none bg-white pl-3 text-left text-base text-gray-500 shadow-md'>
                 <span className='ml-1'>
@@ -125,7 +125,6 @@ function SearchConditionSetting({
           </div>
         </div>
 
-        {/* 검색어 입력 */}
         <div className='flex flex-col items-start'>
           <label className='mb-1 self-start text-base font-semibold text-black'>
             검색어
@@ -143,19 +142,18 @@ function SearchConditionSetting({
             />
           </div>
 
-          {/* 버튼 */}
           <div className='flex w-full justify-end space-x-4'>
             <Button
               variant='outline'
               onClick={handleReset}
-              className='h-[4rem] w-[14rem] rounded-full border-2 border-gray-800 bg-white px-4 py-2 text-xl font-bold text-gray-600 hover:bg-gray-100'
+              className='rounded-full border-[1px] border-lightText bg-white px-3 py-1 text-[1rem] font-bold text-gray-600 hover:bg-gray-100'
             >
               초기화
             </Button>
             <Button
               variant='default'
               onClick={() => onSearch(tmpFilterConditions)}
-              className='h-[4rem] w-[14rem] rounded-full bg-gray-800 px-4 py-2 text-xl font-bold text-white hover:bg-gray-900'
+              className='rounded-full bg-lightText px-3 py-1 text-[1rem] font-bold text-white hover:bg-gray-700'
             >
               검색
             </Button>

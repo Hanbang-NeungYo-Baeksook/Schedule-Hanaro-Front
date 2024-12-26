@@ -18,6 +18,7 @@ function InquiryContainer() {
       <div className='flex w-full items-center gap-5'>
         {inquiries.data.length > 0 ? (
           <InquiryList
+            totalItems={inquiries.total_items}
             activeCategory={activeCategory}
             setActiveCategory={setActiveCategory}
             inquiries={inquiries.data}

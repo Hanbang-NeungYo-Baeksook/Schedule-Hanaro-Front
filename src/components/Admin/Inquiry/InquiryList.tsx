@@ -21,6 +21,8 @@ type InquiryListProps = {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   inquiries: AdminInquiryData[];
+  totalItems?: number;
+  currentPage?: number;
 };
 
 function InquiryList({
@@ -29,6 +31,8 @@ function InquiryList({
   inquiries,
   searchQuery,
   setSearchQuery,
+  totalItems,
+  currentPage,
 }: InquiryListProps) {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -67,12 +71,12 @@ function InquiryList({
   return (
     <div className='font-inter mx-auto w-full rounded-lg border-gray-200 bg-white p-6 text-[1.25rem] font-bold leading-normal shadow-custom'>
       <div className='font-inter mb-0 flex items-center justify-between border-b pb-4 font-normal leading-normal'>
-        <h2 className='text-[1.125rem] font-bold text-gray-800'>
-          총{' '}
+        <h2 className='space-x-1 text-[1.125rem] font-bold text-gray-800'>
+          <span>총</span>
           <span className='text-[1.4rem] font-extrabold text-teal-600'>
-            {formattedInquiries.length}
+            {totalItems}
           </span>
-          건
+          <span>건</span>
         </h2>
         <FilterAndSearch
           activeCategory={activeCategory}
@@ -92,7 +96,7 @@ function InquiryList({
               <div className='font-inter flex items-center justify-between py-4 font-normal leading-normal'>
                 <div className='flex items-center space-x-2'>
                   <span className='ml-5 mr-5 font-medium text-gray-700'>
-                    {index + 1}
+                    {currentPage ? currentPage * 10 + index + 1 : index + 1}
                   </span>
                   <span className='pr-2 font-semibold text-gray-800'>
                     {content.length <= 15

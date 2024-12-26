@@ -14,6 +14,8 @@ function WaitingBox({
   content,
   resTime,
 }: Props) {
+  const time = dayjs(dayjs()).diff(resTime, 'm');
+  const now = dayjs().isAfter(dayjs(resTime)) && time < 60;
   return (
     <div
       className={cn(
@@ -27,7 +29,8 @@ function WaitingBox({
           <Badge>{category}</Badge>
         </div>
         <span className='text-[0.875rem] font-bold text-main'>
-          {dayjs(resTime).format('mm분')} 기다림
+          {now && time}
+          {now && '분 기다림'}
         </span>
       </div>
       <div className='flex items-center justify-between'>

@@ -1,5 +1,5 @@
 import arrowLeft from '@/assets/icons/arrow_left.svg';
-import CustomerInfo from '@/components/Admin/Inquiry/InputCustomerInfo';
+import DetailCustomerInfo from '@/components/Admin/Inquiry/DetailCustomerInfo';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import useGetCallDetail from '@/hooks/query/admin/useGetCallDetail';
@@ -42,8 +42,7 @@ export function CallAnswerDetail() {
         </span>
         <span className='text-[1.2rem] font-bold text-[#464646]'>뒤로가기</span>
       </button>
-      <CustomerInfo
-        className='mb-[1rem] w-full rounded-[1.875rem] bg-[#f9f9f9] p-[1.5rem] shadow-[0_4px_10px_0_rgba(0,0,0,0.1)]'
+      <DetailCustomerInfo
         name={name}
         phoneNumber={phone_number}
         start_time={

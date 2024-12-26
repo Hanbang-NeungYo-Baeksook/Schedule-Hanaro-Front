@@ -1,11 +1,11 @@
-import CustomerInfo from '@/components/Admin/Inquiry/InputCustomerInfo'; // 고객정보 컴포넌트 경로
+import DetailCustomerInfo from '@/components/Admin/Inquiry/DetailCustomerInfo';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ADMIN_ROUTE } from '@/constants/route';
 import useGetInquiryDetail from '@/hooks/query/admin/useGetInquiryDetail';
 import usePostInquiryReply from '@/hooks/query/admin/usePostInquiryReply';
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -51,12 +51,15 @@ export function AnswerInput() {
   return (
     <div className='mx-auto w-full max-w-[1300px]'>
       {/* 고객 정보 컴포넌트 */}
-      <CustomerInfo
-        className='mb-[1rem] w-full rounded-[1.875rem] bg-[#f9f9f9] p-[1.5rem] shadow-[0_4px_10px_0_rgba(0,0,0,0.1)]'
+      <DetailCustomerInfo
         name={customer_name}
         phoneNumber={phone_number}
-        start_time={format(new Date(inquiry_created_at), 'MM월 dd일 HH시 mm분')}
-        end_time={format(new Date(inquiry_created_at), 'MM월 dd일 HH시 mm분')}
+        start_time={
+          inquiry_created_at
+            ? dayjs(inquiry_created_at).format('MM월 DD일 HH시 mm분')
+            : ''
+        }
+        // end_time={format(new Date(inquiry_created_at), 'MM월 dd일 HH시 mm분')}
       />
 
       {/* 하얀색 상자 내부 */}

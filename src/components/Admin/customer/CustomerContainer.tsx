@@ -2,17 +2,37 @@ import { Skeleton } from '@/components/ui/skeleton';
 import useGetCustomerList from '@/hooks/query/admin/useGetCustomerList';
 import { AdminCustomerData } from '@/types/customer';
 import React, { useState } from 'react';
+import ListPagination from '../ListPagination';
 import CustomerBox from './CustomerBox';
 
 function CustomerContainer() {
-  const [page] = useState(1);
-  const { data: customers } = useGetCustomerList(page);
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: customers } = useGetCustomerList(currentPage);
 
   if (!customers || !customers.data) {
-    <>
-      <Skeleton />
-    </>;
+    return (
+      <>
+        <Skeleton />
+      </>
+    );
   }
+
+  console.log(customers.data);
+
+  // 이전 페이지
+  const onPrev = () => {
+    const prevPage = currentPage - 1 > 0 ? currentPage - 1 : 1;
+    setCurrentPage(prevPage);
+  };
+
+  // 다음 페이지
+  const onNext = () => {
+    const nextPage =
+      currentPage + 1 < customers.total_pages
+        ? currentPage + 1
+        : customers.total_pages;
+    setCurrentPage(nextPage);
+  };
 
   return (
     <div className='w-full rounded-[30px] px-5 py-8 shadow-[0px_4px_20px_0px_rgba(0,0,0,0.1)]'>
@@ -48,7 +68,7 @@ function CustomerContainer() {
             <React.Fragment key={customer_id}>
               <CustomerBox
                 userId={customer_id}
-                idx={idx + 1}
+                idx={(currentPage - 1) * 10 + (idx + 1)}
                 name={customer_name}
                 mobile={phone_number}
                 birthdt={birth_date}
@@ -58,6 +78,19 @@ function CustomerContainer() {
           )
         )}
       </ul>
+
+      <div className='my-6'>
+        {customers?.data?.length > 0 && (
+          <ListPagination
+            firstPage={1}
+            currentPage={currentPage - 1}
+            setCurrentPage={setCurrentPage}
+            totalPage={customers?.total_pages ?? 1}
+            onPrev={onPrev}
+            onNext={onNext}
+          />
+        )}
+      </div>
     </div>
   );
 }
