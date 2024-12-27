@@ -75,6 +75,14 @@ function CallInfoBox({
   const { phone_inquiries: calls, one_to_one_inquiries: inquiries } =
     customerHistory;
 
+  const { tags: rawTags = [] } = selectedCall || {};
+
+  const flattenedTags = Array.isArray(rawTags)
+    ? (rawTags as string[]).flatMap((tag) => tag.split(','))
+    : typeof rawTags === 'string'
+      ? rawTags.split(',')
+      : [];
+
   return (
     <div className='flex h-full flex-col rounded-[20px] bg-white px-4 pb-8 pt-6'>
       <div className='pb-5 pt-3'>
@@ -94,9 +102,9 @@ function CallInfoBox({
             </div>
             <div className='flex min-h-80 flex-grow flex-col overflow-auto rounded p-4'>
               <div className='my-3 flex items-center justify-start gap-2'>
-                {tags.split(',').map((tag, idx) => (
+                {flattenedTags.map((tag, idx) => (
                   <Badge key={idx} className='py-1' variant='lightSolid'>
-                    # {tag}
+                    # {tag.trim()}
                   </Badge>
                 ))}
               </div>
