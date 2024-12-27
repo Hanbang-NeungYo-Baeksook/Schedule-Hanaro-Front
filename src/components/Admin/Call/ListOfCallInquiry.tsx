@@ -18,7 +18,7 @@ function ListOfCallInquiry({
         <h2 className='text-[1.125rem] font-bold text-gray-800'>
           총{' '}
           <span className='text-[1.4rem] font-extrabold text-teal-600'>
-            {calls.length * 5}
+            {calls.length}
           </span>{' '}
           건
         </h2>
