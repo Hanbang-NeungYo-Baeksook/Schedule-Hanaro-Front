@@ -28,6 +28,7 @@ jobs:
       - name: Generate wbuild
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_SOCKET_URL: ${{ secrets.VITE_SOCKET_URL }}
         run: pnpm build
 
       # SSH 세팅팅
