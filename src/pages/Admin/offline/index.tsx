@@ -1,14 +1,14 @@
 import InfoCard from '@/components/Admin/Infocard';
 import WaitingNumber from '@/components/Admin/WaitingNum';
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 // import CallInfoBox from '@/components/Admin/main/CallInfoBox';
 import { getVisitStatus } from '@/api/admin/visit';
+import CallInfoBox from '@/components/Admin/main/CallInfoBox';
 import useUpdateVisitStatusMutation from '@/hooks/mutation/admin/useUpdateVisitStatus';
+import useGetVisitDetailQuery from '@/hooks/query/admin/useGetVisitDetail';
+import { useWebSocket } from '@/hooks/useWebSocket';
 import { AdminVisitStatusUpdateResponse } from '@/types/Visit';
 import Next from '../../../components/Admin/Next';
-import useGetVisitDetailQuery from '@/hooks/query/admin/useGetVisitDetail';
-import CallInfoBox from '@/components/Admin/main/CallInfoBox';
-import { useWebSocket } from '@/hooks/useWebSocket';
 
 const ROTATE_ANGLE = 45;
 const SECTION_ID = 5;
@@ -96,14 +96,11 @@ function VisitPage() {
   };
 
   const handleWebSocketMessage = useCallback(
-    (message: { type: 'UPDATE_NEEDED'; sectionId: number }) => {
+    (message: { type: 'UPDATE_NEEDED'; topicId: number }) => {
       console.log('웹소켓 메시지 수신 - 상태 업데이트 필요:', message);
 
       // 해당 섹션의 상태 업데이트가 필요한 경우에만 처리
-      if (
-        message.type === 'UPDATE_NEEDED' &&
-        message.sectionId === SECTION_ID
-      ) {
+      if (message.type === 'UPDATE_NEEDED' && message.topicId === SECTION_ID) {
         console.log(`섹션 ${SECTION_ID}의 상태 업데이트 시작`);
         void fetchInitialStatus();
       }
@@ -111,7 +108,11 @@ function VisitPage() {
     [fetchInitialStatus]
   );
 
-  const { isConnected } = useWebSocket(SECTION_ID, handleWebSocketMessage);
+  const { isConnected } = useWebSocket(
+    SECTION_ID,
+    'VISIT',
+    handleWebSocketMessage
+  );
 
   // 초기 로드와 웹소켓 연결 상태 변경 시에만 실행
   useEffect(() => {

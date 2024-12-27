@@ -68,7 +68,7 @@ function CallInfoBox({
     );
   }
 
-  const { waiting_num, category, tags, content, memo } = selectedCall;
+  const { id, waiting_num, category, tags, content, memo } = selectedCall;
 
   const { auth_id, customer_name, phone_number, birth_date } = customerDetail;
 
@@ -94,16 +94,18 @@ function CallInfoBox({
             </div>
             <div className='flex min-h-80 flex-grow flex-col overflow-auto rounded p-4'>
               <div className='my-3 flex items-center justify-start gap-2'>
-                <Badge className='py-1' variant='lightSolid'>
-                  # {tags}
-                </Badge>
+                {tags.split(',').map((tag, idx) => (
+                  <Badge key={idx} className='py-1' variant='lightSolid'>
+                    # {tag}
+                  </Badge>
+                ))}
               </div>
               <div className='text-[1.125rem] text-lightGrey'>{content}</div>
             </div>
           </div>
           {location.pathname === '/admin/online' && (
             <div className='mt-4 flex justify-end gap-3'>
-              {waiting_num !== currentIdx ? (
+              {id !== currentIdx ? (
                 <Button
                   className='w-fit rounded-3xl bg-[#777777] px-4 py-2 hover:bg-[#666]'
                   onClick={() => changeIdx(currentIdx)}

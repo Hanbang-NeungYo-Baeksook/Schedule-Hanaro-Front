@@ -2,11 +2,12 @@ import { useCallback, useEffect, useRef } from 'react';
 
 interface WebSocketMessage {
   type: 'UPDATE_NEEDED';
-  sectionId: number;
+  topicId: number;
 }
 
 export const useWebSocket = (
-  branchId: number,
+  topicId: number,
+  type: 'VISIT' | 'CALL',
   onMessageReceived: (message: WebSocketMessage) => void
 ) => {
   const BASE_URL = import.meta.env.VITE_SOCKET_URL;
@@ -27,8 +28,8 @@ export const useWebSocket = (
       }
 
       isConnecting.current = true;
-      console.log(`웹소켓 연결 시도... branchId: ${branchId}`);
-      webSocket.current = new WebSocket(`wss://${BASE_URL}/ws/test`);
+      console.log(`웹소켓 연결 시도... topicId: ${topicId}`);
+      webSocket.current = new WebSocket(`${BASE_URL}/ws/test`);
 
       webSocket.current.onopen = () => {
         console.log('웹소켓 연결 성공!');
@@ -39,7 +40,7 @@ export const useWebSocket = (
           try {
             const subscribeMessage = JSON.stringify({
               action: 'subscribe',
-              topicId: String(branchId),
+              topicId: String(topicId),
             });
             console.log('구독 메시지 전송:', subscribeMessage);
             webSocket.current.send(subscribeMessage);
@@ -61,20 +62,15 @@ export const useWebSocket = (
             return;
           }
 
-          // VISIT_UPDATE 메시지 처리
           if (
             typeof event.data === 'string' &&
-            event.data.startsWith('VISIT_UPDATE:')
+            event.data.startsWith(`${type}_UPDATE:`)
           ) {
             const sectionId = parseInt(event.data.split(':')[1], 10);
-            console.log('방문 상태 업데이트 메시지 수신:', {
-              sectionId,
-              branchId,
-            });
 
             onMessageReceived({
               type: 'UPDATE_NEEDED',
-              sectionId: sectionId,
+              topicId: sectionId,
             });
           } else {
             console.log('알 수 없는 메시지 형식:', event.data);
@@ -113,7 +109,7 @@ export const useWebSocket = (
       console.error('웹소켓 연결 실패:', error);
       isConnecting.current = false;
     }
-  }, [BASE_URL, branchId, onMessageReceived]);
+  }, [topicId, BASE_URL, type, onMessageReceived]);
 
   useEffect(() => {
     connect();

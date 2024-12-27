@@ -20,7 +20,7 @@ function WaitingList({ selectedIdx, changeIdx, progress, waiting }: CallProps) {
         <span className='text-[1.125rem] font-medium'>대기목록</span>
         <span className='text-[0.8725rem] font-medium'>
           <span className='mr-1 text-[1.125rem] font-bold'>
-            {waiting?.length - 1 >= 0 ? waiting?.length - 1 : 0}
+            {waiting?.length >= 0 ? waiting?.length : 0}
           </span>
           명 대기중
         </span>
@@ -30,10 +30,10 @@ function WaitingList({ selectedIdx, changeIdx, progress, waiting }: CallProps) {
         {progress ? (
           <div
             className='border-t-[1px] border-[#D9D9D9]'
-            onClick={() => changeIdx(progress.waiting_num)}
+            onClick={() => changeIdx(progress.id)}
           >
             <WaitingBox
-              isSelected={selectedIdx === progress.waiting_num}
+              isSelected={selectedIdx === progress.id}
               waitingNum={progress.waiting_num}
               category={progress.category}
               content={progress.content}
@@ -57,10 +57,10 @@ function WaitingList({ selectedIdx, changeIdx, progress, waiting }: CallProps) {
           {waiting?.length ? (
             <>
               {(isShowDetail ? waiting : waiting.slice(0, 6)).map(
-                ({ waiting_num, category, content, reservation_time }) => (
-                  <li key={waiting_num} onClick={() => changeIdx(waiting_num)}>
+                ({ id, waiting_num, category, content, reservation_time }) => (
+                  <li key={id} onClick={() => changeIdx(id)}>
                     <WaitingBox
-                      isSelected={selectedIdx === waiting_num}
+                      isSelected={selectedIdx === id}
                       waitingNum={waiting_num}
                       category={category}
                       content={content}

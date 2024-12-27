@@ -54,7 +54,7 @@ export type Category =
   | 'BRANCH';
 
 export const CategoryDetails: Record<Category, string> = {
-  전체: 'ALL',
+  전체: '',
   로그인: 'SIGNIN',
   회원가입: 'SIGNUP',
   인증: 'AUTH',
