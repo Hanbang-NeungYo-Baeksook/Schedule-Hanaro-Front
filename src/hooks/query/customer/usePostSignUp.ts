@@ -17,6 +17,9 @@ const usePostSignUp = () => {
       showToast(toast, '회원가입에 성공하였습니다!');
       navigate('/');
     },
+    onError(error) {
+      showToast(toast, error.message);
+    },
   });
 };
 

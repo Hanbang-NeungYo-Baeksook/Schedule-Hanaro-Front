@@ -20,6 +20,9 @@ const usePostSignIn = () => {
       showToast(toast, '로그인에 성공하였습니다!');
       navigate('/');
     },
+    onError(error) {
+      showToast(toast, error.message);
+    },
   });
 };
 

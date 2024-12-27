@@ -1,5 +1,6 @@
 import { ADMIN_ROUTE } from '@/constants/route';
 import { postReissueAccessToken } from './admin/auth';
+import { APIError, ErrorCode } from './Error';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -27,65 +28,66 @@ const fetcher = async ({
   data,
   params,
 }: ConfigProps) => {
-  try {
-    const tokenName: TokenNames = url.startsWith('/admin')
-      ? 'adminAccessToken'
-      : 'customerAccessToken';
+  const tokenName: TokenNames = url.startsWith('/admin')
+    ? 'adminAccessToken'
+    : 'customerAccessToken';
 
-    const token = window.localStorage.getItem(tokenName);
+  const token = window.localStorage.getItem(tokenName);
 
-    const defaultHeaders: HeadersProps = {
-      'Content-Type': 'application/json',
-      Authorization: token ? `Bearer ${token}` : '',
-    };
+  const defaultHeaders: HeadersProps = {
+    'Content-Type': 'application/json',
+    Authorization: token ? `Bearer ${token}` : '',
+  };
 
-    const configHeaders: Record<string, string> = url.startsWith('/api/auth')
-      ? {
-          ...headers,
-          'Content-Type': 'application/json',
-        }
-      : {
-          ...defaultHeaders,
-          ...headers,
-        };
+  const configHeaders: Record<string, string> = url.startsWith('/api/auth')
+    ? {
+        ...headers,
+        'Content-Type': 'application/json',
+      }
+    : {
+        ...defaultHeaders,
+        ...headers,
+      };
 
-    let queryString = '';
-    if (params && method === 'GET') {
-      queryString = `?${new URLSearchParams(params as Record<string, string>).toString()}`;
-    }
-
-    const options: RequestInit = {
-      method,
-      headers: configHeaders,
-      credentials: 'include',
-    };
-
-    if (data && method !== 'GET') {
-      options.body = JSON.stringify(data);
-    }
-
-    const response = await fetch(`${BASE_URL}${url}${queryString}`, options);
-
-    if (!response.ok) {
-      throw handleError(response, { url, method, headers, data, params });
-    }
-
-    return response.json();
-  } catch (error) {
-    console.error('API call error:', error);
-    throw error;
+  let queryString = '';
+  if (params && method === 'GET') {
+    queryString = `?${new URLSearchParams(params as Record<string, string>).toString()}`;
   }
+
+  const options: RequestInit = {
+    method,
+    headers: configHeaders,
+    credentials: 'include',
+  };
+
+  if (data && method !== 'GET') {
+    options.body = JSON.stringify(data);
+  }
+
+  const response = await fetch(`${BASE_URL}${url}${queryString}`, options);
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    if (errorBody.code === ErrorCode.EXPIRED_ACCESS_TOKEN) {
+      throw handleUnauthorizedError(response, {
+        url,
+        method,
+        headers,
+        data,
+        params,
+      });
+    }
+    throw handleError(errorBody);
+  }
+
+  return response.json();
 };
 
-const handleError = async (response: Response, requestProps: ConfigProps) => {
-  const responseString = await response.clone().text();
-  const errorCode = JSON.parse(responseString).bangggoodCode;
-
-  if (response.status === 401 && errorCode === 'EXPIRED_ACCESS_TOKEN') {
-    return handleUnauthorizedError(response, requestProps);
-  }
-
-  throw new Error(response.statusText);
+const handleError = (errorBody: APIError) => {
+  throw {
+    code: errorBody?.code || 'Unknown Code',
+    message: errorBody?.message || 'Unknown Error',
+  };
 };
 
 const handleUnauthorizedError = async (
