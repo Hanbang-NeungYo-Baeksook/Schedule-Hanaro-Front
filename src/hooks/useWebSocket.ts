@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 interface WebSocketMessage {
   type: 'UPDATE_NEEDED';
@@ -9,6 +9,7 @@ export const useWebSocket = (
   branchId: number,
   onMessageReceived: (message: WebSocketMessage) => void
 ) => {
+  const BASE_URL = import.meta.env.VITE_API_URL;
   const webSocket = useRef<WebSocket | null>(null);
   const isConnecting = useRef<boolean>(false);
   const reconnectTimeoutRef = useRef<number>();
@@ -27,7 +28,7 @@ export const useWebSocket = (
 
       isConnecting.current = true;
       console.log(`웹소켓 연결 시도... branchId: ${branchId}`);
-      webSocket.current = new WebSocket('ws://localhost:8080/ws/test');
+      webSocket.current = new WebSocket(`ws://${BASE_URL}/ws/test`);
 
       webSocket.current.onopen = () => {
         console.log('웹소켓 연결 성공!');
