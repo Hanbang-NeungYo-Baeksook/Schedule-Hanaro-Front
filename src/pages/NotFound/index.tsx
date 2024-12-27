@@ -8,7 +8,7 @@ export default function NotFound() {
   const { toast } = useToast();
 
   showToast(toast, '메인페이지로 돌아갑니다.');
-  //   setTimeout(() => navigate('/'), 1000);
+  setTimeout(() => navigate('/'), 1000);
 
   return (
     <div className='mx-auto mt-10'>
