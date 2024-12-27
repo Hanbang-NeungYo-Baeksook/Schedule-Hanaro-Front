@@ -19,7 +19,7 @@ export type AdminCallData = {
   id: number;
   waiting_num: number;
   category: string;
-  tags: string[];
+  tags: string;
   content: string;
   reservation_time: string;
   start_time?: string;
