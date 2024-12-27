@@ -1,4 +1,3 @@
-import { Status } from '@/api/customer/calls';
 import { InquiryStatus } from '@/api/customer/inquires';
 import { ReactComponent as DropButton } from '@/assets/icons/reservation/minidown.svg';
 import Header from '@/components/Header/Header';
@@ -8,25 +7,41 @@ import { useAtom } from 'jotai';
 import { useState } from 'react';
 import { ChangeToggle } from '../Reservation/ChangeToggle';
 import Tabs from '../Tabs/Tabs';
+import { Status } from '@/api/customer/calls';
 
 type Props = {
   tabLocation: 'visit' | 'call';
+  toggleTitle: '전화 상담 내역' | '1:1 상담 내역';
 };
 
-function ReservationHeader({ tabLocation }: Props) {
+function ReservationHeader({ tabLocation, toggleTitle }: Props) {
+  const [callStatus, setCallStatusAtom] = useAtom(callStatusAtom);
+  const [inquiryStatus, setInquiryStatusAtom] = useAtom(inquiryStatusAtom);
+
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedTab, setSelectedTab] = useState('전화 상담 내역');
+  const [selectedTab, setSelectedTab] = useState(toggleTitle);
   const [activeTab, setActiveTab] = useState<'visit' | 'call'>(tabLocation);
-  const [selectedStatus, setSelectedStatus] = useState('대기 중인 상담'); // 상담 상태
-  const [, setCallStatusAtom] = useAtom(callStatusAtom);
-  const [, setInquiryStatusAtom] = useAtom(inquiryStatusAtom);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 상태
+
+  const convertStatusToMessage = (status: Status | InquiryStatus) => {
+    if (status == 'PENDING') {
+      return '대기 중인 상담';
+    } else {
+      return '완료된 상담';
+    }
+  };
+
+  const [selectedStatus, setSelectedStatus] = useState(
+    toggleTitle === '전화 상담 내역'
+      ? convertStatusToMessage(callStatus)
+      : convertStatusToMessage(inquiryStatus)
+  ); // 상담 상태
 
   const toggleCallList = () => {
     setIsOpen(!isOpen);
   };
 
-  const selectTab = (tabName: string) => {
+  const selectTab = (tabName: '전화 상담 내역' | '1:1 상담 내역') => {
     setSelectedTab(tabName);
     setIsOpen(false);
   };

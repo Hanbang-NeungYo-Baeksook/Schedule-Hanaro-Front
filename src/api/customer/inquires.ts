@@ -9,10 +9,11 @@ export type InquiryData = {
   inquiry_num: number;
   content: string;
   category: Category;
-  status: InquiryStatus;
+  status: InquiryStatusKr;
 };
 
 export type InquiryStatus = 'PENDING' | 'REGISTRATIONCOMPLETE';
+export type InquiryStatusKr = '답변 대기중' | '답변완료';
 
 export type GetInquiryListRequest = {
   status?: InquiryStatus;
@@ -46,7 +47,7 @@ export type GetInquiryReplyRequest = GetInquiryDetailRequest;
 
 export type GetInquiryReplyResponse = {
   content: string;
-  status: InquiryStatus;
+  status: InquiryStatusKr;
   reply: string;
   tags: string[];
 };

@@ -12,6 +12,7 @@ import { ChangeToggle } from './ChangeToggle';
 import useGetBranchDetail from '@/hooks/query/customer/useGetBranchDetail';
 import { WaitingInfo } from '@/components/Map/BranchCard';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function BranchInfo({
   type,
@@ -31,12 +32,16 @@ export default function BranchInfo({
     longitude: getCurrentLongitude(),
   });
 
-  if (isLoading) {
-    <>Loading...</>;
-  }
-
-  if (!targetBranch) {
-    return <>영업점이 존재하지 않습니다.</>;
+  if (isLoading || !targetBranch) {
+    return (
+      <div className='z-10 flex items-center space-x-4'>
+        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
+        <div className='w-full space-y-2'>
+          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+        </div>
+      </div>
+    );
   }
 
   const {

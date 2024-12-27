@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import ReservationDetailInquiryTags from '../ReservationDetailInquiryTags';
 import useGetInquiryDetail from '@/hooks/query/customer/useGetInquiryDetail';
 import useDeleteInquiry from '@/hooks/query/customer/useDeleteInquiry';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function ReservationDetailInquiryPage() {
   const navigate = useNavigate();
@@ -19,20 +20,25 @@ export function ReservationDetailInquiryPage() {
 
   const { mutate: deleteInquiry } = useDeleteInquiry();
 
-  if (isLoading) {
-    return <>Loading...</>;
+  if (isLoading || !inquiry) {
+    return (
+      <div className='z-10 flex items-center space-x-4'>
+        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
+        <div className='w-full space-y-2'>
+          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+        </div>
+      </div>
+    );
   }
 
-  if (!inquiry) {
-    return <div>예약 정보를 찾을 수 없습니다.</div>;
-  }
-
-  const { inquiry_num, customer_name, content, tags, category } = inquiry;
+  const { inquiry_num, customer_name, content, tags, category, status } =
+    inquiry;
 
   return (
     <>
       <div className='mx-auto h-screen w-[90%] flex-col justify-between overflow-y-auto scrollbar-hide'>
-        <ReservationDetailHeader />
+        <ReservationDetailHeader reservationType='inquiry' />
         <div className='pt-[1rem]'>
           <div className='flex min-h-screen flex-col justify-between gap-[3rem]'>
             <div className='flex flex-col items-center gap-[4rem]'>
@@ -80,21 +86,23 @@ export function ReservationDetailInquiryPage() {
             </div>
 
             <div className='flex w-full gap-[1rem] pb-[7rem]'>
-              <Modalbutton
-                buttonTitle='문의 취소'
-                buttonVariant='ghost'
-                buttonSize='h-[3.75rem] w-1/3 text-xl'
-                modalTitle='1:1 문의 취소'
-                modalDescription1=''
-                modalDescription2='취소시에는 다시 상담 신청을 하셔야합니다.'
-                modalButtonTitle='확인'
-                onClick={() =>
-                  deleteInquiry({ inquiry_id: +(inquiryId ?? -1) })
-                }
-              ></Modalbutton>
+              {status === '답변 대기중' && (
+                <Modalbutton
+                  buttonTitle='문의 취소'
+                  buttonVariant='ghost'
+                  buttonSize='h-[3.75rem] w-1/3 text-xl'
+                  modalTitle='1:1 문의 취소'
+                  modalDescription1=''
+                  modalDescription2='취소시에는 다시 상담 신청을 하셔야합니다.'
+                  modalButtonTitle='확인'
+                  onClick={() =>
+                    deleteInquiry({ inquiry_id: +(inquiryId ?? -1) })
+                  }
+                />
+              )}
 
               <Button
-                className='h-[3.75rem] w-2/3 py-[1.125rem] text-xl font-bold'
+                className='h-[3.75rem] w-full py-[1.125rem] text-xl font-bold'
                 variant={'default'}
                 onClick={() =>
                   navigate(`/reservation/inquiry/${inquiryId}/detail`)

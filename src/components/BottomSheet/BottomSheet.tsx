@@ -32,10 +32,10 @@ import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useMap } from '@/hooks/map-context';
 import useGetBranchList from '@/hooks/query/customer/useGetBranchList';
 import { cn } from '@/lib/utils';
-import { branchOrderByAtom } from '@/stores';
+import { branchOrderByAtom, sectionTypeAtom } from '@/stores';
 import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { List, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import BranchCard from '../Map/BranchCard';
@@ -49,6 +49,7 @@ import {
   SelectValue,
 } from '../ui/select';
 import { Separator } from '../ui/separator';
+import { Skeleton } from '../ui/skeleton';
 
 export function BottomSheet() {
   const {
@@ -63,6 +64,8 @@ export function BottomSheet() {
   const [open, setOpen] = useState(false);
 
   const [branchOrderBy, setBranchOrderByAtom] = useAtom(branchOrderByAtom);
+  const sectionType = useAtomValue(sectionTypeAtom);
+
   const queryClient = useQueryClient();
   const [isSpinning, setIsSpinning] = useState(false);
 
@@ -74,16 +77,21 @@ export function BottomSheet() {
     latitude: getCurrentLatitude(),
     longitude: getCurrentLongitude(),
     order_by: branchOrderBy,
+    sectionType,
   });
 
   const [now, setNow] = useState(Date.now());
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
-
-  if (!branchList) {
-    return <>주변에 영업점이 없습니다.</>;
+  if (isLoading || !branchList) {
+    return (
+      <div className='z-10 flex items-center space-x-4'>
+        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
+        <div className='w-full space-y-2'>
+          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+        </div>
+      </div>
+    );
   }
 
   const selectedBranchList: BranchData[] =

@@ -5,6 +5,7 @@ import waitingAnswer from '@/assets/images/waitingAnswer.svg';
 import ReservationDetailInquiryTags from '../ReservationDetailInquiryTags';
 import { Separator } from '@/components/ui/separator';
 import useGetInquiryReply from '@/hooks/query/customer/useGetInquiryReply';
+import { Skeleton } from '@/components/ui/skeleton';
 export function InquiryDetailPage() {
   const { id: inquiryId } = useParams<{ id: string }>();
 
@@ -12,12 +13,16 @@ export function InquiryDetailPage() {
     inquiry_id: +(inquiryId ?? 0),
   });
 
-  if (isLoading) {
-    <>Loading...</>;
-  }
-
-  if (!response) {
-    return <div>문의 정보를 찾을 수 없습니다.</div>;
+  if (isLoading || !response) {
+    return (
+      <div className='z-10 flex items-center space-x-4'>
+        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
+        <div className='w-full space-y-2'>
+          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+        </div>
+      </div>
+    );
   }
 
   const { content, status, reply } = response;
@@ -33,7 +38,7 @@ export function InquiryDetailPage() {
               <div className='text-lg text-[#464646]'>{content}</div>
             </div>
             <Separator />
-            {status == 'REGISTRATIONCOMPLETE' ? (
+            {status === '답변완료' ? (
               <div className='flex flex-col gap-[0.5rem] text-left'>
                 <label className='text-2xl font-bold'>답변 내용</label>
                 <div className='text-lg text-[#464646]'>{reply}</div>

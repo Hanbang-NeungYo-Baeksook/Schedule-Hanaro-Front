@@ -27,6 +27,7 @@ export type GetBranchListRequest = {
   latitude: number;
   longitude: number;
   order_by: BranchOrder;
+  sectionType?: SectionType;
 };
 
 export type GetBranchListResponse = {
@@ -47,6 +48,7 @@ export type GetBranchDetailResponce = BranchData & {
 export type TransportType = 'WALK' | 'CAR';
 
 export type SectionType = 'DEPOSIT' | 'PERSONAL_LOAN' | 'OTHERS';
+export type SectionTypeKr = '예금' | '개인대출' | '기타';
 
 export type GetBranchRecommendListRequest = {
   latitude: number;
