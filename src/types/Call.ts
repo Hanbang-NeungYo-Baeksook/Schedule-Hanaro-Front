@@ -1,5 +1,7 @@
-export type Call = PageData<CallData[], Pagination>;
-export type AdminCallListRes = PageData<AdminHistoryData[], Pagination>;
+import { PageData, SliceData } from './page';
+
+export type Call = SliceData<CallData[]>;
+export type AdminCallListRes = PageData<AdminHistoryData[]>;
 
 export type CallData = {
   call_id: number;

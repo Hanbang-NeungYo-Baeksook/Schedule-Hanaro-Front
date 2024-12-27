@@ -1,4 +1,5 @@
 import { Category, InquiryStatus } from './enum';
+import { PageData } from './page';
 
 export type ActiveTab = '답변대기' | '답변완료' | '문의정보' | '고객정보';
 
@@ -24,13 +25,7 @@ export type AdminInquiryDetail = {
   reply_created_at?: string;
 };
 
-export type AdminInquiry = {
-  data: AdminInquiryData[];
-  current_page: number;
-  page_size: number;
-  total_items: number;
-  total_pages: number;
-};
+export type AdminInquiry = PageData<AdminInquiryData[]>;
 
 export type AdminInquiryData = {
   category: Category;
