@@ -7,6 +7,7 @@ import useGetCallDetail from '@/hooks/query/customer/useGetCallDetail';
 import '@/index.css';
 import { useParams } from 'react-router-dom';
 import ReservationDetailInquiryTags from '../ReservationDetailInquiryTags';
+import { Skeleton } from '@/components/ui/skeleton';
 export function ReservationDetailCallPage() {
   const { callId } = useParams<{ callId: string }>();
 
@@ -16,12 +17,16 @@ export function ReservationDetailCallPage() {
 
   const { mutate: deleteCall } = useDeleteCall();
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
-
-  if (!call) {
-    return <div>예약 정보를 찾을 수 없습니다.</div>;
+  if (isLoading || !call) {
+    return (
+      <div className='z-10 flex items-center space-x-4'>
+        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
+        <div className='w-full space-y-2'>
+          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+        </div>
+      </div>
+    );
   }
 
   const {
@@ -34,6 +39,7 @@ export function ReservationDetailCallPage() {
     tags,
     wait_num,
     estimated_wait_time,
+    status,
   } = call;
 
   function ReservationInfoItem({
@@ -54,7 +60,7 @@ export function ReservationDetailCallPage() {
   return (
     <>
       <div className='mx-auto h-screen w-[90%] flex-col justify-between overflow-y-auto scrollbar-hide'>
-        <ReservationDetailHeader />
+        <ReservationDetailHeader reservationType='call' />
         <div className='flex h-screen flex-col justify-between gap-5'>
           <div className='flex flex-col gap-[5rem]'>
             <div className='flex flex-col gap-[2rem]'>
@@ -104,21 +110,23 @@ export function ReservationDetailCallPage() {
           </div>
 
           <div className='mt-5 flex flex-col pb-[10rem]'>
-            <Modalbutton
-              buttonTitle='상담 취소'
-              buttonVariant='outline'
-              buttonSize='h-[3.75rem]  rounded-[1.25rem] py-[1.125rem] text-xl'
-              modalTitle='전화 상담 취소'
-              modalDescription1=''
-              modalDescription2='취소시에는 다시 상담 신청을 하셔야합니다.'
-              modalButtonTitle='확인'
-              navigateTo='/reservation/call'
-              onClick={() =>
-                deleteCall({
-                  call_id: +(callId ?? 0),
-                })
-              }
-            />
+            {status === '대기중' && (
+              <Modalbutton
+                buttonTitle='상담 취소'
+                buttonVariant='outline'
+                buttonSize='h-[3.75rem]  rounded-[1.25rem] py-[1.125rem] text-xl'
+                modalTitle='전화 상담 취소'
+                modalDescription1=''
+                modalDescription2='취소시에는 다시 상담 신청을 하셔야합니다.'
+                modalButtonTitle='확인'
+                navigateTo='/reservation/call'
+                onClick={() =>
+                  deleteCall({
+                    call_id: +(callId ?? 0),
+                  })
+                }
+              />
+            )}
           </div>
         </div>
       </div>

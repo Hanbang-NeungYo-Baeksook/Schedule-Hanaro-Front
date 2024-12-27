@@ -1,4 +1,4 @@
-import { BranchOrder } from '@/api/customer/branches';
+import { BranchOrder, SectionType } from '@/api/customer/branches';
 import { PostCallRequest, Status } from '@/api/customer/calls';
 import { InquiryStatus, PostInquiryRequest } from '@/api/customer/inquires';
 import { RecommendData } from '@/api/customer/recommends';
@@ -25,6 +25,7 @@ export const mapClickAtom = atom<boolean>(false);
 export const callStatusAtom = atom<Status>('PENDING');
 export const inquiryStatusAtom = atom<InquiryStatus>('PENDING');
 export const branchOrderByAtom = atom<BranchOrder>('distance');
+export const sectionTypeAtom = atom<SectionType>('DEPOSIT');
 
 export const recommendListAtom = atom<RecommendData[]>([]);
 export const isLoadingAtom = atom(false);

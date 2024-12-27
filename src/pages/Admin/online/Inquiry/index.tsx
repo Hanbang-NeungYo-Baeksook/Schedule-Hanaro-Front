@@ -1,6 +1,7 @@
 import InquiryList from '@/components/Admin/Inquiry/InquiryList';
 import ReplyState from '@/components/Admin/Inquiry/ReplyState';
 import ListPagination from '@/components/Admin/ListPagination';
+import { Skeleton } from '@/components/ui/skeleton';
 import useGetInquiryList from '@/hooks/query/admin/useGetInquiryList';
 import { Category, InquiryStatus } from '@/types/enum';
 import { ActiveTab } from '@/types/inquiry';
@@ -14,15 +15,23 @@ function InquiryPage() {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: inquiries } = useGetInquiryList({
+  const { data: inquiries, isLoading } = useGetInquiryList({
     page: currentPage,
     status: activeTab as InquiryStatus,
     category: activeCategory,
     search_content: searchQuery,
   });
 
-  if (!inquiries) {
-    return <>Loading...</>;
+  if (isLoading || !inquiries) {
+    return (
+      <div className='z-10 flex items-center space-x-4'>
+        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
+        <div className='w-full space-y-2'>
+          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+        </div>
+      </div>
+    );
   }
 
   const onPrev = () => {

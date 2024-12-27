@@ -2,20 +2,25 @@ import { VisitData } from '@/api/customer/visits';
 import { Toaster } from '@/components/ui/toaster';
 import useGetVisitList from '@/hooks/query/customer/useGetVisitList';
 import { useNavigate } from 'react-router-dom';
-import { ReservationPage } from '..';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function ReservationVisitPage() {
   const { data: visitList, isLoading } = useGetVisitList({ page: 1, size: 20 });
 
   const navigate = useNavigate();
 
-  if (isLoading) {
-    return <>Loading...</>;
+  if (isLoading || !visitList) {
+    return (
+      <div className='z-10 flex items-center space-x-4'>
+        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
+        <div className='w-full space-y-2'>
+          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+        </div>
+      </div>
+    );
   }
 
-  if (!visitList) {
-    return <ReservationPage />;
-  }
   const moveToDetail = (id: string) => {
     navigate(`/reservation/visit/${id}`);
   };

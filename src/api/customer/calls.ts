@@ -25,6 +25,7 @@ export const CATEGORY = [
 export type Category = (typeof CATEGORY)[number];
 
 export type Status = 'PENDING' | 'PROGRESS' | 'COMPLETE' | 'CANCELED';
+export type StatusKr = '대기중' | '진행중' | '완료' | '취소';
 
 export type CallData = {
   call_id: number;
@@ -32,7 +33,7 @@ export type CallData = {
   call_time: string;
   call_num: number;
   category: Category;
-  status: Status;
+  status: StatusKr;
   wait_num: number;
   estimated_wait_time: number;
 };

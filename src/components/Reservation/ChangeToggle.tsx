@@ -7,7 +7,7 @@ type ChangeToggleProps = {
   isOpen: boolean;
   onToggle: () => void;
   selectedTab: string;
-  onSelect: (tabName: string) => void;
+  onSelect: (tabName: '전화 상담 내역' | '1:1 상담 내역') => void;
 };
 
 export function ChangeToggle({
@@ -57,9 +57,9 @@ export function ChangeToggle({
 }
 
 type ChangeToggleOptionProps = {
-  label: string;
+  label: '전화 상담 내역' | '1:1 상담 내역';
   selectedTab: string;
-  onSelect: (label: string) => void;
+  onSelect: (label: '전화 상담 내역' | '1:1 상담 내역') => void;
 };
 
 function ChangeToggleOption({

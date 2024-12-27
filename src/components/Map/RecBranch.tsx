@@ -5,7 +5,7 @@ import { ReactComponent as PedestrainIcon } from '@/assets/icons/pedestrain.svg'
 import { ReactComponent as PedestrainWhiteIcon } from '@/assets/icons/pedestrainWhite.svg';
 import { useMap } from '@/hooks/map-context';
 import useGetBranchRecommendList from '@/hooks/query/customer/useGetBranchRecommendList';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Badge } from '../ui/badge';
 import {
   Select,
@@ -16,21 +16,21 @@ import {
 } from '../ui/select';
 import { Skeleton } from '../ui/skeleton';
 import RecBranchBox from './RecBranchBox';
+import { useAtom } from 'jotai';
+import { sectionTypeAtom } from '@/stores';
 
 function RecBranch() {
   const [transportType, setTransportType] = useState<TransportType>('WALK');
-  const sectionType = useRef<SectionType>('DEPOSIT');
-  const { getCurrentLatitude, getCurrentLongitude } = useMap();
 
-  const setSectionType = (type: SectionType) => {
-    sectionType.current = type;
-  };
+  const [sectionType, setSectionType] = useAtom(sectionTypeAtom);
+
+  const { getCurrentLatitude, getCurrentLongitude } = useMap();
 
   const { data: branchRecommendList, isLoading } = useGetBranchRecommendList({
     latitude: getCurrentLatitude(),
     longitude: getCurrentLongitude(),
     transportType: transportType,
-    sectionType: sectionType.current,
+    sectionType: sectionType,
   });
 
   const convertValueToItem = (type: SectionType) => {
@@ -54,9 +54,7 @@ function RecBranch() {
             }
           >
             <SelectTrigger className='z-[61] space-x-1 border-none text-lightGrey'>
-              <SelectValue
-                placeholder={convertValueToItem(sectionType.current)}
-              />
+              <SelectValue placeholder={convertValueToItem(sectionType)} />
             </SelectTrigger>
             <SelectContent className='right-8 z-[61]'>
               <SelectItem value='DEPOSIT'>예금</SelectItem>
@@ -71,7 +69,7 @@ function RecBranch() {
       </span>
       <Badge
         variant='white'
-        className='mt-1 h-[2.25rem] w-full px-0 py-0 text-[0.875rem] tracking-wider'
+        className='mt-4 h-[2.25rem] w-full px-0 py-0 text-[0.875rem] tracking-wider'
         onClick={() => {
           if (transportType === 'WALK') {
             setTransportType('CAR');

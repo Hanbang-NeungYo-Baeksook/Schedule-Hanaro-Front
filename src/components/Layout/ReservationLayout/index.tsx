@@ -23,7 +23,11 @@ export function ReservationLayout() {
 
   return (
     <div className='relative h-screen w-full justify-self-center overflow-hidden'>
-      <ReservationHeader tabLocation={tabLocation} key={tabLocation} />
+      <ReservationHeader
+        tabLocation={tabLocation}
+        key={tabLocation}
+        toggleTitle={tab === 'call' ? '전화 상담 내역' : '1:1 상담 내역'}
+      />
       <Outlet />
       <Nav />
       <Toaster />
