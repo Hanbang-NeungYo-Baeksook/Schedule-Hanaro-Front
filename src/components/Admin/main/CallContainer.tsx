@@ -13,8 +13,9 @@ import CallTimeSelector from './CallTimeSelector';
 import CurrentBox from './CurrentBox';
 import WaitingList from './WaitingList';
 
+const BASE_URL = import.meta.env.VITE_SOCKET_URL;
+
 function CallContainer() {
-  const BASE_URL = import.meta.env.VITE_API_URL;
   const [openCallMemo, setOpenCallMemo] = useState(false);
   const toggleOpenCallMemo = () => setOpenCallMemo((prev) => !prev);
   const closeCallMemo = () => setOpenCallMemo(false);
@@ -36,7 +37,7 @@ function CallContainer() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    webSocket.current = new WebSocket(`ws://${BASE_URL}/ws/test`);
+    webSocket.current = new WebSocket(`wss://${BASE_URL}/ws/test`);
     webSocket.current.onopen = () => {
       console.log('WebSocket 연결!');
     };
