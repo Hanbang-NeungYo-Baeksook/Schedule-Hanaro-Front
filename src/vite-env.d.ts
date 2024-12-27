@@ -1,5 +1,6 @@
 interface ImportMetaEnv {
-  readonly VITE_API_URL: string; // 사용할 환경 변수 명시
+  readonly VITE_API_URL: string;
+  readonly VITE_SOCKET_URL: string;
 }
 
 interface ImportMeta {

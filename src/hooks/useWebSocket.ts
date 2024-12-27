@@ -9,7 +9,7 @@ export const useWebSocket = (
   branchId: number,
   onMessageReceived: (message: WebSocketMessage) => void
 ) => {
-  const BASE_URL = import.meta.env.VITE_API_URL;
+  const BASE_URL = import.meta.env.VITE_SOCKET_URL;
   const webSocket = useRef<WebSocket | null>(null);
   const isConnecting = useRef<boolean>(false);
   const reconnectTimeoutRef = useRef<number>();
@@ -28,7 +28,7 @@ export const useWebSocket = (
 
       isConnecting.current = true;
       console.log(`웹소켓 연결 시도... branchId: ${branchId}`);
-      webSocket.current = new WebSocket(`ws://${BASE_URL}/ws/test`);
+      webSocket.current = new WebSocket(`wss://${BASE_URL}/ws/test`);
 
       webSocket.current.onopen = () => {
         console.log('웹소켓 연결 성공!');
@@ -113,7 +113,7 @@ export const useWebSocket = (
       console.error('웹소켓 연결 실패:', error);
       isConnecting.current = false;
     }
-  }, [branchId, onMessageReceived]);
+  }, [BASE_URL, branchId, onMessageReceived]);
 
   useEffect(() => {
     connect();
