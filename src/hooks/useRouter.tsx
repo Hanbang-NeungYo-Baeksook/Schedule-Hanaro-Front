@@ -46,6 +46,7 @@ import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
 import AdminLogin from '@/pages/Admin/Login';
 import AiQuestion from '@/pages/AiQuestion';
 import AiAnswer from '@/pages/AiAnswer';
+import NotFound from '@/pages/NotFound';
 export const useRouter = () =>
   createBrowserRouter([
     {
@@ -220,5 +221,9 @@ export const useRouter = () =>
       path: '/maptest',
       element: <MapTestLayout />,
       children: [{ index: true, element: <MapTestPage /> }],
+    },
+    {
+      path: '/*',
+      element: <NotFound />,
     },
   ]);

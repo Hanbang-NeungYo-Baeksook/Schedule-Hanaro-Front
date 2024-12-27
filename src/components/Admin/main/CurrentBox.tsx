@@ -23,6 +23,8 @@ function CurrentBox({
     customer_id,
   } = progress;
 
+  console.log(progress);
+
   const { data: customerDetail } = useGetCustomerDetail(customer_id ?? 0);
   const { data: customerHistory } = useGetCustomerHistory(customer_id ?? 0);
 
@@ -33,7 +35,12 @@ function CurrentBox({
     toggleOpen();
   };
 
-  if (!customerDetail || !customerHistory) {
+  if (
+    !progress ||
+    !customerDetail ||
+    !customerHistory ||
+    !progress.start_time
+  ) {
     return (
       <>
         <Skeleton />
@@ -58,7 +65,7 @@ function CurrentBox({
   return (
     <div className='z-10 flex w-[30%] flex-col items-center justify-center'>
       <div className='relative z-10 h-[50%] w-full max-w-md bg-lightGrey px-4 pt-5'>
-        <CallTimer start_time={start_time ?? new Date()} />
+        <CallTimer start_time={start_time as string} />
 
         <div className='z-30 mb-6 text-center text-white'>
           <p className='text-sm font-semibold'>현재 순번 고객</p>
@@ -109,13 +116,13 @@ function CurrentBox({
               <span className='font-regular font-[0.75rem] text-lightGrey'>
                 예정 시작 시간
               </span>
-              <span>{dayjs(reservation_time).format('MM:ss')}</span>
+              <span>{dayjs(reservation_time).format('hh:mm')}</span>
             </p>
             <p className='flex items-center justify-between text-sm'>
               <span className='font-regular font-[0.75rem] text-lightGrey'>
                 실제 시작 시간
               </span>
-              <span>{dayjs(start_time).format('MM:ss')}</span>
+              <span>{dayjs(start_time).format('hh:mm')}</span>
             </p>
           </div>
 

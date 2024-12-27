@@ -39,7 +39,7 @@ export type AdminVisitInquiryInfoResponse = {
   customer_id: number;
   category: string;
   content: string;
-  tags: string[];
+  tags: string;
 };
 
 // 섹션 정보 타입

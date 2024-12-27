@@ -10,7 +10,7 @@ type Props = {
 export const CloseButton = ({ className = '', location = '' }: Props) => {
   const navigate = useNavigate();
   const close = () => {
-    if (location.includes('reservation/visit')) navigate(`/${location}`);
+    if (location.includes('reservation')) navigate(`/${location}`);
     else navigate('/');
   };
   return (

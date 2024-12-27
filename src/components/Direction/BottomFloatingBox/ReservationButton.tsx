@@ -4,6 +4,7 @@ import Modalbutton from '../Modal';
 import useGetBranchDetail from '@/hooks/query/customer/useGetBranchDetail';
 import { useMap } from '@/hooks/map-context';
 import useDeleteVisit from '@/hooks/query/customer/useDeleteVisit';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ReservationButton({ branchId }: { branchId: number }) {
   const { getCurrentLatitude, getCurrentLongitude } = useMap();
@@ -18,12 +19,16 @@ export default function ReservationButton({ branchId }: { branchId: number }) {
 
   const navigate = useNavigate();
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
-
-  if (!branch) {
-    return <>No branch</>;
+  if (isLoading || !branch) {
+    return (
+      <div className='z-10 mx-auto mt-10 flex w-full items-center space-x-4'>
+        <div className='mx-auto w-full space-y-2'>
+          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+          <Skeleton className='h-4 w-[75%] bg-[#F2F2F2]' />
+        </div>
+      </div>
+    );
   }
 
   const { reserved, visit_id } = branch;

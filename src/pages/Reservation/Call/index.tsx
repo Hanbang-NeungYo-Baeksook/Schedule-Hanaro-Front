@@ -9,6 +9,7 @@ import React, { useEffect, useRef } from 'react';
 
 export function ReservationCallPage() {
   const status = useAtomValue(callStatusAtom);
+
   const {
     data: calls,
     fetchNextPage,

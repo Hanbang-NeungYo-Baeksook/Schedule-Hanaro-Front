@@ -1,19 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ADMIN_QUERY_KEYS } from '@/constants/queryKeys';
 import useGetCallWaitListQuery from '@/hooks/query/admin/useGetCallWaitList';
 import usePatchCallProgress from '@/hooks/query/admin/usePatchCallProgress';
+import { useWebSocket } from '@/hooks/useWebSocket';
 import { cn } from '@/lib/utils';
-import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CallInfoBox from './CallInfoBox';
 import CallMemoForm from './CallMemoForm';
 import CallTimeSelector from './CallTimeSelector';
 import CurrentBox from './CurrentBox';
 import WaitingList from './WaitingList';
-
-const BASE_URL = import.meta.env.VITE_SOCKET_URL;
 
 function CallContainer() {
   const [openCallMemo, setOpenCallMemo] = useState(false);
@@ -26,43 +23,35 @@ function CallContainer() {
   const [dateValue, setDateValue] = useState<Date | undefined>(undefined);
   const [timeValue, setTimeValue] = useState<string | undefined>(undefined);
 
-  const { data: waits } = useGetCallWaitListQuery({
+  const { data: waits, refetch } = useGetCallWaitListQuery({
     date: dateValue && dayjs(dateValue).format('YYYY-MM-DD'),
     time: timeValue && timeValue?.split('~')[0],
   });
   const { mutate: patchStart } = usePatchCallProgress();
 
-  // Web socket
-  const webSocket = useRef<WebSocket | null>(null);
-  const queryClient = useQueryClient();
+  const refetchList = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  const handleWebSocketMessage = useCallback(
+    (message: { type: 'UPDATE_NEEDED'; topicId: number }) => {
+      console.log('웹소켓 메시지 수신 - 상태 업데이트 필요:', message);
+
+      refetchList();
+    },
+    [refetchList]
+  );
+
+  const { isConnected } = useWebSocket(1, 'CALL', handleWebSocketMessage);
 
   useEffect(() => {
-    webSocket.current = new WebSocket(`wss://${BASE_URL}/ws/test`);
-    webSocket.current.onopen = () => {
-      console.log('WebSocket 연결!');
-    };
-    webSocket.current.onclose = (error) => {
-      console.log(error);
-    };
-    webSocket.current.onerror = (error) => {
-      console.log(error);
-    };
-    webSocket.current.onmessage = (event: MessageEvent) => {
-      console.log(event);
-      queryClient.invalidateQueries({
-        queryKey: [ADMIN_QUERY_KEYS.CALL_WAIT_LIST],
-      });
-    };
-
-    return () => {
-      webSocket.current?.close();
-    };
-  }, [BASE_URL, queryClient]);
+    console.log('전화 페이지 마운트, 웹소켓 연결 상태:', isConnected);
+    refetchList();
+  }, [isConnected, refetchList]);
 
   useEffect(() => {
     if (waits) {
-      const newIdx =
-        waits.progress?.waiting_num ?? waits.waiting?.[0]?.waiting_num ?? null;
+      const newIdx = waits.progress?.id ?? waits.waiting?.[0]?.id ?? null;
       setSelectedIdx(newIdx);
     }
   }, [waits]);
@@ -112,13 +101,11 @@ function CallContainer() {
             <CallInfoBox
               changeIdx={changeIdx}
               toggleOpen={toggleOpenCallMemo}
-              currentIdx={waits?.progress?.waiting_num ?? -1}
+              currentIdx={waits?.progress?.id ?? -1}
               selectedCall={
-                selectedIdx === waits?.progress?.waiting_num
+                selectedIdx === waits?.progress?.id
                   ? waits?.progress
-                  : waits?.waiting.find(
-                      ({ waiting_num }) => waiting_num === selectedIdx
-                    )
+                  : waits?.waiting.find(({ id }) => id === selectedIdx)
               }
             />
           </div>

@@ -1,4 +1,5 @@
 import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useMap } from '@/hooks/map-context';
 import useGetBranchDetail from '@/hooks/query/customer/useGetBranchDetail';
 
@@ -15,12 +16,16 @@ export default function DepartureArrivalAddress({
     longitude: getCurrentLongitude(),
   });
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
-
-  if (!branch) {
-    <>영업점 없음</>;
+  if (isLoading || !branch) {
+    return (
+      <div className='z-10 flex items-center space-x-4'>
+        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
+        <div className='w-full space-y-2'>
+          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+        </div>
+      </div>
+    );
   }
 
   return (
