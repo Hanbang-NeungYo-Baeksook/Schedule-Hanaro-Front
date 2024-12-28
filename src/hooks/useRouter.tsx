@@ -40,11 +40,12 @@ import NotFound from '@/pages/NotFound';
 import { ReservationPage } from '@/pages/Reservation';
 import { AuthRequiredLayout } from '@/components/Layout/AuthRequiredLayout';
 import AdminSignInPage from '@/pages/Admin/Login';
+import { AdminAuthRequiredLayout } from '@/components/Layout/AdminAuthRequiredLayout';
 export const useRouter = () =>
   createBrowserRouter([
     {
       path: '/',
-      element: <AuthRequiredLayout pageType='customer' />,
+      element: <AuthRequiredLayout />,
       children: [
         { index: true, element: <MainLayout /> },
         {
@@ -156,7 +157,7 @@ export const useRouter = () =>
     },
     {
       path: '/admin',
-      element: <AuthRequiredLayout pageType='admin' />,
+      element: <AdminAuthRequiredLayout />,
       children: [
         { index: true, element: <VisitPage /> },
         {
