@@ -37,7 +37,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useAtom, useAtomValue } from 'jotai';
 import { List, MapPin } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BranchCard from '../Map/BranchCard';
 import RecBranch from '../Map/RecBranch';
 import { Badge } from '../ui/badge';
@@ -49,7 +49,7 @@ import {
   SelectValue,
 } from '../ui/select';
 import { Separator } from '../ui/separator';
-import { Skeleton } from '../ui/skeleton';
+import LoadingBasic from '../Loading';
 
 export function BottomSheet() {
   const {
@@ -67,7 +67,7 @@ export function BottomSheet() {
   const sectionType = useAtomValue(sectionTypeAtom);
 
   const queryClient = useQueryClient();
-  const [isSpinning, setIsSpinning] = useState(false);
+  const [isSpinning, setIsSpinning] = useState(true);
 
   const {
     data: branchList,
@@ -82,16 +82,22 @@ export function BottomSheet() {
 
   const [now, setNow] = useState(Date.now());
 
+  // 새로고침 버튼 클릭 시
+  const handleRefresh = () => {
+    setIsSpinning(true);
+    refetch();
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEYS.BRANCH_RECOMMEND],
+    });
+    setNow(Date.now());
+
+    setTimeout(() => setIsSpinning(false), 500);
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => handleRefresh, []);
+
   if (isLoading || !branchList) {
-    return (
-      <div className='z-10 flex items-center space-x-4'>
-        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
-        <div className='w-full space-y-2'>
-          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-        </div>
-      </div>
-    );
+    return <LoadingBasic />;
   }
 
   const selectedBranchList: BranchData[] =
@@ -108,26 +114,14 @@ export function BottomSheet() {
   const isOpen = (business_hours: string) => {
     const date = new Date(Date.now());
 
-    if (date.getDay() === 0 || date.getDay() === 6) {
-      return false;
-    }
+    // if (date.getDay() === 0 || date.getDay() === 6) {
+    //   return false;
+    // } // 주말로직
 
     const [startTime, endTime] = business_hours.split('~');
     const startHour = startTime.split(':')[0];
     const endHour = endTime.split(':')[0];
     return date.getHours() >= +startHour && date.getHours() < +endHour;
-  };
-
-  // 새로고침 버튼 클릭 시
-  const handleRefresh = () => {
-    setIsSpinning(true);
-    refetch();
-    queryClient.invalidateQueries({
-      queryKey: [QUERY_KEYS.BRANCH_RECOMMEND],
-    });
-    setNow(Date.now());
-
-    setTimeout(() => setIsSpinning(false), 500);
   };
 
   const handleDetailPage = (branchId: number) => {

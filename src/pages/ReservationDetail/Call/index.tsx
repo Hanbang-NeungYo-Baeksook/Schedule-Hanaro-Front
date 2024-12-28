@@ -1,5 +1,6 @@
 import Modalbutton from '@/components/Direction/Modal';
 import ReservationDetailHeader from '@/components/Header/ReservationDetailHeader';
+import LoadingBasic from '@/components/Loading';
 import Nav from '@/components/Nav/Nav';
 import { Separator } from '@/components/ui/separator';
 import useDeleteCall from '@/hooks/query/customer/useDeleteCall';
@@ -7,7 +8,6 @@ import useGetCallDetail from '@/hooks/query/customer/useGetCallDetail';
 import '@/index.css';
 import { useParams } from 'react-router-dom';
 import ReservationDetailInquiryTags from '../ReservationDetailInquiryTags';
-import { Skeleton } from '@/components/ui/skeleton';
 export function ReservationDetailCallPage() {
   const { callId } = useParams<{ callId: string }>();
 
@@ -18,15 +18,7 @@ export function ReservationDetailCallPage() {
   const { mutate: deleteCall } = useDeleteCall();
 
   if (isLoading || !call) {
-    return (
-      <div className='z-10 flex items-center space-x-4'>
-        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
-        <div className='w-full space-y-2'>
-          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-        </div>
-      </div>
-    );
+    return <LoadingBasic />;
   }
 
   const {
@@ -59,9 +51,9 @@ export function ReservationDetailCallPage() {
 
   return (
     <>
-      <div className='mx-auto h-screen w-[90%] flex-col justify-between overflow-y-auto scrollbar-hide'>
-        <ReservationDetailHeader reservationType='call' />
-        <div className='flex h-screen flex-col justify-between gap-5'>
+      <ReservationDetailHeader reservationType='call' />
+      <div className='mx-auto h-screen min-h-screen w-[90%] flex-col justify-between overflow-y-auto scrollbar-hide'>
+        <div className='flex h-full flex-col items-stretch justify-between pt-[5rem]'>
           <div className='flex flex-col gap-[5rem]'>
             <div className='flex flex-col gap-[2rem]'>
               <div className='text-center text-lg font-medium'>
@@ -93,7 +85,7 @@ export function ReservationDetailCallPage() {
               </div>
             </div>
           </div>
-          <div className='mt-1 flex w-[90%] flex-col gap-[1rem]'>
+          <div className='mb-2 mt-1 flex w-[90%] flex-col gap-[1rem]'>
             <label className='flex text-2xl font-bold'>문의 내용</label>
             <Separator />
             <ReservationDetailInquiryTags tags={tags} />
@@ -109,7 +101,7 @@ export function ReservationDetailCallPage() {
             </div>
           </div>
 
-          <div className='mt-5 flex flex-col pb-[10rem]'>
+          <div className='flex flex-col pb-[7rem]'>
             {status === '대기중' && (
               <Modalbutton
                 buttonTitle='상담 취소'

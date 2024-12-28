@@ -50,8 +50,8 @@ export default function AdminSignInPage() {
   const isDisabled = !id || !password;
 
   return (
-    <div className='flex items-center justify-center bg-[#FFFFFF] pt-[8rem]'>
-      <div className='mx-auto flex h-full max-h-[60rem] min-h-[40rem] w-[40%] min-w-[40rem] max-w-[40rem] flex-col rounded-[1.25rem] bg-[#008485] bg-opacity-5 p-[3.4375rem] pb-[5rem] shadow-[0_4px_20px_0_rgba(0,0,0,0.1)]'>
+    <div className='flex h-screen items-center justify-center bg-[#FFFFFF]'>
+      <div className='mx-auto flex max-h-[60rem] min-h-[40rem] w-[40%] min-w-[40rem] max-w-[40rem] flex-col rounded-[1.25rem] bg-[#008485] bg-opacity-5 p-[3.4375rem] pb-[5rem] shadow-[0_4px_20px_0_rgba(0,0,0,0.1)]'>
         <div className='flex items-center justify-center'>
           <img
             src={hanaLogo}

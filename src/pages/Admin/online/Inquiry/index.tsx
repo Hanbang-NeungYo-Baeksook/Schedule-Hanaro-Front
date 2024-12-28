@@ -1,7 +1,7 @@
 import InquiryList from '@/components/Admin/Inquiry/InquiryList';
 import ReplyState from '@/components/Admin/Inquiry/ReplyState';
 import ListPagination from '@/components/Admin/ListPagination';
-import { Skeleton } from '@/components/ui/skeleton';
+import LoadingBasic from '@/components/Loading';
 import useGetInquiryList from '@/hooks/query/admin/useGetInquiryList';
 import { Category, InquiryStatus } from '@/types/enum';
 import { ActiveTab } from '@/types/inquiry';
@@ -23,15 +23,7 @@ export function InquiryPage() {
   });
 
   if (isLoading || !inquiries) {
-    return (
-      <div className='z-10 flex items-center space-x-4'>
-        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
-        <div className='w-full space-y-2'>
-          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-        </div>
-      </div>
-    );
+    return <LoadingBasic />;
   }
 
   const onPrev = () => {
@@ -49,7 +41,7 @@ export function InquiryPage() {
 
   return (
     <div className='mx-auto max-w-[1300px] px-4'>
-      <div className='mx-auto mb-10 mt-6 flex w-[40rem] flex-col items-center'>
+      <div className='mx-auto mb-10 mt-8 flex w-[40rem] flex-col items-center'>
         <ReplyState
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -57,23 +49,15 @@ export function InquiryPage() {
         />
       </div>
       <div className='w-full'>
-        {inquiries?.data.length > 0 ? (
-          <InquiryList
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            inquiries={inquiries?.data}
-            totalItems={inquiries?.total_items}
-            currentPage={currentPage}
-          />
-        ) : (
-          <div className='mt-36'>
-            <span className='text-2xl font-bold text-lightGrey'>
-              등록된 1:1 문의가 없습니다.
-            </span>
-          </div>
-        )}
+        <InquiryList
+          activeCategory={activeCategory}
+          setActiveCategory={setActiveCategory}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          inquiries={inquiries?.data}
+          totalItems={inquiries?.total_items}
+          currentPage={currentPage}
+        />
       </div>
       <div className='my-6'>
         {inquiries?.data.length > 0 && (

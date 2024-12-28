@@ -2,9 +2,10 @@ import { ReactComponent as Check } from '@/assets/icons/reservation/check.svg';
 import AnimationCheck from '@/assets/images/animationCheck.gif';
 import Modalbutton from '@/components/Direction/Modal';
 import ReservationDetailHeader from '@/components/Header/ReservationDetailHeader';
+import LoadingBasic from '@/components/Loading';
 import Nav from '@/components/Nav/Nav';
 import { DirectionButton } from '@/components/ui/direction';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Toaster } from '@/components/ui/toaster';
 import useDeleteVisit from '@/hooks/query/customer/useDeleteVisit';
 import useGetVisitDetail from '@/hooks/query/customer/useGetVisitDetail';
 import { useToast } from '@/hooks/use-toast';
@@ -12,7 +13,7 @@ import getMyLocation from '@/hooks/useMyLocation';
 import '@/index.css';
 import { showToast } from '@/pages/Register/Call';
 import { Coord } from '@/stores';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 export function ReservationDetailVisitPage() {
   const { toast } = useToast();
@@ -33,16 +34,14 @@ export function ReservationDetailVisitPage() {
 
   const { mutate: deleteVisit } = useDeleteVisit();
 
+  useEffect(() => {
+    if (visit?.waiting_amount === 1) {
+      showToast(toast, '곧 고객님의 상담이 시작됩니다. 대기해주세요');
+    }
+  }, []);
+
   if (isLoading || !visit) {
-    return (
-      <div className='z-10 flex items-center space-x-4'>
-        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
-        <div className='w-full space-y-2'>
-          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-        </div>
-      </div>
-    );
+    return <LoadingBasic />;
   }
 
   const {
@@ -73,9 +72,9 @@ export function ReservationDetailVisitPage() {
   }, 1000);
   return (
     <>
-      <div className='mx-auto h-screen w-[90%] flex-col justify-between overflow-y-auto scrollbar-hide'>
-        <ReservationDetailHeader reservationType='visit' />
-        <div className='flex w-full flex-col justify-between gap-12'>
+      <ReservationDetailHeader reservationType='visit' />
+      <div className='mx-auto h-screen min-h-screen w-[90%] flex-col justify-between overflow-y-auto scrollbar-hide'>
+        <div className='flex h-full w-full flex-col items-stretch justify-between pt-[4rem]'>
           <div className='flex w-full flex-col items-center'>
             <div className='mt-4 flex justify-center'>
               {load ? (
@@ -92,17 +91,33 @@ export function ReservationDetailVisitPage() {
               번호표 발급 완료
             </div>
             <div className='mt-4 text-center text-sm font-medium text-[#666666]'>
-              1시간 이내 미방문 시<br />
-              예약이 취소될 수 있습니다.
+              순번이 지나가면 예약이 취소됩니다.
             </div>
             <hr className='mt-4 w-[80%]' color='#464646' />
-            <div className='mt-4 text-center text-lg font-medium'>
-              현재 대기 번호는{' '}
-              <span className='text-3xl font-bold text-[#008485]/80'>
-                {currentNum}
-              </span>
-              번 입니다.
-            </div>
+            {waitAmount > 0 ? (
+              <div className='mt-4 text-center text-lg font-medium'>
+                현재 대기 번호는{' '}
+                <span className='text-3xl font-bold text-[#008485]/80'>
+                  {currentNum}
+                </span>
+                번 입니다.
+              </div>
+            ) : (
+              <div className='mt-4 text-center text-lg font-medium'>
+                <span>고객님의 상담 차례입니다.</span>
+                <div className='flex items-center justify-center gap-2'>
+                  <span className='text-[0.75rem] text-lightText'>
+                    상담 차례가 지나가버렸다면?
+                  </span>
+                  <span
+                    className='text-[0.875rem] font-bold text-[#008485]'
+                    onClick={() => navigate('/register/visit/' + branchId)}
+                  >
+                    재예약하기
+                  </span>
+                </div>
+              </div>
+            )}
             <div className='mb-4 mt-2 text-8xl font-bold'>
               {visitNum}
               <span className='text-[2rem] font-bold'>번</span>
@@ -113,7 +128,7 @@ export function ReservationDetailVisitPage() {
               </div>
               <DirectionButton onClick={handleDirection} />
             </div>
-            <div className='mt-6 w-[85%] rounded-[1.25rem] border border-[#d9d9d9] bg-[#f9f9f9] p-6'>
+            <div className='mb-3 mt-6 w-[85%] rounded-[1.25rem] border border-[#d9d9d9] bg-[#f9f9f9] p-6'>
               <h3 className='flex text-xl font-bold text-black'>대기정보</h3>
               <hr className='my-3' />
               <div className='flex justify-between'>
@@ -134,7 +149,7 @@ export function ReservationDetailVisitPage() {
               </div>
             </div>
           </div>
-          <div className='flex w-full justify-center justify-self-center pb-[8rem]'>
+          <div className='flex w-full justify-center justify-self-center pb-[7rem]'>
             <Modalbutton
               buttonTitle='예약 취소'
               buttonVariant='outline'
@@ -153,6 +168,7 @@ export function ReservationDetailVisitPage() {
         </div>
       </div>
       <Nav />
+      <Toaster />
     </>
   );
 }

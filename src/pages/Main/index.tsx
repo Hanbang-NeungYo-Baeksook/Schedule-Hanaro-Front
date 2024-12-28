@@ -1,17 +1,18 @@
-import { ReactComponent as HanaAvengers } from '@/assets/images/hanaAvengers.svg';
 import { ReactComponent as StarGgonge } from '@/assets/icons/StarGgonge.svg';
+import { ReactComponent as HanaAvengers } from '@/assets/images/hanaAvengers.svg';
 import Map from '@/assets/images/map.png';
-import { useNavigate } from 'react-router-dom';
-import MyCard from './MyCard';
+import LoadingBasic from '@/components/Loading';
 import { Toaster } from '@/components/ui/toaster';
 import useGetCustomerDetail from '@/hooks/query/customer/useGetCustomerDetail';
+import { useNavigate } from 'react-router-dom';
+import MyCard from './MyCard';
 
 export function MainPage() {
   const navigate = useNavigate();
   const { data: customer, isLoading } = useGetCustomerDetail();
 
   if (isLoading || !customer) {
-    return <>Loading...</>;
+    return <LoadingBasic />;
   }
 
   return (
@@ -50,12 +51,18 @@ export function MainPage() {
                   <div className='flex w-full justify-between gap-4'>
                     <MyCard
                       title='전화상담'
-                      contents={['상담사를 통한', '전화 상담 서비스']}
+                      contents={[
+                        '전화 상담 예약을 통해',
+                        '정해진 시간에 상담하세요',
+                      ]}
                       onClick={() => navigate('/register/call')}
                     />
                     <MyCard
                       title='1:1 상담'
-                      contents={['1:1 상담을을 통한', '1:1 상담 상담 서비스']}
+                      contents={[
+                        '1:1 상담을 통해',
+                        '간편하게 상담을 시작해보세요',
+                      ]}
                       onClick={() => navigate('/register/inquiry')}
                     />
                   </div>

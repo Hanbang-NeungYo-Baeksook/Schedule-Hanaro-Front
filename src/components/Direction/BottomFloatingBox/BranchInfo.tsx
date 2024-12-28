@@ -1,18 +1,18 @@
 import { ReactComponent as Hyperlink } from '@/assets/icons/hyperlink.svg';
+import LoadingBasic from '@/components/Loading';
+import { WaitingInfo } from '@/components/Map/BranchCard';
+import { Badge } from '@/components/ui/badge';
 import { DirectionButton } from '@/components/ui/direction';
 import { Separator } from '@/components/ui/separator';
 import { Toaster } from '@/components/ui/toaster';
+import { useMap } from '@/hooks/map-context';
+import useGetBranchDetail from '@/hooks/query/customer/useGetBranchDetail';
 import { useToast } from '@/hooks/use-toast';
 import { showToast } from '@/pages';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FloatingType } from '.';
-import { useMap } from '@/hooks/map-context';
-import { useState } from 'react';
 import { ChangeToggle } from './ChangeToggle';
-import useGetBranchDetail from '@/hooks/query/customer/useGetBranchDetail';
-import { WaitingInfo } from '@/components/Map/BranchCard';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export default function BranchInfo({
   type,
@@ -33,15 +33,7 @@ export default function BranchInfo({
   });
 
   if (isLoading || !targetBranch) {
-    return (
-      <div className='z-10 flex items-center space-x-4'>
-        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
-        <div className='w-full space-y-2'>
-          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-        </div>
-      </div>
-    );
+    return <LoadingBasic />;
   }
 
   const {
@@ -94,13 +86,13 @@ export default function BranchInfo({
     <>
       <div className='flex items-center justify-between'>
         <div className='flex w-full flex-col items-start justify-center gap-1 pr-4'>
-          <div className='flex w-full justify-between'>
-            <div className='flex flex-col items-start justify-center'>
+          <div className='flex w-full justify-between gap-2'>
+            <div className='flex flex-col items-start justify-center pl-3'>
               <div
                 className='flex items-center justify-center gap-2'
                 onClick={handlePage(`/branch/${branchId}`)}
               >
-                <div className='flex flex-wrap justify-center gap-1'>
+                <div className='flex w-fit flex-wrap justify-start gap-1'>
                   <span className='flex text-2xl font-extrabold'>
                     {topName}
                   </span>

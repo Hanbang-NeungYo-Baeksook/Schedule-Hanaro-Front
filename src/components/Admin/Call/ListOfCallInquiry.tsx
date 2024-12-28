@@ -34,7 +34,7 @@ function ListOfCallInquiry({
           >
             <div className='flex items-center space-x-2'>
               <span className='ml-5 mr-5 font-medium text-gray-700'>
-                {currentPage - 1 + index + 1}
+                {(currentPage - 1) * 5 + index + 1}
               </span>
               <span className='font-semibold text-gray-800'>
                 {content.length <= 15
