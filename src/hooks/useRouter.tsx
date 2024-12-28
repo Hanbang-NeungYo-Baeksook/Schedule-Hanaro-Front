@@ -19,6 +19,7 @@ import {
 //수정 예정 ..
 import { MainLayout } from '@/components/Layout/MainLayout';
 import MypageLayout from '@/components/Layout/MypageLayout';
+import { SignUpLayout } from '@/components/Layout/SignUp';
 import VisitPage from '@/pages/Admin/offline';
 import CallPage from '@/pages/Admin/online/Call';
 import AdminCustomerPage from '@/pages/Admin/online/customer';
@@ -29,19 +30,18 @@ import { AnswerInput } from '@/pages/Admin/online/Inquiry/Answer/Input';
 import { AdminMainPage } from '@/pages/Admin/online/Main';
 import Mypage from '@/pages/Mypage';
 import { RegisterVisitFormPage } from '@/pages/Register/Visit';
-import { createBrowserRouter } from 'react-router-dom';
-import { SignUpPage } from '@/pages/SignUp';
-import { SignUpLayout } from '@/components/Layout/SignUp';
 import SignInPage from '@/pages/Signin';
+import { SignUpPage } from '@/pages/SignUp';
+import { createBrowserRouter } from 'react-router-dom';
 
-import { AdminMyPage } from '@/pages/Admin/online/mypage';
-import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
+import { AuthRequiredLayout } from '@/components/Layout/AuthRequiredLayout';
 import AdminLogin from '@/pages/Admin/Login';
-import AiQuestion from '@/pages/AiQuestion';
+import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
+import { AdminMyPage } from '@/pages/Admin/online/mypage';
 import AiAnswer from '@/pages/AiAnswer';
+import AiQuestion from '@/pages/AiQuestion';
 import NotFound from '@/pages/NotFound';
 import { ReservationPage } from '@/pages/Reservation';
-import { AuthRequiredLayout } from '@/components/Layout/AuthRequiredLayout';
 export const useRouter = () =>
   createBrowserRouter([
     {
@@ -180,7 +180,7 @@ export const useRouter = () =>
           element: <AdminCustomerPage />,
         },
         {
-          path: '/admin/online/customer/:customerId',
+          path: '/admin/online/customer/:id',
           element: <AdminCustomerDetailPage />,
         },
         {
