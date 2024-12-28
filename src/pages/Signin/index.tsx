@@ -69,7 +69,7 @@ function SignInPage() {
             </label>
             <input
               ref={idRef}
-              placeholder='hanaro4@hana.com'
+              placeholder='hanaro'
               className='w-full border-b border-gray-300 px-[0.75rem] py-[0.5rem] leading-tight text-[#464646] focus:border-[#666666] focus:outline-none'
               onKeyDown={handleKeyPress}
             />
