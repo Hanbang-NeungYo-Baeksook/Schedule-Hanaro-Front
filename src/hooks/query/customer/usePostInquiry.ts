@@ -23,6 +23,9 @@ const usePostInquiry = () => {
         navigate(`/reservation/inquiry/${inquiry_id}`);
       }, 300);
     },
+    onError(error) {
+      showToast(toast, error.message);
+    },
   });
 };
 

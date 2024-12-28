@@ -4,9 +4,16 @@ import Map from '@/assets/images/map.png';
 import { useNavigate } from 'react-router-dom';
 import MyCard from './MyCard';
 import { Toaster } from '@/components/ui/toaster';
+import useGetCustomerDetail from '@/hooks/query/customer/useGetCustomerDetail';
 
 export function MainPage() {
   const navigate = useNavigate();
+  const { data: customer, isLoading } = useGetCustomerDetail();
+
+  if (isLoading || !customer) {
+    return <>Loading...</>;
+  }
+
   return (
     <>
       <div className='z-1 flex h-screen flex-col justify-start overflow-y-auto bg-[#DCEFEA] text-text scrollbar-hide'>
@@ -16,7 +23,7 @@ export function MainPage() {
               <div className='absoulte text-[2.3rem] font-[1000]'>
                 반갑습니다
               </div>
-              <div className='text-[3rem] font-bold'>해빈님!</div>
+              <div className='text-[3rem] font-bold'>{customer.name}님!</div>
               <HanaAvengers className='absolute bottom-[-3rem] right-0 z-10 w-[85%]' />
             </div>
           </div>

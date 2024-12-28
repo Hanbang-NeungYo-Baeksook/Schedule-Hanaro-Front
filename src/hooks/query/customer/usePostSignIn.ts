@@ -4,7 +4,7 @@ import { showToast } from '@/pages';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../use-toast';
-import { TokenNames } from '@/api/Api';
+import { AccessTokenNames } from '@/api/Api';
 
 const usePostSignIn = () => {
   const { toast } = useToast();
@@ -14,11 +14,14 @@ const usePostSignIn = () => {
     mutationKey: [QUERY_KEYS.SIGN_IN],
     mutationFn: postSignIn,
     onSuccess: ({ accessToken }) => {
-      console.log(accessToken);
-      const tokenName: TokenNames = 'customerAccessToken';
-      window.localStorage.setItem(tokenName, accessToken);
+      const accessTokenName: AccessTokenNames = 'customerAccessToken';
+      window.localStorage.setItem(accessTokenName, accessToken);
       showToast(toast, '로그인에 성공하였습니다!');
       navigate('/');
+      window.location.reload();
+    },
+    onError(error) {
+      showToast(toast, error.message);
     },
   });
 };
