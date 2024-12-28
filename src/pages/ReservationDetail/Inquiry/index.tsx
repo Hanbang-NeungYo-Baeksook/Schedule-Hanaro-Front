@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import ReservationDetailInquiryTags from '../ReservationDetailInquiryTags';
 import useGetInquiryDetail from '@/hooks/query/customer/useGetInquiryDetail';
 import useDeleteInquiry from '@/hooks/query/customer/useDeleteInquiry';
-import { Skeleton } from '@/components/ui/skeleton';
+import LoadingBasic from '@/components/Loading';
 
 export function ReservationDetailInquiryPage() {
   const navigate = useNavigate();
@@ -21,15 +21,7 @@ export function ReservationDetailInquiryPage() {
   const { mutate: deleteInquiry } = useDeleteInquiry();
 
   if (isLoading || !inquiry) {
-    return (
-      <div className='z-10 flex items-center space-x-4'>
-        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
-        <div className='w-full space-y-2'>
-          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-        </div>
-      </div>
-    );
+    return <LoadingBasic />;
   }
 
   const { inquiry_num, customer_name, content, tags, category, status } =
