@@ -76,7 +76,7 @@ export function SignUpPage() {
               fieldName='id'
               error={errors.id?.message}
               label='아이디'
-              placeholder='ex) HanaBank@gmail.com'
+              placeholder='ex) HanaBank'
               type='text'
             />
             <PasswordInput
