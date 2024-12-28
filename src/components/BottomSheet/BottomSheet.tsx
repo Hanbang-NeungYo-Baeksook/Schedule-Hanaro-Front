@@ -108,9 +108,9 @@ export function BottomSheet() {
   const isOpen = (business_hours: string) => {
     const date = new Date(Date.now());
 
-    if (date.getDay() === 0 || date.getDay() === 6) {
-      return false;
-    }
+    // if (date.getDay() === 0 || date.getDay() === 6) {
+    //   return false;
+    // } // 주말로직
 
     const [startTime, endTime] = business_hours.split('~');
     const startHour = startTime.split(':')[0];
