@@ -1,11 +1,9 @@
 import { MapLayout, ReservationLayout } from '@/components/Layout';
-import AdminLayout from '@/components/Layout/AdminLayout';
 import { RegisterLayout } from '@/components/Layout/Register';
 import {
   BranchDetailPage,
   DirectionPage,
   InquiryDetailPage,
-  MapDetailPage,
   MapPage,
   RegisterCallFormPage,
   RegisterInquiryFormPage,
@@ -34,31 +32,25 @@ import SignInPage from '@/pages/Signin';
 import { SignUpPage } from '@/pages/SignUp';
 import { createBrowserRouter } from 'react-router-dom';
 
-import { AuthRequiredLayout } from '@/components/Layout/AuthRequiredLayout';
-import AdminLogin from '@/pages/Admin/Login';
-import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
 import { AdminMyPage } from '@/pages/Admin/online/mypage';
+import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
 import AiAnswer from '@/pages/AiAnswer';
 import AiQuestion from '@/pages/AiQuestion';
 import NotFound from '@/pages/NotFound';
 import { ReservationPage } from '@/pages/Reservation';
+import { AuthRequiredLayout } from '@/components/Layout/AuthRequiredLayout';
+import AdminSignInPage from '@/pages/Admin/Login';
 export const useRouter = () =>
   createBrowserRouter([
     {
       path: '/',
-      element: <AuthRequiredLayout />,
+      element: <AuthRequiredLayout pageType='customer' />,
       children: [
         { index: true, element: <MainLayout /> },
         {
           path: '/map',
           element: <MapLayout />,
-          children: [
-            { index: true, element: <MapPage /> },
-            {
-              path: '/map/:id',
-              element: <MapDetailPage />,
-            },
-          ],
+          children: [{ index: true, element: <MapPage /> }],
         },
         {
           path: '/direction',
@@ -164,7 +156,7 @@ export const useRouter = () =>
     },
     {
       path: '/admin',
-      element: <AdminLayout />,
+      element: <AuthRequiredLayout pageType='admin' />,
       children: [
         { index: true, element: <VisitPage /> },
         {
@@ -210,11 +202,9 @@ export const useRouter = () =>
     },
 
     {
-      path: '/admin/auth',
-      element: <AdminLayout />,
-      children: [{ path: '/admin/auth/signin', element: <AdminLogin /> }],
+      path: '/admin/auth/signin',
+      element: <AdminSignInPage />,
     },
-
     {
       path: '/*',
       element: <NotFound />,

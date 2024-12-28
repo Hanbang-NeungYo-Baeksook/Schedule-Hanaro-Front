@@ -1,5 +1,6 @@
 import { deleteInquiry } from '@/api/customer/inquires';
 import { QUERY_KEYS } from '@/constants/queryKeys';
+import { CUSTOMER_ROUTE } from '@/constants/route';
 import { useToast } from '@/hooks/use-toast';
 import { showToast } from '@/pages';
 import { useMutation } from '@tanstack/react-query';
@@ -16,7 +17,7 @@ const useDeleteInquiry = () => {
       console.log(inquiry_id);
       showToast(toast, '취소되었습니다.');
       setTimeout(() => {
-        navigate('/reservation/Inquiry');
+        navigate(CUSTOMER_ROUTE.reservation.inquiry);
       }, 200);
     },
     onError(error) {

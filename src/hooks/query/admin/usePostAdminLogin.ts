@@ -19,6 +19,7 @@ const usePostAdminLogin = () => {
       window.localStorage.setItem(tokenName, accessToken);
       showToast(toast, '로그인에 성공하였습니다!');
       navigate(ADMIN_ROUTE.online.main);
+      window.location.reload();
     },
   });
 };

@@ -6,6 +6,7 @@ import { useToast } from '../../use-toast';
 import { postInquiry } from '@/api/customer/inquires';
 import { useSetAtom } from 'jotai';
 import { contentAtom } from '@/stores';
+import { CUSTOMER_ROUTE } from '@/constants/route';
 
 const usePostInquiry = () => {
   const { toast } = useToast();
@@ -20,7 +21,7 @@ const usePostInquiry = () => {
       showToast(toast, '예약 완료되었습니다!');
       setContent('');
       setTimeout(() => {
-        navigate(`/reservation/inquiry/${inquiry_id}`);
+        navigate(CUSTOMER_ROUTE.reservation.inquiryDetail(inquiry_id));
       }, 300);
     },
     onError(error) {
