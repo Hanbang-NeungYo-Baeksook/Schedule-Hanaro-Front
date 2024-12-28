@@ -6,6 +6,7 @@ import { useToast } from '../../use-toast';
 import { postCall } from '@/api/customer/calls';
 import { useSetAtom } from 'jotai';
 import { contentAtom } from '@/stores';
+import { CUSTOMER_ROUTE } from '@/constants/route';
 
 const usePostCall = () => {
   const { toast } = useToast();
@@ -20,7 +21,7 @@ const usePostCall = () => {
       showToast(toast, '예약 완료되었습니다!');
       setContent('');
       setTimeout(() => {
-        navigate(`/reservation/call/${call_id}`);
+        navigate(CUSTOMER_ROUTE.reservation.callDetail(call_id));
       }, 300);
     },
     onError(error) {

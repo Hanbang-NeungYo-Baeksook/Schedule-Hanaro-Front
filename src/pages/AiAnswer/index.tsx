@@ -15,7 +15,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-export default function AiAnswer() {
+export function AiAnswer() {
   const { registerType } = useParams();
 
   const { mutate: postRecommendList } = usePostRecommendList();

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { showToast } from '../Register/Call';
 import { toast } from '@/hooks/use-toast';
 import { AccessTokenNames } from '@/api/Api';
+import { CUSTOMER_ROUTE } from '@/constants/route';
 
 function Mypage() {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ function Mypage() {
       showToast(toast, '로그아웃되었습니다.');
       const tokenName: AccessTokenNames = 'customerAccessToken';
       localStorage.removeItem(tokenName);
-      navigate('/');
+      navigate(CUSTOMER_ROUTE.signin);
       window.location.reload();
     } else handleNavigate(path);
   };
@@ -152,7 +153,7 @@ function Mypage() {
                     <span
                       key={idx}
                       onClick={() => handleBottomMenuClick(item.path)}
-                      className='mt-3'
+                      className='mt-3 cursor-pointer'
                     >
                       <span className='text-[0.875rem] font-light'>
                         {item.name}

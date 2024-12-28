@@ -7,7 +7,7 @@ import { Category, InquiryStatus } from '@/types/enum';
 import { ActiveTab } from '@/types/inquiry';
 import { useState } from 'react';
 
-function InquiryPage() {
+export function InquiryPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('답변대기');
   const [activeCategory, setActiveCategory] = useState<Category>('전체');
   const [searchQuery, setSearchQuery] = useState<string>(''); // 검색어 상태 추가
@@ -90,5 +90,3 @@ function InquiryPage() {
     </div>
   );
 }
-
-export default InquiryPage;
