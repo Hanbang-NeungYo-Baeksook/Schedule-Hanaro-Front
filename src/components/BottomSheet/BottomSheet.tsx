@@ -49,7 +49,7 @@ import {
   SelectValue,
 } from '../ui/select';
 import { Separator } from '../ui/separator';
-import { Skeleton } from '../ui/skeleton';
+import LoadingBasic from '../Loading';
 
 export function BottomSheet() {
   const {
@@ -83,15 +83,16 @@ export function BottomSheet() {
   const [now, setNow] = useState(Date.now());
 
   if (isLoading || !branchList) {
-    return (
-      <div className='z-10 flex items-center space-x-4'>
-        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
-        <div className='w-full space-y-2'>
-          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-        </div>
-      </div>
-    );
+    // return (
+    //   <div className='z-10 flex items-center space-x-4'>
+    //     <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
+    //     <div className='w-full space-y-2'>
+    //       <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+    //       <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+    //     </div>
+    //   </div>
+    // );
+    return <LoadingBasic />;
   }
 
   const selectedBranchList: BranchData[] =

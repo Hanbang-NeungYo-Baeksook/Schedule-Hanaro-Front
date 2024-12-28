@@ -5,13 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import MyCard from './MyCard';
 import { Toaster } from '@/components/ui/toaster';
 import useGetCustomerDetail from '@/hooks/query/customer/useGetCustomerDetail';
+import LoadingBasic from '@/components/Loading';
 
 export function MainPage() {
   const navigate = useNavigate();
   const { data: customer, isLoading } = useGetCustomerDetail();
 
   if (isLoading || !customer) {
-    return <>Loading...</>;
+    return <LoadingBasic />;
   }
 
   return (

@@ -1,5 +1,4 @@
 import { Separator } from '@/components/ui/separator';
-import { Skeleton } from '@/components/ui/skeleton';
 import { MYPAGECONSTANTS } from '@/constants/mypage';
 import useGetCustomerDetail from '@/hooks/query/customer/useGetCustomerDetail';
 import React from 'react';
@@ -8,6 +7,7 @@ import { showToast } from '../Register/Call';
 import { toast } from '@/hooks/use-toast';
 import { AccessTokenNames } from '@/api/Api';
 import { CUSTOMER_ROUTE } from '@/constants/route';
+import LoadingBasic from '@/components/Loading';
 
 function Mypage() {
   const navigate = useNavigate();
@@ -15,14 +15,15 @@ function Mypage() {
   const { data: customerDetail, isLoading } = useGetCustomerDetail();
 
   if (isLoading || !customerDetail) {
-    return (
-      <div className='z-10 mx-auto mt-16 flex w-[90%] items-center'>
-        <div className='w-full space-y-2'>
-          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-        </div>
-      </div>
-    );
+    // return (
+    //   <div className='z-10 mx-auto mt-16 flex w-[90%] items-center'>
+    //     <div className='w-full space-y-2'>
+    //       <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+    //       <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+    //     </div>
+    //   </div>
+    // );
+    return <LoadingBasic />;
   }
 
   const {

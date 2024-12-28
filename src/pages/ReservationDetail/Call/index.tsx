@@ -7,7 +7,7 @@ import useGetCallDetail from '@/hooks/query/customer/useGetCallDetail';
 import '@/index.css';
 import { useParams } from 'react-router-dom';
 import ReservationDetailInquiryTags from '../ReservationDetailInquiryTags';
-import { Skeleton } from '@/components/ui/skeleton';
+import LoadingBasic from '@/components/Loading';
 export function ReservationDetailCallPage() {
   const { callId } = useParams<{ callId: string }>();
 
@@ -18,15 +18,16 @@ export function ReservationDetailCallPage() {
   const { mutate: deleteCall } = useDeleteCall();
 
   if (isLoading || !call) {
-    return (
-      <div className='z-10 flex items-center space-x-4'>
-        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
-        <div className='w-full space-y-2'>
-          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-        </div>
-      </div>
-    );
+    // return (
+    //   <div className='z-10 flex items-center space-x-4'>
+    //     <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
+    //     <div className='w-full space-y-2'>
+    //       <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+    //       <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+    //     </div>
+    //   </div>
+    // );
+    return <LoadingBasic />;
   }
 
   const {

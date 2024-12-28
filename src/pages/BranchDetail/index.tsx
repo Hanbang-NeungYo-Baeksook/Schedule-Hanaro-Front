@@ -19,6 +19,7 @@ import { Coord } from '@/stores';
 import getMyLocation from '@/hooks/useMyLocation';
 import ReservationButton from '@/components/Direction/BottomFloatingBox/ReservationButton';
 import { Skeleton } from '@/components/ui/skeleton';
+import LoadingBasic from '@/components/Loading';
 
 export function BranchDetailPage() {
   const navigate = useNavigate();
@@ -38,15 +39,16 @@ export function BranchDetailPage() {
   });
 
   if (isLoading || !branch) {
-    return (
-      <div className='z-10 flex items-center space-x-4'>
-        <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
-        <div className='w-full space-y-2'>
-          <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-          <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-        </div>
-      </div>
-    );
+    // return (
+    //   <div className='z-10 flex items-center space-x-4'>
+    //     <Skeleton className='h-12 w-12 rounded-full bg-[#F2F2F2]' />
+    //     <div className='w-full space-y-2'>
+    //       <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
+    //       <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
+    //     </div>
+    //   </div>
+    // );
+    return <LoadingBasic />;
   }
 
   const {
