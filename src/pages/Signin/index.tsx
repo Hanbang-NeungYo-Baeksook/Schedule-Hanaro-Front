@@ -100,7 +100,7 @@ function SignInPage() {
 
           <div
             className='mt-[1.5rem] cursor-pointer hover:underline'
-            onClick={() => navigate('/signup')}
+            onClick={() => navigate('/auth/signup')}
           >
             회원가입
           </div>
