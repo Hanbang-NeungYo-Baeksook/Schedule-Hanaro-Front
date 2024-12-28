@@ -395,15 +395,14 @@ export const MapProvider = ({
         branch_name: name,
         x_position: longitude,
         y_position: latitude,
-        branch_type: type,
+        reserved,
       }) => {
         if (mapInstance && latitude && longitude) {
-          console.log(type);
           const position = new Tmapv3.LatLng(+latitude, +longitude);
           const marker = Marker({
             mapContent: mapInstance,
             position,
-            theme: 'branch',
+            theme: reserved ? 'reservedBank' : 'bank',
             labelText: name,
           });
           marker.on('Click', () => {
