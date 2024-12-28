@@ -68,7 +68,7 @@ export function AiQuestion() {
             />
           </div>
           <div className='flex flex-col text-center text-lg font-bold'>
-            <span>{customer?.name}이 작성하신 문의 내용을 바탕으로</span>
+            <span>{customer?.name}님이 작성하신 문의 내용을 바탕으로</span>
             <span>상담 전, AI의 맞춤답변을 제공해드려요</span>
           </div>
           <div className='flex w-full flex-col items-center'>
