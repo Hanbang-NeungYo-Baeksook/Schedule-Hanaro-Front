@@ -1,5 +1,6 @@
 import { deleteVisit } from '@/api/customer/visits';
 import { QUERY_KEYS } from '@/constants/queryKeys';
+import { CUSTOMER_ROUTE } from '@/constants/route';
 import { useToast } from '@/hooks/use-toast';
 import { showToast } from '@/pages';
 import { useMutation } from '@tanstack/react-query';
@@ -16,7 +17,7 @@ const useDeleteVisit = () => {
       console.log(visit_id);
       showToast(toast, '취소되었습니다.');
       setTimeout(() => {
-        navigate('/reservation/visit');
+        navigate(CUSTOMER_ROUTE.reservation.visit);
       }, 200);
     },
     onError(error) {

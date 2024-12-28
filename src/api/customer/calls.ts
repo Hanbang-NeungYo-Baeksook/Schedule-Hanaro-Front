@@ -1,4 +1,5 @@
 import { API_ROUTE } from '@/constants/route';
+import { SliceData } from '@/types/page';
 import apiCall from '../Api';
 
 const BASE_URL = API_ROUTE.customer + '/calls';
@@ -44,7 +45,7 @@ export type GetCallListRequest = {
   size?: number;
 };
 
-export type GetCallListResponse = PageData<CallData[], Pagination>;
+export type GetCallListResponse = SliceData<CallData[]>;
 
 export type GetCallDetailRequest = {
   call_id: number;

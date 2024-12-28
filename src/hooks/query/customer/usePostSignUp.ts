@@ -4,6 +4,7 @@ import { showToast } from '@/pages';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../use-toast';
+import { CUSTOMER_ROUTE } from '@/constants/route';
 
 const usePostSignUp = () => {
   const { toast } = useToast();
@@ -15,7 +16,7 @@ const usePostSignUp = () => {
     onSuccess: ({ message }) => {
       console.log(message);
       showToast(toast, '회원가입에 성공하였습니다!');
-      navigate('/');
+      navigate(CUSTOMER_ROUTE.signin);
     },
     onError(error) {
       showToast(toast, error.message);

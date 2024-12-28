@@ -1,4 +1,5 @@
 import { API_ROUTE } from '@/constants/route';
+import { SliceData } from '@/types/page';
 import apiCall from '../Api';
 import { Category } from './calls';
 
@@ -21,7 +22,7 @@ export type GetInquiryListRequest = {
   size?: number;
 };
 
-export type GetInquiryListResponse = PageData<InquiryData[], Pagination>;
+export type GetInquiryListResponse = SliceData<InquiryData[]>;
 
 export type GetInquiryDetailRequest = {
   inquiry_id: number;

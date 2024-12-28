@@ -34,17 +34,6 @@ declare global {
       }) => TMapPolyline;
     };
   }
-
-  type PageData<T, P> = {
-    data: T;
-    pagination: P;
-  };
-
-  type Pagination = {
-    currentPage: number;
-    pageSize: number;
-    hasNext: boolean;
-  };
 }
 
 export {};

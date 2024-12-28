@@ -1,4 +1,5 @@
 import { API_ROUTE } from '@/constants/route';
+import { SliceData } from '@/types/page';
 import apiVisit from '../Api';
 import { Category } from './calls';
 
@@ -22,7 +23,7 @@ export type GetVisitListRequest = {
   size?: number;
 };
 
-export type GetVisitListResponse = PageData<VisitData[], Pagination>;
+export type GetVisitListResponse = SliceData<VisitData[]>;
 
 export type GetVisitDetailRequest = {
   visit_id: number;

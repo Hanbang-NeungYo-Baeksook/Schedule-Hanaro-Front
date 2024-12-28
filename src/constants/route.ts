@@ -5,11 +5,24 @@ export const API_ROUTE = {
 
 export const CUSTOMER_ROUTE = {
   home: '/',
-  login: '/signin',
+
+  signin: '/auth/signin',
+  signup: '/auth/signup',
+
+  reservation: {
+    call: '/reservation/call',
+    callDetail: (callId: number) => `/reservation/call/${callId}`,
+
+    inquiry: '/reservation/inquiry',
+    inquiryDetail: (inquiryId: number) => `/reservation/inquiry/${inquiryId}`,
+
+    visit: '/reservation/visit',
+    visitDetail: (visitId: number) => `/reservation/visit/${visitId}`,
+  },
 };
 
 export const ADMIN_ROUTE = {
-  login: '/admin/login',
+  login: '/admin/auth/signin',
   online: {
     main: '/admin/online',
 

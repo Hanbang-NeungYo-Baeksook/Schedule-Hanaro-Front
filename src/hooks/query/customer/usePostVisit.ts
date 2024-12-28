@@ -6,6 +6,7 @@ import { useToast } from '../../use-toast';
 import { postVisit } from '@/api/customer/visits';
 import { useSetAtom } from 'jotai';
 import { contentAtom } from '@/stores';
+import { CUSTOMER_ROUTE } from '@/constants/route';
 
 const usePostVisit = () => {
   const { toast } = useToast();
@@ -19,7 +20,7 @@ const usePostVisit = () => {
       showToast(toast, '예약 완료되었습니다!');
       setContent('');
       setTimeout(() => {
-        navigate(`/reservation/visit/${visit_id}`);
+        navigate(CUSTOMER_ROUTE.reservation.visitDetail(visit_id));
       }, 300);
     },
     onError(error) {
