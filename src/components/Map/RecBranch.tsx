@@ -5,6 +5,8 @@ import { ReactComponent as PedestrainIcon } from '@/assets/icons/pedestrain.svg'
 import { ReactComponent as PedestrainWhiteIcon } from '@/assets/icons/pedestrainWhite.svg';
 import { useMap } from '@/hooks/map-context';
 import useGetBranchRecommendList from '@/hooks/query/customer/useGetBranchRecommendList';
+import { sectionTypeAtom } from '@/stores';
+import { useAtom } from 'jotai';
 import { useState } from 'react';
 import { Badge } from '../ui/badge';
 import {
@@ -16,8 +18,6 @@ import {
 } from '../ui/select';
 import { Skeleton } from '../ui/skeleton';
 import RecBranchBox from './RecBranchBox';
-import { useAtom } from 'jotai';
-import { sectionTypeAtom } from '@/stores';
 
 function RecBranch() {
   const [transportType, setTransportType] = useState<TransportType>('WALK');
@@ -112,7 +112,7 @@ function RecBranch() {
           Array.from({ length: 3 }).map((_, index) => (
             <li
               key={index}
-              className='h-28 w-[40%] flex-shrink-0 animate-pulse items-stretch space-y-2 rounded-[15px] bg-white pt-3 shadow-[0px_0px_10px_5px_rgba(0,0,0,0.05)]'
+              className='h-32 w-[40%] flex-shrink-0 animate-pulse items-stretch space-y-2 rounded-[15px] bg-white pt-3 shadow-[0px_0px_10px_5px_rgba(0,0,0,0.05)]'
             >
               <Skeleton className='mx-auto h-[20%] w-[80%] animate-pulse rounded-full bg-[#F2F2F2]' />
               <Skeleton className='mx-auto h-[20%] w-[80%] animate-pulse rounded-full bg-[#F2F2F2]' />

@@ -29,6 +29,7 @@ export type GetInquiryDetailRequest = {
 };
 
 export type GetInquiryDetailResponce = InquiryData & {
+  waiting_amount: number;
   customer_name: string;
   tags: string[];
 };

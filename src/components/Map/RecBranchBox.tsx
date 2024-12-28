@@ -23,12 +23,12 @@ function RecBranchBox({
       <span className='text-[0.75rem] text-lightGrey'>{location}</span>
 
       <Separator />
-      <div className='flex w-full justify-between'>
+      <div className='mt-2 flex w-full justify-between'>
         <span className='text-[0.875rem]'>거리</span>
         <span className='text-[0.875rem] text-[#339D9D]'>{distance}m</span>
       </div>
-      <div className='flex w-full justify-between'>
-        <span className='text-[0.875rem]'>예상 대시 시간</span>
+      <div className='mt-2 flex w-full justify-between'>
+        <span className='text-[0.875rem]'>예상 대기 시간</span>
         <span className='text-[0.875rem] text-[#339D9D]'>{waitingTime}분</span>
       </div>
     </div>
