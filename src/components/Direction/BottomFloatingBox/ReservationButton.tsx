@@ -20,15 +20,6 @@ export default function ReservationButton({ branchId }: { branchId: number }) {
   const navigate = useNavigate();
 
   if (isLoading || !branch) {
-    // return (
-    //   <div className='z-10 mx-auto mt-10 flex w-full items-center space-x-4'>
-    //     <div className='mx-auto w-full space-y-2'>
-    //       <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-    //       <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-    //       <Skeleton className='h-4 w-[75%] bg-[#F2F2F2]' />
-    //     </div>
-    //   </div>
-    // );
     return <LoadingBasic />;
   }
 

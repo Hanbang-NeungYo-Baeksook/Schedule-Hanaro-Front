@@ -15,14 +15,6 @@ function Mypage() {
   const { data: customerDetail, isLoading } = useGetCustomerDetail();
 
   if (isLoading || !customerDetail) {
-    // return (
-    //   <div className='z-10 mx-auto mt-16 flex w-[90%] items-center'>
-    //     <div className='w-full space-y-2'>
-    //       <Skeleton className='h-4 w-full bg-[#F2F2F2]' />
-    //       <Skeleton className='h-4 w-[80%] bg-[#F2F2F2]' />
-    //     </div>
-    //   </div>
-    // );
     return <LoadingBasic />;
   }
 
