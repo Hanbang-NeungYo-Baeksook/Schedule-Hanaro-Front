@@ -25,7 +25,7 @@ function CallContainer() {
 
   const { data: waits, refetch } = useGetCallWaitListQuery({
     date: dateValue && dayjs(dateValue).format('YYYY-MM-DD'),
-    time: timeValue && timeValue?.split('~')[0],
+    time: timeValue !== '전체 시간대' ? timeValue?.split('~')[0] : undefined,
   });
   const { mutate: patchStart } = usePatchCallProgress();
 

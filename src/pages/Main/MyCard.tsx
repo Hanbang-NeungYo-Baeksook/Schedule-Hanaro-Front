@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
 import { ReactComponent as CallReservationIcon } from '@/assets/icons/call_reservation.svg';
 import { ReactComponent as InquiryReservationIcon } from '@/assets/icons/inquiry_reservation.svg';
+import { Button } from '@/components/ui/button';
 type Props = {
   title: string;
   contents: string[];
@@ -21,9 +21,11 @@ export default function MyCard({ title, contents, onClick }: Props) {
         </div>
         <div className='text-[0.925rem] font-[400] text-lightGrey'>
           {contents.length > 1 ? (
-            <div className='flex flex-wrap justify-center gap-2'>
+            <div className='flex flex-wrap justify-start gap-1 px-1'>
               {contents.map((content, idx) => (
-                <span key={idx}>{content}</span>
+                <span key={idx} className='text-left'>
+                  {content}
+                </span>
               ))}
             </div>
           ) : (

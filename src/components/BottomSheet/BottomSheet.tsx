@@ -37,7 +37,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useAtom, useAtomValue } from 'jotai';
 import { List, MapPin } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BranchCard from '../Map/BranchCard';
 import RecBranch from '../Map/RecBranch';
 import { Badge } from '../ui/badge';
@@ -67,7 +67,7 @@ export function BottomSheet() {
   const sectionType = useAtomValue(sectionTypeAtom);
 
   const queryClient = useQueryClient();
-  const [isSpinning, setIsSpinning] = useState(false);
+  const [isSpinning, setIsSpinning] = useState(true);
 
   const {
     data: branchList,
@@ -81,6 +81,20 @@ export function BottomSheet() {
   });
 
   const [now, setNow] = useState(Date.now());
+
+  // 새로고침 버튼 클릭 시
+  const handleRefresh = () => {
+    setIsSpinning(true);
+    refetch();
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEYS.BRANCH_RECOMMEND],
+    });
+    setNow(Date.now());
+
+    setTimeout(() => setIsSpinning(false), 500);
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => handleRefresh, []);
 
   if (isLoading || !branchList) {
     return <LoadingBasic />;
@@ -108,18 +122,6 @@ export function BottomSheet() {
     const startHour = startTime.split(':')[0];
     const endHour = endTime.split(':')[0];
     return date.getHours() >= +startHour && date.getHours() < +endHour;
-  };
-
-  // 새로고침 버튼 클릭 시
-  const handleRefresh = () => {
-    setIsSpinning(true);
-    refetch();
-    queryClient.invalidateQueries({
-      queryKey: [QUERY_KEYS.BRANCH_RECOMMEND],
-    });
-    setNow(Date.now());
-
-    setTimeout(() => setIsSpinning(false), 500);
   };
 
   const handleDetailPage = (branchId: number) => {

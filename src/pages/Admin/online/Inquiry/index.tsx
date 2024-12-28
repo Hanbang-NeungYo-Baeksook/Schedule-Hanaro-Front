@@ -41,7 +41,7 @@ export function InquiryPage() {
 
   return (
     <div className='mx-auto max-w-[1300px] px-4'>
-      <div className='mx-auto mb-10 mt-6 flex w-[40rem] flex-col items-center'>
+      <div className='mx-auto mb-10 mt-8 flex w-[40rem] flex-col items-center'>
         <ReplyState
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -49,23 +49,15 @@ export function InquiryPage() {
         />
       </div>
       <div className='w-full'>
-        {inquiries?.data.length > 0 ? (
-          <InquiryList
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            inquiries={inquiries?.data}
-            totalItems={inquiries?.total_items}
-            currentPage={currentPage}
-          />
-        ) : (
-          <div className='mt-36'>
-            <span className='text-2xl font-bold text-lightGrey'>
-              등록된 1:1 문의가 없습니다.
-            </span>
-          </div>
-        )}
+        <InquiryList
+          activeCategory={activeCategory}
+          setActiveCategory={setActiveCategory}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          inquiries={inquiries?.data}
+          totalItems={inquiries?.total_items}
+          currentPage={currentPage}
+        />
       </div>
       <div className='my-6'>
         {inquiries?.data.length > 0 && (

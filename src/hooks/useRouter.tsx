@@ -1,10 +1,13 @@
-import { createBrowserRouter } from 'react-router-dom';
 import {
   MainLayout,
   MapLayout,
   RegisterLayout,
   SignUpLayout,
 } from '@/components/Layout';
+import AdminAuthRequiredLayout from '@/components/Layout/AdminAuthRequiredLayout';
+import AuthRequiredLayout from '@/components/Layout/AuthRequiredLayout';
+import MypageLayout from '@/components/Layout/MypageLayout';
+import ReservationLayout from '@/components/Layout/ReservationLayout';
 import {
   AdminMainPage,
   AdminMyPage,
@@ -27,21 +30,18 @@ import {
   ReservationVisitPage,
   SignUpPage,
 } from '@/pages';
-import AdminAuthRequiredLayout from '@/components/Layout/AdminAuthRequiredLayout';
-import AuthRequiredLayout from '@/components/Layout/AuthRequiredLayout';
-import MypageLayout from '@/components/Layout/MypageLayout';
-import ReservationLayout from '@/components/Layout/ReservationLayout';
-import SignInPage from '@/pages/Signin';
 import AdminSignInPage from '@/pages/Admin/Login';
-import NotFound from '@/pages/NotFound';
+import VisitPage from '@/pages/Admin/offline';
 import CallPage from '@/pages/Admin/online/Call';
 import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
-import { AnswerInput } from '@/pages/Admin/online/Inquiry/Answer/Input';
 import { AnswerDetail } from '@/pages/Admin/online/Inquiry/Answer/Detail';
-import AdminCustomerDetailPage from '@/pages/Admin/online/customer/detail';
+import { AnswerInput } from '@/pages/Admin/online/Inquiry/Answer/Input';
 import AdminCustomerPage from '@/pages/Admin/online/customer';
-import VisitPage from '@/pages/Admin/offline';
+import AdminCustomerDetailPage from '@/pages/Admin/online/customer/detail';
 import Mypage from '@/pages/Mypage';
+import NotFound from '@/pages/NotFound';
+import SignInPage from '@/pages/Signin';
+import { createBrowserRouter } from 'react-router-dom';
 export const useRouter = () =>
   createBrowserRouter([
     {
