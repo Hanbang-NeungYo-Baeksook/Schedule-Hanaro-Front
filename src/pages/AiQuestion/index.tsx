@@ -16,7 +16,7 @@ const recommendedQuestions = [
   '인터넷으로 신용 대출 신청을 완료했는데, 결과를 확인할 수 있는 시점이 언제인지 알고 싶습니다.',
 ];
 
-export default function AiQuestion() {
+export function AiQuestion() {
   const { mutate: postRecommendList } = usePostRecommendList();
 
   const navigate = useNavigate();

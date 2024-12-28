@@ -1,46 +1,47 @@
-import { MapLayout, ReservationLayout } from '@/components/Layout';
-import { RegisterLayout } from '@/components/Layout/Register';
+import { createBrowserRouter } from 'react-router-dom';
 import {
+  MainLayout,
+  MapLayout,
+  RegisterLayout,
+  SignUpLayout,
+} from '@/components/Layout';
+import {
+  AdminMainPage,
+  AdminMyPage,
+  AiAnswer,
+  AiQuestion,
   BranchDetailPage,
   DirectionPage,
   InquiryDetailPage,
+  InquiryPage,
   MapPage,
   RegisterCallFormPage,
   RegisterInquiryFormPage,
+  RegisterVisitFormPage,
   ReservationCallPage,
   ReservationDetailCallPage,
   ReservationDetailInquiryPage,
   ReservationDetailVisitPage,
   ReservationInquiryPage,
+  ReservationPage,
   ReservationVisitPage,
+  SignUpPage,
 } from '@/pages';
-//수정 예정 ..
-import { MainLayout } from '@/components/Layout/MainLayout';
+import AdminAuthRequiredLayout from '@/components/Layout/AdminAuthRequiredLayout';
+import AuthRequiredLayout from '@/components/Layout/AuthRequiredLayout';
 import MypageLayout from '@/components/Layout/MypageLayout';
-import { SignUpLayout } from '@/components/Layout/SignUp';
-import VisitPage from '@/pages/Admin/offline';
-import CallPage from '@/pages/Admin/online/Call';
-import AdminCustomerPage from '@/pages/Admin/online/customer';
-import AdminCustomerDetailPage from '@/pages/Admin/online/customer/detail';
-import InquiryPage from '@/pages/Admin/online/Inquiry';
-import { AnswerDetail } from '@/pages/Admin/online/Inquiry/Answer/Detail';
-import { AnswerInput } from '@/pages/Admin/online/Inquiry/Answer/Input';
-import { AdminMainPage } from '@/pages/Admin/online/Main';
-import Mypage from '@/pages/Mypage';
-import { RegisterVisitFormPage } from '@/pages/Register/Visit';
+import ReservationLayout from '@/components/Layout/ReservationLayout';
 import SignInPage from '@/pages/Signin';
-import { SignUpPage } from '@/pages/SignUp';
-import { createBrowserRouter } from 'react-router-dom';
-
-import { AdminMyPage } from '@/pages/Admin/online/mypage';
-import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
-import AiAnswer from '@/pages/AiAnswer';
-import AiQuestion from '@/pages/AiQuestion';
-import NotFound from '@/pages/NotFound';
-import { ReservationPage } from '@/pages/Reservation';
-import { AuthRequiredLayout } from '@/components/Layout/AuthRequiredLayout';
 import AdminSignInPage from '@/pages/Admin/Login';
-import { AdminAuthRequiredLayout } from '@/components/Layout/AdminAuthRequiredLayout';
+import NotFound from '@/pages/NotFound';
+import CallPage from '@/pages/Admin/online/Call';
+import { CallAnswerDetail } from '@/pages/Admin/online/Call/Detail';
+import { AnswerInput } from '@/pages/Admin/online/Inquiry/Answer/Input';
+import { AnswerDetail } from '@/pages/Admin/online/Inquiry/Answer/Detail';
+import AdminCustomerDetailPage from '@/pages/Admin/online/customer/detail';
+import AdminCustomerPage from '@/pages/Admin/online/customer';
+import VisitPage from '@/pages/Admin/offline';
+import Mypage from '@/pages/Mypage';
 export const useRouter = () =>
   createBrowserRouter([
     {

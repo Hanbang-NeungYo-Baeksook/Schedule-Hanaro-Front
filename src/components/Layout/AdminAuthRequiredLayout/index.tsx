@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import AdminSignInPage from '@/pages/Admin/Login';
 import { Outlet } from 'react-router-dom';
 
-export function AdminAuthRequiredLayout() {
+export default function AdminAuthRequiredLayout() {
   const tokenName: AccessTokenNames = 'adminAccessToken';
   const token = window.localStorage.getItem(tokenName);
 

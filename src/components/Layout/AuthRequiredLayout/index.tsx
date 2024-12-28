@@ -3,7 +3,7 @@ import { Toaster } from '@/components/ui/toaster';
 import SignInPage from '@/pages/Signin';
 import { Outlet } from 'react-router-dom';
 
-export function AuthRequiredLayout() {
+export default function AuthRequiredLayout() {
   const tokenName: AccessTokenNames = 'customerAccessToken';
   const token = window.localStorage.getItem(tokenName);
 

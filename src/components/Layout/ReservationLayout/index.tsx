@@ -3,7 +3,7 @@ import Nav from '@/components/Nav/Nav';
 import { Toaster } from '@/components/ui/toaster';
 import { Outlet, useLocation } from 'react-router-dom';
 
-export function ReservationLayout() {
+export default function ReservationLayout() {
   const location = useLocation();
   const tab = location.pathname.replace('/reservation/', '');
   const tabLocation = tab === 'visit' ? 'visit' : 'call';
