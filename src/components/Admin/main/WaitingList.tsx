@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { AdminCallData } from '@/types/Call';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import WaitingBox from './WaitingBox';
 
@@ -56,19 +57,29 @@ function WaitingList({ selectedIdx, changeIdx, progress, waiting }: CallProps) {
         >
           {waiting?.length ? (
             <>
-              {(isShowDetail ? waiting : waiting.slice(0, 6)).map(
-                ({ id, waiting_num, category, content, reservation_time }) => (
-                  <li key={id} onClick={() => changeIdx(id)}>
-                    <WaitingBox
-                      isSelected={selectedIdx === id}
-                      waitingNum={waiting_num}
-                      category={category}
-                      content={content}
-                      resTime={reservation_time}
-                    />
-                  </li>
+              {(isShowDetail ? waiting : waiting.slice(0, 6))
+                .sort((a, b) =>
+                  dayjs(a.reservation_time).diff(dayjs(b.reservation_time))
                 )
-              )}
+                .map(
+                  ({
+                    id,
+                    waiting_num,
+                    category,
+                    content,
+                    reservation_time,
+                  }) => (
+                    <li key={id} onClick={() => changeIdx(id)}>
+                      <WaitingBox
+                        isSelected={selectedIdx === id}
+                        waitingNum={waiting_num}
+                        category={category}
+                        content={content}
+                        resTime={reservation_time}
+                      />
+                    </li>
+                  )
+                )}
             </>
           ) : (
             <div className='mt-2 flex h-full w-full items-center justify-center bg-[#FAFAFA] text-center'>
