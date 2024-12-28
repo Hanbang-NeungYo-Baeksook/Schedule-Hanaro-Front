@@ -70,6 +70,10 @@ function CallInfoBox({
 
   const { id, waiting_num, category, tags, content, memo } = selectedCall;
 
+  if (tags) {
+    console.log(tags);
+  }
+
   const { auth_id, customer_name, phone_number, birth_date } = customerDetail;
 
   const { phone_inquiries: calls, one_to_one_inquiries: inquiries } =
