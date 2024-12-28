@@ -1,14 +1,14 @@
-import { useNavigate } from 'react-router-dom';
-import { Button } from '../ui/button';
 import usePostCall from '@/hooks/query/customer/usePostCall';
 import usePostInquiry from '@/hooks/query/customer/usePostInquiry';
 import usePostVisit from '@/hooks/query/customer/usePostVisit';
-import { useAtomValue } from 'jotai';
 import {
   postCallRequestAtom,
   postInquiryRequestAtom,
   postVisitRequestAtom,
 } from '@/stores';
+import { useAtomValue } from 'jotai';
+import { useNavigate } from 'react-router-dom';
+import Modalbutton from '../Direction/Modal';
 
 const Feedback = ({ resigterType }: { resigterType: string }) => {
   const { mutate: postCall } = usePostCall();
@@ -43,16 +43,27 @@ const Feedback = ({ resigterType }: { resigterType: string }) => {
         AI가 생성해드린 맞춤 답변이 도움이 되셨나요?
       </p>
       <div className='flex w-[80%] gap-4'>
-        <Button type='button' variant='ghost' onClick={handleNegativeFeedback}>
-          아니요, 부족해요
-        </Button>
-        <Button
-          type='button'
-          variant='default'
+        <Modalbutton
+          buttonTitle='아니오, 부족해요'
+          buttonVariant='ghost'
+          buttonSize='w-1/2'
+          modalTitle='상담 접수'
+          modalDescription1='더 나은 답변 제공을 위해 상담이 접수됩니다.'
+          modalDescription2=''
+          modalButtonTitle='확인'
+          onClick={handleNegativeFeedback}
+        ></Modalbutton>
+
+        <Modalbutton
+          buttonTitle='네, 도움이 되었어요'
+          buttonVariant='default'
+          buttonSize='w-1/2'
+          modalTitle='AI 답변 완료'
+          modalDescription1='AI 답변을 통해 도움이 되었다면'
+          modalDescription2='상담이 접수되지 않습니다.'
+          modalButtonTitle='확인'
           onClick={handlePositiveFeedback}
-        >
-          네, 도움이 되었어요
-        </Button>
+        ></Modalbutton>
       </div>
     </div>
   );

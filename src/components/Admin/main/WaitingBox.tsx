@@ -35,7 +35,9 @@ function WaitingBox({
       </div>
       <div className='flex items-center justify-between'>
         <span className='text-[0.875rem]'>{content}</span>
-        <span className='text-[0.75rem]'>{dayjs(resTime).format('HH:MM')}</span>
+        <span className='text-[0.75rem]'>
+          {dayjs(resTime).format('MM월 DD일 HH시 MM분')}
+        </span>
       </div>
     </div>
   );

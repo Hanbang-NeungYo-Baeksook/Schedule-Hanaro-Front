@@ -62,9 +62,9 @@ function CallPage() {
   // 다음 페이지
   const onNext = () => {
     const nextPage =
-      currentPage + 1 < calls?.pagination?.pageSize
+      currentPage + 1 < calls?.total_pages
         ? currentPage + 1
-        : calls?.pagination?.pageSize;
+        : calls?.total_pages;
     setCurrentPage(nextPage);
   };
 
@@ -81,7 +81,11 @@ function CallPage() {
           검색 목록
         </h1>
         {calls.data ? (
-          <ListOfCallInquiry calls={calls.data} currentPage={currentPage} />
+          <ListOfCallInquiry
+            calls={calls.data}
+            currentPage={currentPage}
+            totalItems={calls.total_items}
+          />
         ) : (
           <Skeleton />
         )}
@@ -91,7 +95,7 @@ function CallPage() {
               firstPage={1}
               currentPage={currentPage - 1}
               setCurrentPage={setCurrentPage}
-              totalPage={calls?.pagination?.pageSize ?? 1}
+              totalPage={calls?.total_pages ?? 1}
               onPrev={onPrev}
               onNext={onNext}
             />

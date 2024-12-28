@@ -60,8 +60,6 @@ function CurrentBox({
     one_to_one_inquiries: inquiries,
   }: AdminCustomerHistory = customerHistory;
 
-  console.log(calls, inquiries);
-
   return (
     <div className='z-10 flex w-[30%] flex-col items-center justify-center'>
       <div className='relative z-10 h-[50%] w-full max-w-md bg-lightGrey px-4 pt-5'>
@@ -106,23 +104,21 @@ function CurrentBox({
             <span className='mr-3 text-[0.875rem] font-bold text-black'>
               상담정보
             </span>
-            <span className='text-[0.75rem] font-bold text-main'>
-              {dayjs(new Date()).diff(start_time, 'minute')}
-              <span className='text-[0.625rem]'>분째 진행 중</span>
-            </span>
           </p>
           <div className='mb-4 space-y-2 rounded-[10px] border-[0.5px] border-border bg-[#fff] p-4'>
             <p className='flex items-center justify-between text-sm'>
               <span className='font-regular font-[0.75rem] text-lightGrey'>
                 예정 시작 시간
               </span>
-              <span>{dayjs(reservation_time).format('hh:mm')}</span>
+              <span>
+                {dayjs(reservation_time).format('MM월 DD일 HH시 mm분')}
+              </span>
             </p>
             <p className='flex items-center justify-between text-sm'>
               <span className='font-regular font-[0.75rem] text-lightGrey'>
                 실제 시작 시간
               </span>
-              <span>{dayjs(start_time).format('hh:mm')}</span>
+              <span>{dayjs(start_time).format('MM월 DD일 HH시 mm분')}</span>
             </p>
           </div>
 

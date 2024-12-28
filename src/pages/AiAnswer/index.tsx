@@ -1,10 +1,10 @@
 import { ReactComponent as DownVector } from '@/assets/icons/DownVector.svg';
-import { ReactComponent as UpVector } from '@/assets/icons/UpVector.svg';
 import Feedback from '@/components/Chat/Feedback';
 import Loading from '@/components/Chat/Loading';
 import Header from '@/components/Header/Header';
 import { Badge } from '@/components/ui/badge';
 import usePostRecommendList from '@/hooks/query/customer/usePostRecommendList';
+import { cn } from '@/lib/utils';
 import {
   contentAtom,
   isLoadingAtom,
@@ -12,7 +12,7 @@ import {
   tagListAtom,
 } from '@/stores';
 import { useAtom, useAtomValue } from 'jotai';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export default function AiAnswer() {
@@ -24,7 +24,6 @@ export default function AiAnswer() {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [, setIsEditing] = useState(false);
-  const [dropdownIndex, setDropdownIndex] = useState<number | null>(null);
 
   const [content, setContent] = useAtom(contentAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
@@ -54,6 +53,26 @@ export default function AiAnswer() {
       ? content.slice(0, MAX_LENGTH) + '...' // 문자열 길이를 기준으로 잘라내기
       : content;
 
+  // 높이 애니메이션 적용
+  const [dropdownIndex, setDropdownIndex] = useState<number | null>(null);
+  const contentRefs = useRef<HTMLParagraphElement[] | null>([]);
+  const [heights, setHeights] = useState<number[] | undefined>([]);
+
+  const calculateHeights = () => {
+    const newHeights = contentRefs.current?.map((ref) =>
+      ref ? ref.scrollHeight + 50 : 0
+    );
+    setHeights(newHeights);
+  };
+
+  useEffect(() => {
+    calculateHeights();
+  }, [recommendList]);
+
+  const toggleDropdown = (index: number) => {
+    setDropdownIndex(dropdownIndex === index ? null : index);
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -63,13 +82,16 @@ export default function AiAnswer() {
       <Header title={'별꽁이에게 문의하기'} />
       <div className='mx-auto flex min-h-screen w-[90%] flex-col justify-between gap-[2rem] pb-[7rem] pt-[7rem]'>
         <div className='flex flex-col items-center gap-[1rem] px-[1rem]'>
-          {content.trim() || isExpanded ? (
+          {content.trim() ? (
             <div
-              className={`relative w-full rounded-[1.25rem] border-[.1875rem] border-main bg-white p-[1rem] text-center text-[1rem] font-normal shadow-[0_0_17px_0_rgba(0,132,133,0.25)] transition-all duration-300 ${
-                // 수정한부분 2024.12.01
-                isExpanded ? 'h-auto' : 'cursor-pointer overflow-hidden'
-              }`}
-              onClick={!isExpanded ? handleToggleExpand : undefined} // 클릭 시 확장
+              className={cn(
+                'relative w-full overflow-hidden rounded-[1.25rem] border-[.1875rem] border-main bg-white p-[1rem] text-center text-[1rem] font-normal shadow-[0_0_17px_0_rgba(0,132,133,0.25)] transition-all duration-300'
+              )}
+              style={{
+                maxHeight: isExpanded ? '500px' : '5rem',
+                transition: 'max-height 0.3s ease-in-out',
+              }}
+              onClick={!isExpanded ? handleToggleExpand : undefined}
             >
               {!isExpanded ? (
                 <span>&quot;{truncatedContent}&quot;</span>
@@ -111,7 +133,7 @@ export default function AiAnswer() {
                 <Badge
                   key={index}
                   variant='lightSolid'
-                  className='px-[1.2rem] py-[0.2rem] text-[.875rem] font-bold'
+                  className='bg-[linear-gradient(259deg,_rgba(187,_187,_187,_0.15)_11.47%,_rgba(0,_132,_133,_0.15)_88.87%)] px-[1.2rem] py-[0.2rem] text-[.875rem] font-bold'
                 >
                   #{badge}
                 </Badge>
@@ -121,29 +143,57 @@ export default function AiAnswer() {
 
           {recommendList.map((answer, index) => (
             <div key={index} className='w-full'>
+              {/* 제목 */}
               <div
-                className='relative z-20 flex w-full cursor-pointer items-start rounded-[.9375rem] bg-[#3FA5A6] p-4'
-                onClick={() =>
-                  setDropdownIndex(dropdownIndex === index ? null : index)
-                }
-              >
-                <div className='pl-[.25rem] pr-[.625rem] font-bold text-white'>
-                  Q
-                </div>
-                <div className='text-white'>{answer.query}</div>
-                {dropdownIndex === index ? (
-                  <UpVector className='"h-[1.5rem] ml-auto w-[1.5rem] py-[0.5rem] pr-[0.5rem]' />
-                ) : (
-                  <DownVector className='"h-[1.5rem] ml-auto w-[1.5rem] py-[0.5rem] pr-[0.5rem]' />
+                className={cn(
+                  'relative z-20 flex w-full cursor-pointer items-center justify-between rounded-[.9375rem] p-4 transition-all duration-300',
+                  dropdownIndex === index ? 'bg-[#338587]' : 'bg-[#3FA5A6]'
                 )}
-              </div>
-              {dropdownIndex === index && (
-                <div className='relative z-10 -mt-4 w-full rounded-[.9375rem] border-[.125rem] border-[#d9d9d9] bg-white px-4 pb-3 pt-6'>
-                  <p className='whitespace-pre-line text-left text-[1rem] font-bold text-[#464646]'>
-                    {answer.response}
-                  </p>
+                onClick={() => toggleDropdown(index)}
+              >
+                <div className='flex w-[90%] items-center gap-2'>
+                  <div className='pl-[.25rem] pr-[.625rem] font-bold text-white'>
+                    Q
+                  </div>
+                  <div className='text-left text-white'>{answer.query}</div>
                 </div>
-              )}
+                <div className={`flex w-[5%] items-center`}>
+                  <span
+                    className={`ml-auto h-[1.5rem] w-[1.5rem] py-[0.5rem] pr-[0.5rem] transition-transform duration-300 ${
+                      dropdownIndex === index ? 'rotate-180' : 'rotate-0'
+                    }`}
+                  >
+                    <DownVector />
+                  </span>
+                </div>
+              </div>
+              <div
+                className={cn(
+                  'relative z-10 flex w-full flex-col items-start justify-center overflow-hidden rounded-[.9375rem] border-[.125rem] border-[#d9d9d9] bg-white px-4 transition-all duration-300'
+                )}
+                style={{
+                  height:
+                    dropdownIndex === index
+                      ? `${heights ? heights[index] : 0}px`
+                      : '0',
+                  opacity: dropdownIndex === index ? 1 : 0,
+                }}
+              >
+                <Badge className='mt-4 rounded-[10px] border-[1px] border-[#DADFF3] bg-[#F2F4FB] px-4 py-1 text-[.875rem] font-bold text-[#0022AC]'>
+                  유사도{' '}
+                  <span className='ml-1 text-[1rem]'>{answer.similarity}</span>%
+                </Badge>
+                <p
+                  ref={(el) => {
+                    if (el) {
+                      contentRefs.current![index] = el;
+                    }
+                  }}
+                  className='whitespace-pre-line px-2 py-3 text-left text-[1rem] font-bold text-[#464646]'
+                >
+                  {answer.response}
+                </p>
+              </div>
             </div>
           ))}
         </div>
