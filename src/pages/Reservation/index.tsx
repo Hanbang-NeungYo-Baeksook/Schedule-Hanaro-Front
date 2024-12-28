@@ -24,36 +24,35 @@ export function ReservationPage() {
 
   return (
     <>
-      <div className='mx-auto flex h-screen w-[90%] flex-col justify-between pb-[7rem] pt-[4rem]'>
-        <div className='space-y-10'>
-          <div className='space-y-5'>
-            <div className='flex flex-col items-start justify-center text-4xl font-bold'>
+      <div className='mx-auto flex h-screen w-[100%] flex-col overflow-visible'>
+        <div className='flex h-full w-full flex-col space-y-[1.5rem] overflow-auto scrollbar-hide'>
+          <div className='mx-auto flex w-[90%] flex-col'>
+            <div className='flex flex-col items-start justify-center pt-10 text-4xl font-bold'>
               <span>상담 유형을</span>
               <span>선택해주세요</span>
             </div>
-            <div className='flex flex-col items-start justify-center text-lg'>
-              <span>예나님이 작성하신 문의 내용을</span>
+            <div className='flex flex-col items-start justify-center pt-5 text-lg'>
+              <span>고객님이 작성하신 문의 내용을</span>
               <span>원하시는 유형의 상담으로 문의할 수 있어요</span>
             </div>
-          </div>
 
-          <ul className='space-y-5'>
-            {RESERVATION_TYPE.map(({ id, title, subTitle }) => (
-              <li key={id} onClick={() => setSelectedRes(id)}>
-                <ReservationTypeCard
-                  title={title}
-                  subTitle={subTitle}
-                  selected={selectedRes === id}
-                />
-              </li>
-            ))}
-          </ul>
+            <ul className='space-y-5 pt-5'>
+              {RESERVATION_TYPE.map(({ id, title, subTitle }) => (
+                <li key={id} onClick={() => setSelectedRes(id)}>
+                  <ReservationTypeCard
+                    title={title}
+                    subTitle={subTitle}
+                    selected={selectedRes === id}
+                  />
+                </li>
+              ))}
+            </ul>
+            <div className='pb-10 pt-10'>
+              <Button onClick={handlePage}>상담 유형 선택하기</Button>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className='customWidth fixed bottom-[6.5rem]'>
-        <Button className='w-[90%]' onClick={handlePage}>
-          상담 유형 선택하기
-        </Button>
+        <div className='=pb-[80px] min-[435px]:pb-[85px] min-[800px]:pb-[90px]'></div>
       </div>
     </>
   );

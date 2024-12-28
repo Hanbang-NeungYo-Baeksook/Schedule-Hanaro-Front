@@ -23,8 +23,8 @@ const usePostCall = () => {
         navigate(`/reservation/call/${call_id}`);
       }, 300);
     },
-    onError: () => {
-      showToast(toast, '예약 실패! 동일한 시간에 예약되었습니다.');
+    onError(error) {
+      showToast(toast, error.message);
     },
   });
 };

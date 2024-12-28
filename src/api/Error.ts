@@ -47,12 +47,12 @@ export enum ErrorCode {
 }
 
 export class APIError extends Error {
-  public readonly errorCode: ErrorCode;
+  public readonly code: ErrorCode;
   public readonly message: string;
 
-  constructor(errorCode: ErrorCode, message?: string) {
-    super(message || ErrorCode[errorCode]);
-    this.errorCode = errorCode;
-    this.message = message || ErrorCode[errorCode];
+  constructor(code: ErrorCode, message?: string) {
+    super(message || ErrorCode[code]);
+    this.code = code;
+    this.message = message || ErrorCode[code];
   }
 }

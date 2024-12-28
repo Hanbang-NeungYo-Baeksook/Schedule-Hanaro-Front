@@ -238,7 +238,7 @@ export function BottomSheet() {
                             />
                           </SelectTrigger>
                           <SelectContent className='right-8 z-[61]'>
-                            <SelectItem value='diatance'>거리순</SelectItem>
+                            <SelectItem value='distance'>거리순</SelectItem>
                             <SelectItem value='wait'>대기시간순</SelectItem>
                           </SelectContent>
                         </Select>

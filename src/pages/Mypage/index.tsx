@@ -4,6 +4,9 @@ import { MYPAGECONSTANTS } from '@/constants/mypage';
 import useGetCustomerDetail from '@/hooks/query/customer/useGetCustomerDetail';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { showToast } from '../Register/Call';
+import { toast } from '@/hooks/use-toast';
+import { AccessTokenNames } from '@/api/Api';
 
 function Mypage() {
   const navigate = useNavigate();
@@ -49,7 +52,11 @@ function Mypage() {
 
   const handleBottomMenuClick = (path: string) => {
     if (path === '/logout') {
-      console.log('로그아웃');
+      showToast(toast, '로그아웃되었습니다.');
+      const tokenName: AccessTokenNames = 'customerAccessToken';
+      localStorage.removeItem(tokenName);
+      navigate('/');
+      window.location.reload();
     } else handleNavigate(path);
   };
 

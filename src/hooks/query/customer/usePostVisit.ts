@@ -22,6 +22,9 @@ const usePostVisit = () => {
         navigate(`/reservation/visit/${visit_id}`);
       }, 300);
     },
+    onError(error) {
+      showToast(toast, error.message);
+    },
   });
 };
 

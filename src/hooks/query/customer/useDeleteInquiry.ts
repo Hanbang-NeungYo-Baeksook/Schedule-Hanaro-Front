@@ -19,9 +19,8 @@ const useDeleteInquiry = () => {
         navigate('/reservation/Inquiry');
       }, 200);
     },
-    onError: (message: string) => {
-      console.log('Error');
-      console.log(message);
+    onError(error) {
+      showToast(toast, error.message);
     },
   });
 };

@@ -19,9 +19,8 @@ const useDeleteCall = () => {
         navigate('/reservation/call');
       }, 200);
     },
-    onError: ({ code, error }: { code: string; error: string }) => {
-      console.log(code);
-      console.log(error);
+    onError(error) {
+      showToast(toast, error.message);
     },
   });
 };

@@ -6,8 +6,12 @@ import {
 } from '@/api/customer/recommends';
 import { isLoadingAtom, recommendListAtom, tagListAtom } from '@/stores';
 import { useAtom } from 'jotai';
+import { useToast } from '@/hooks/use-toast';
+import { showToast } from '@/pages';
 
 const usePostRecommendList = () => {
+  const { toast } = useToast();
+
   const [, setRecommendList] = useAtom(recommendListAtom);
   const [, setIsLoading] = useAtom(isLoadingAtom);
   const [, setTagList] = useAtom(tagListAtom);
@@ -20,6 +24,9 @@ const usePostRecommendList = () => {
       setRecommendList(recommends);
       setTagList(tags);
       setIsLoading(false);
+    },
+    onError(error) {
+      showToast(toast, error.message);
     },
   });
 };
