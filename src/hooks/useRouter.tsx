@@ -202,13 +202,11 @@ export const useRouter = () =>
     },
     {
       path: '/auth/signup',
-      element: <SignUpLayout />,
-      children: [{ index: true, element: <SignUpPage /> }],
+      element: <SignUpPage />,
     },
     {
       path: '/auth/signin',
-      element: <SignUpLayout />,
-      children: [{ index: true, element: <SignInPage /> }],
+      element: <SignInPage />,
     },
 
     {

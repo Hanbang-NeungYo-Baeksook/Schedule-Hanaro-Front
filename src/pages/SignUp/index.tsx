@@ -55,7 +55,7 @@ export function SignUpPage() {
   };
 
   return (
-    <div className='min-h-screen'>
+    <div className='App min-h-screen'>
       <Header title='회원가입' />
       <div className='mx-auto flex w-[90%] flex-col'>
         <form
