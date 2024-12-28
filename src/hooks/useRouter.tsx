@@ -1,8 +1,4 @@
-import {
-  MapLayout,
-  MapTestLayout,
-  ReservationLayout,
-} from '@/components/Layout';
+import { MapLayout, ReservationLayout } from '@/components/Layout';
 import AdminLayout from '@/components/Layout/AdminLayout';
 import { RegisterLayout } from '@/components/Layout/Register';
 import {
@@ -11,7 +7,6 @@ import {
   InquiryDetailPage,
   MapDetailPage,
   MapPage,
-  MapTestPage,
   RegisterCallFormPage,
   RegisterInquiryFormPage,
   ReservationCallPage,
@@ -19,11 +14,9 @@ import {
   ReservationDetailInquiryPage,
   ReservationDetailVisitPage,
   ReservationInquiryPage,
-  ReservationPage,
   ReservationVisitPage,
 } from '@/pages';
 //수정 예정 ..
-import { ClientLayout } from '@/components/Layout/ClientLayout';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import MypageLayout from '@/components/Layout/MypageLayout';
 import VisitPage from '@/pages/Admin/offline';
@@ -47,11 +40,13 @@ import AdminLogin from '@/pages/Admin/Login';
 import AiQuestion from '@/pages/AiQuestion';
 import AiAnswer from '@/pages/AiAnswer';
 import NotFound from '@/pages/NotFound';
+import { ReservationPage } from '@/pages/Reservation';
+import { AuthRequiredLayout } from '@/components/Layout/AuthRequiredLayout';
 export const useRouter = () =>
   createBrowserRouter([
     {
       path: '/',
-      element: <ClientLayout />,
+      element: <AuthRequiredLayout />,
       children: [
         { index: true, element: <MainLayout /> },
         {
@@ -86,17 +81,6 @@ export const useRouter = () =>
               element: <AiAnswer />,
             },
           ],
-        },
-
-        {
-          path: '/signup',
-          element: <SignUpLayout />,
-          children: [{ index: true, element: <SignUpPage /> }],
-        },
-        {
-          path: '/signin',
-          element: <SignUpLayout />,
-          children: [{ index: true, element: <SignInPage /> }],
         },
         {
           path: '/reservation',
@@ -183,7 +167,6 @@ export const useRouter = () =>
       element: <AdminLayout />,
       children: [
         { index: true, element: <VisitPage /> },
-        { path: '/admin/login', element: <AdminLogin /> },
         {
           path: '/admin/offline',
           element: <VisitPage />,
@@ -218,10 +201,22 @@ export const useRouter = () =>
       ],
     },
     {
-      path: '/maptest',
-      element: <MapTestLayout />,
-      children: [{ index: true, element: <MapTestPage /> }],
+      path: '/auth/signup',
+      element: <SignUpLayout />,
+      children: [{ index: true, element: <SignUpPage /> }],
     },
+    {
+      path: '/auth/signin',
+      element: <SignUpLayout />,
+      children: [{ index: true, element: <SignInPage /> }],
+    },
+
+    {
+      path: '/admin/auth',
+      element: <AdminLayout />,
+      children: [{ path: '/admin/auth/signin', element: <AdminLogin /> }],
+    },
+
     {
       path: '/*',
       element: <NotFound />,

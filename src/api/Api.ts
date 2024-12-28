@@ -1,5 +1,3 @@
-import { ADMIN_ROUTE } from '@/constants/route';
-import { postReissueAccessToken } from './admin/auth';
 import { APIError, ErrorCode } from './Error';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -17,9 +15,8 @@ type ConfigProps = {
   params?: object | null;
 };
 
-export type TokenNames = 'adminAccessToken' | 'customerAccessToken';
-
-let reissueAccessToken = false;
+export type AccessTokenNames = 'adminAccessToken' | 'customerAccessToken';
+export type RefreshTokenNames = 'adminRefreshToken' | 'customerRefreshToken';
 
 const fetcher = async ({
   url,
@@ -28,7 +25,7 @@ const fetcher = async ({
   data,
   params,
 }: ConfigProps) => {
-  const tokenName: TokenNames = url.startsWith('/admin')
+  const tokenName: AccessTokenNames = url.startsWith('/admin')
     ? 'adminAccessToken'
     : 'customerAccessToken';
 
@@ -69,13 +66,51 @@ const fetcher = async ({
   if (!response.ok) {
     const errorBody = await response.json();
     if (errorBody.code === ErrorCode.EXPIRED_ACCESS_TOKEN) {
-      throw handleUnauthorizedError(response, {
-        url,
-        method,
-        headers,
-        data,
-        params,
-      });
+      const newAccessToken = await refreshAccessToken();
+      if (newAccessToken) {
+        const defaultHeaders: HeadersProps = {
+          'Content-Type': 'application/json',
+          Authorization: token ? `Bearer ${token}` : '',
+        };
+
+        const configHeaders: Record<string, string> = url.startsWith(
+          '/api/auth'
+        )
+          ? {
+              ...headers,
+              'Content-Type': 'application/json',
+            }
+          : {
+              ...defaultHeaders,
+              ...headers,
+            };
+
+        let queryString = '';
+        if (params && method === 'GET') {
+          queryString = `?${new URLSearchParams(params as Record<string, string>).toString()}`;
+        }
+
+        const options: RequestInit = {
+          method,
+          headers: configHeaders,
+          credentials: 'include',
+        };
+
+        if (data && method !== 'GET') {
+          options.body = JSON.stringify(data);
+        }
+
+        const response = await fetch(
+          `${BASE_URL}${url}${queryString}`,
+          options
+        );
+
+        if (!response.ok) {
+          throw handleError(errorBody);
+        }
+
+        return response.json();
+      }
     }
     throw handleError(errorBody);
   }
@@ -90,41 +125,27 @@ const handleError = (errorBody: APIError) => {
   };
 };
 
-const handleUnauthorizedError = async (
-  response: Response,
-  requestProps: ConfigProps
-) => {
-  if (reissueAccessToken) {
-    throw new Error(response.statusText);
-  }
-
-  reissueAccessToken = true;
+const refreshAccessToken = async (): Promise<string | null> => {
+  const tokenName: AccessTokenNames = 'customerAccessToken';
   try {
-    const accessTokenReissueResult = await postReissueAccessToken();
-    if (accessTokenReissueResult && accessTokenReissueResult?.accessToken) {
-      reissueAccessToken = false;
-      const isAdmin = requestProps.url.startsWith('/admin');
-      setToken(
-        isAdmin ? 'ADMIN' : 'CUSTOMER',
-        accessTokenReissueResult.accessToken
-      );
-      window.location.href = isAdmin ? ADMIN_ROUTE.online.main : '/';
-      return await fetcher(requestProps);
+    const response = await fetch(`${BASE_URL}/refresh`, {
+      method: 'POST',
+      credentials: 'include', // Refresh Token은 HttpOnly 쿠키에서 처리
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to refresh access token');
     }
-  } catch (err) {
-    console.error(err);
-    const isAdmin = requestProps.url.startsWith('/admin');
-    removeToken(isAdmin ? 'ADMIN' : 'CUSTOMER');
-    window.location.href = isAdmin ? ADMIN_ROUTE.login : '/login';
+
+    const { accessToken } = await response.json();
+    localStorage.setItem(tokenName, accessToken);
+    return accessToken;
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+    // 로그아웃 또는 추가 처리
+    localStorage.removeItem('accessToken');
+    return null;
   }
-};
-
-const setToken = (type: 'CUSTOMER' | 'ADMIN', token: string) => {
-  window.localStorage.setItem(`${type.toLowerCase()}AccessToken`, token);
-};
-
-const removeToken = (type: 'CUSTOMER' | 'ADMIN') => {
-  window.localStorage.removeItem(`${type.toLowerCase()}AccessToken`);
 };
 
 const apiCall = {

@@ -1,5 +1,5 @@
 import { postAdminLogin } from '@/api/admin/auth';
-import { TokenNames } from '@/api/Api';
+import { AccessTokenNames } from '@/api/Api';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { ADMIN_ROUTE } from '@/constants/route';
 import { useToast } from '@/hooks/use-toast';
@@ -15,7 +15,7 @@ const usePostAdminLogin = () => {
     mutationKey: [QUERY_KEYS.SIGN_IN],
     mutationFn: postAdminLogin,
     onSuccess: ({ accessToken }) => {
-      const tokenName: TokenNames = 'adminAccessToken';
+      const tokenName: AccessTokenNames = 'adminAccessToken';
       window.localStorage.setItem(tokenName, accessToken);
       showToast(toast, '로그인에 성공하였습니다!');
       navigate(ADMIN_ROUTE.online.main);
