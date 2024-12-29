@@ -73,6 +73,13 @@ export function AiAnswer() {
     setDropdownIndex(dropdownIndex === index ? null : index);
   };
 
+  const links: Record<number, string> = {
+    411: 'https://www.hanabank.com/fund/index.do',
+    414: 'https://www.hanabank.com/pension/index.do?contentUrl=/pension/retirement/wppns100_01i.do?_menuNo=99006#//HanaBank',
+    416: 'https://www.kebhana.com/cont/mall/mall08/mall0802/mall080204/1420271_115200.jsp?_menuNo=98786',
+    418: 'https://www.kebhana.com/cont/mall/mall08/mall0802/mall080204/1431602_115200.jsp?_menuNo=98786',
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -192,17 +199,10 @@ export function AiAnswer() {
                   className='whitespace-pre-line px-2 py-3 text-left text-[1rem] font-bold text-[#464646]'
                 >
                   <div>
-                    {answer.recommend_id && (
+                    {links[answer.recommend_id] && (
                       <a
                         className='text-[1.25rem] font-bold text-main'
-                        href={
-                          {
-                            411: 'https://www.hanabank.com/fund/index.do',
-                            414: 'https://www.hanabank.com/pension/index.do?contentUrl=/pension/retirement/wppns100_01i.do?_menuNo=99006#//HanaBank',
-                            416: 'https://www.kebhana.com/cont/mall/mall08/mall0802/mall080204/1420271_115200.jsp?_menuNo=98786',
-                            418: 'https://www.kebhana.com/cont/mall/mall08/mall0802/mall080204/1431602_115200.jsp?_menuNo=98786',
-                          }[answer.recommend_id]
-                        }
+                        href={links[answer.recommend_id]}
                       >
                         👉 상품 바로가기 👈
                       </a>
