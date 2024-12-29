@@ -8,7 +8,7 @@ const useTimer = (startTime: string | Date) => {
       const startDate = new Date(startTime);
       const now = new Date();
 
-      const timeDiff = now.getTime() - startDate.getTime() + 9 * 60 * 60 * 1000;
+      const timeDiff = now.getTime() - startDate.getTime() - 9 * 60 * 60 * 1000;
 
       const diffInSeconds = Math.floor(timeDiff / 1000);
 
