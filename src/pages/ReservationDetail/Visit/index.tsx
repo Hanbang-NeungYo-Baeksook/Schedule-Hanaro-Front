@@ -9,7 +9,7 @@ import { Toaster } from '@/components/ui/toaster';
 import useDeleteVisit from '@/hooks/query/customer/useDeleteVisit';
 import useGetVisitDetail from '@/hooks/query/customer/useGetVisitDetail';
 import { useToast } from '@/hooks/use-toast';
-import getMyLocation from '@/hooks/useMyLocation';
+import { getMyLocation } from '@/hooks/useMyLocation';
 import '@/index.css';
 import { showToast } from '@/pages/Register/Call';
 import { Coord } from '@/stores';
