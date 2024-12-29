@@ -1,14 +1,9 @@
-// import markermyGreen from '@/assets/icons/marker-my-green.svg';
-import markerAtmSelected from '@/assets/icons/marker-atm-selected.svg';
 import markerAtm from '@/assets/icons/marker-atm.svg';
-import markerBankReservedSelected from '@/assets/icons/marker-bank-reserved-selected.svg';
-import markerBankReserved from '@/assets/icons/marker-bank-reserved.svg';
-import markerBankSelected from '@/assets/icons/marker-bank-selected.svg';
+import markerBankReserved from '@/assets/icons/marker-bank-reserved.png';
 import markerBank from '@/assets/icons/marker-bank.png';
 import markerCurrent from '@/assets/icons/marker-current.png';
 import markerEnd from '@/assets/icons/marker-end.svg';
 import markerStart from '@/assets/icons/marker-start.svg';
-// import markerMyPurple from '@/assets/icons/marker-purple.svg';
 
 import { TMap, TMapLatLng } from '@/types';
 import { reactElementToString } from '@/utils';
@@ -18,16 +13,7 @@ const { Tmapv3 } = window;
 type MarkerProps = {
   mapContent: TMap;
   position: TMapLatLng;
-  theme:
-    | 'start'
-    | 'end'
-    | 'current'
-    | 'branch'
-    | 'selectedBranch'
-    | 'reservedBranch'
-    | 'selectedReservedBranch'
-    | 'atm'
-    | 'selectedAtm';
+  theme: 'start' | 'end' | 'current' | 'bank' | 'reservedBank' | 'atm';
   icon?: string;
   labelText?: string;
 };
@@ -45,17 +31,12 @@ export function Marker({
         ? markerStart
         : theme === 'end'
           ? markerEnd
-          : theme === 'branch'
+          : theme === 'bank'
             ? markerBank
-            : theme === 'selectedBranch'
-              ? markerBankSelected
-              : theme === 'reservedBranch'
-                ? markerBankReserved
-                : theme === 'selectedReservedBranch'
-                  ? markerBankReservedSelected
-                  : theme === 'atm'
-                    ? markerAtm
-                    : markerAtmSelected;
+            : theme === 'reservedBank'
+              ? markerBankReserved
+              : markerAtm;
+
   return new Tmapv3.Marker({
     position,
     map: mapContent,

@@ -16,9 +16,9 @@ import useGetBranchDetail from '@/hooks/query/customer/useGetBranchDetail';
 import { WaitingInfo } from '@/components/Map/BranchCard';
 import { Badge } from '@/components/ui/badge';
 import { Coord } from '@/stores';
-import getMyLocation from '@/hooks/useMyLocation';
 import ReservationButton from '@/components/Direction/BottomFloatingBox/ReservationButton';
 import LoadingBasic from '@/components/Loading';
+import { getMyLocation } from '@/hooks/useMyLocation';
 
 export function BranchDetailPage() {
   const navigate = useNavigate();

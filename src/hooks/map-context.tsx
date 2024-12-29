@@ -24,7 +24,6 @@ import {
   useRoutesPedestrain,
 } from './useTmapQuery';
 import { parseRoutesResponse } from './parseRoutesPedestrainResponse';
-import getMyLocation from './useMyLocation';
 import useMarker from './useMarker';
 import { defaultMarkers, Markers } from '@/types/markers';
 import { PolyLine } from '@/components/Map/Polyline';
@@ -38,6 +37,7 @@ import {
   RoutesResponse,
 } from '@/types/routesPedestrainData';
 import { GetBranchListResponse } from '@/api/customer/branches';
+import { cancelWatchMyLocation, watchMyLocation } from './useMyLocation';
 
 const defaultBranchList = {
   bank_list: [],
@@ -214,9 +214,14 @@ export const MapProvider = ({
 
   // 현위치 정보 받아오기 & 현위치 설정
   useEffect(() => {
-    getMyLocation(setCurrentCoord);
+    const watchId = watchMyLocation(setCurrentCoord);
+    return () => cancelWatchMyLocation(watchId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapInstance]);
+
+  useEffect(() => {
+    console.log(coords);
+  }, [mapInstance, coords]);
 
   // 보행자 경로 및 시간, 거리 정보 설정하기
   useEffect(() => {
@@ -340,8 +345,6 @@ export const MapProvider = ({
         return;
       }
 
-      console.log('Automobile Marker');
-
       tmpStart = Marker({
         mapContent: mapInstance,
         position: startAutomobileCoord,
@@ -395,15 +398,14 @@ export const MapProvider = ({
         branch_name: name,
         x_position: longitude,
         y_position: latitude,
-        branch_type: type,
+        reserved,
       }) => {
         if (mapInstance && latitude && longitude) {
-          console.log(type);
           const position = new Tmapv3.LatLng(+latitude, +longitude);
           const marker = Marker({
             mapContent: mapInstance,
             position,
-            theme: 'branch',
+            theme: reserved ? 'reservedBank' : 'bank',
             labelText: name,
           });
           marker.on('Click', () => {
@@ -420,10 +422,8 @@ export const MapProvider = ({
         branch_name: name,
         x_position: longitude,
         y_position: latitude,
-        branch_type: type,
       }) => {
         if (mapInstance && latitude && longitude) {
-          console.log(type);
           const position = new Tmapv3.LatLng(+latitude, +longitude);
           const marker = Marker({
             mapContent: mapInstance,
@@ -466,8 +466,6 @@ export const MapProvider = ({
     }
 
     const setPolyline = throttle(() => {
-      console.log('Map Loaded!!!');
-
       if (!pedestrainPolyline) {
         setPedestrainPolyline(
           PolyLine({
