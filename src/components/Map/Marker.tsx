@@ -1,4 +1,4 @@
-import markerAtm from '@/assets/icons/marker-atm.svg';
+import markerAtm from '@/assets/icons/marker-atm.png';
 import markerBankReserved from '@/assets/icons/marker-bank-reserved.png';
 import markerBank from '@/assets/icons/marker-bank.png';
 import markerCurrent from '@/assets/icons/marker-current.png';
@@ -44,7 +44,9 @@ export function Marker({
     iconSize: new Tmapv3.Size(50, 50),
     label: labelText
       ? reactElementToString(
-          <span className={`label-green`}>{labelText.split(' ')[1]}</span>
+          <span className={`label-green`}>
+            {theme === 'atm' ? labelText : labelText.split(' ')[1]}
+          </span>
         )
       : '',
   });

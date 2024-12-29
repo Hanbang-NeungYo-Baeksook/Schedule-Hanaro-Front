@@ -37,7 +37,7 @@ import {
   RoutesResponse,
 } from '@/types/routesPedestrainData';
 import { GetBranchListResponse } from '@/api/customer/branches';
-import { cancelWatchMyLocation, watchMyLocation } from './useMyLocation';
+import { getMyLocation } from './useMyLocation';
 
 const defaultBranchList = {
   bank_list: [],
@@ -91,7 +91,7 @@ const MapContext = createContext<MapContextProps>({
 type MapProviderProps = {
   mapRef: RefObject<HTMLDivElement>;
 };
-// TODO: 선택 상태하나 만들고 그거 set되면 그 라인만 보이게
+
 // Routes Pedstrain
 const routesReducer = (
   data: RoutesRequest,
@@ -145,7 +145,7 @@ export const MapProvider = ({
   const [automobilePolyline, setAutomobilePolyline] =
     useState<TMapPolyline | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
-  const watchIdRef = useRef<number>(-1);
+  // const watchIdRef = useRef<number>(-1);
   const initialRef = useRef<number>(-1);
 
   // Map 초기 설정
@@ -216,13 +216,18 @@ export const MapProvider = ({
 
   // 현위치 정보 받아오기 & 현위치 설정
   useEffect(() => {
-    watchIdRef.current = watchMyLocation(setCurrentCoord);
-    return () => {
-      cancelWatchMyLocation(watchIdRef.current);
-      watchIdRef.current = -1;
-    };
+    getMyLocation(setCurrentCoord);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapInstance]);
+  // // 현위치 정보 받아오기 & 현위치 설정
+  // useEffect(() => {
+  //   watchIdRef.current = watchMyLocation(setCurrentCoord);
+  //   return () => {
+  //     cancelWatchMyLocation(watchIdRef.current);
+  //     watchIdRef.current = -1;
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [mapInstance]);
 
   useEffect(() => {
     console.log(coords);
@@ -430,6 +435,7 @@ export const MapProvider = ({
         y_position: latitude,
       }) => {
         if (mapInstance && latitude && longitude) {
+          console.log(name);
           const position = new Tmapv3.LatLng(+latitude, +longitude);
           const marker = Marker({
             mapContent: mapInstance,
@@ -506,34 +512,6 @@ export const MapProvider = ({
       console.log(mapInstance);
       setPolyline();
     }
-
-    // mapInstance.on('ConfigLoad', () => {
-    //   console.log('Map Loaded!!!');
-    //   if (routesType === 'initial') {
-    //     setPedestrainPolyline(
-    //       PolyLine({
-    //         path: pathPedestrain,
-    //         strokeColor: '#3D8BFF',
-    //         strokeWeight: 9,
-    //         mapContent: mapInstance,
-    //       })
-    //     );
-    //     setAutomobilePolyline(
-    //       PolyLine({
-    //         path: pathAutomobile,
-    //         strokeColor: '#3D8BFF',
-    //         strokeWeight: 9,
-    //         mapContent: mapInstance,
-    //       })
-    //     );
-    //   }
-    // });
-    // setPedestrainPolyline(tmpPolyline);
-
-    console.log('!!!!!!!!!!!!!!!!!!FJFKFjldsjfkl');
-    console.log('pathPedestrain: ', pathPedestrain);
-    console.log('pathAutomobile: ', pathAutomobile);
-    console.log('routeType', routesType);
 
     const startLatitude = (
       routesType === 'initial' || routesType === 'pedestrain'
