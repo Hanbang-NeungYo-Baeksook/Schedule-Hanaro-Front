@@ -34,7 +34,7 @@ function WaitingBox({
         </span>
       </div>
       <div className='flex items-center justify-between'>
-        <span className='max-w-[250px] overflow-hidden truncate whitespace-nowrap text-[0.875rem]'>
+        <span className='max-w-[200px] overflow-hidden truncate whitespace-nowrap text-[0.875rem]'>
           {content}
         </span>
         <span className='text-[0.75rem]'>
