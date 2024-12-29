@@ -112,7 +112,9 @@ function CallInfoBox({
                   </Badge>
                 ))}
               </div>
-              <div className='text-[1.125rem] text-lightGrey'>{content}</div>
+              <div className='whitespace-pre-line text-[1.125rem] text-lightGrey'>
+                {content}
+              </div>
             </div>
           </div>
           {location.pathname === '/admin/online' && (
