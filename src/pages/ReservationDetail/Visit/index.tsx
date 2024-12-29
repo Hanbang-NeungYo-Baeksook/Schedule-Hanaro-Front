@@ -9,7 +9,7 @@ import { Toaster } from '@/components/ui/toaster';
 import useDeleteVisit from '@/hooks/query/customer/useDeleteVisit';
 import useGetVisitDetail from '@/hooks/query/customer/useGetVisitDetail';
 import { useToast } from '@/hooks/use-toast';
-import getMyLocation from '@/hooks/useMyLocation';
+import { getMyLocation } from '@/hooks/useMyLocation';
 import '@/index.css';
 import { showToast } from '@/pages/Register/Call';
 import { Coord } from '@/stores';
@@ -38,6 +38,7 @@ export function ReservationDetailVisitPage() {
     if (visit?.waiting_amount === 1) {
       showToast(toast, '곧 고객님의 상담이 시작됩니다. 대기해주세요');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading || !visit) {
