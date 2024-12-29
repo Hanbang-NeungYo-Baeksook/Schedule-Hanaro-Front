@@ -25,7 +25,7 @@ function Header({ storeName, employeeName }: HeaderProps) {
       {storeName}
     </div>
   ) : (
-    <nav className='p-1rem flex h-full items-center justify-between'>
+    <nav className='flex h-full items-center justify-between p-[1rem]'>
       <div className='ml-[2rem] flex items-center space-x-2'>
         <Link to='/admin/online'>
           <img
@@ -56,7 +56,7 @@ function Header({ storeName, employeeName }: HeaderProps) {
   );
 
   return (
-    <div className='fixed z-50 h-[9%] w-full bg-[#464646] py-[1rem] pl-[1.5rem] text-left shadow-[0_4px_50px_10px_rgba(0,0,0,0.07)]'>
+    <div className='fixed z-50 h-[9%] max-h-[6rem] w-full bg-[#464646] py-[1rem] pl-[1.5rem] text-left shadow-[0_4px_50px_10px_rgba(0,0,0,0.07)]'>
       {headerContent}
     </div>
   );
