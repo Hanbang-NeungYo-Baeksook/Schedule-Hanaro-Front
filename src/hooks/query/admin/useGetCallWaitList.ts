@@ -12,7 +12,7 @@ const useGetCallWaitList = ({
   return useQuery({
     queryKey: [ADMIN_QUERY_KEYS.CALL_WAIT_LIST, { date, time }],
     queryFn: () => getCallWaitList({ date, time }),
-    enabled: !!date,
+    // enabled: !!date,
   });
 };
 
