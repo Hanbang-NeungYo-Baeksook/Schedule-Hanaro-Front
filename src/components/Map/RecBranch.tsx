@@ -39,7 +39,7 @@ function RecBranch() {
     } else if (type === 'PERSONAL_LOAN') {
       return '개인대출';
     } else {
-      return '기업대출';
+      return '기타';
     }
   };
 
@@ -59,7 +59,7 @@ function RecBranch() {
             <SelectContent className='right-8 z-[61]'>
               <SelectItem value='DEPOSIT'>예금</SelectItem>
               <SelectItem value='PERSONAL_LOAN'>개인대출</SelectItem>
-              <SelectItem value='OTHERS'>기업대출</SelectItem>
+              <SelectItem value='OTHERS'>기타</SelectItem>
             </SelectContent>
           </Select>
         </div>
