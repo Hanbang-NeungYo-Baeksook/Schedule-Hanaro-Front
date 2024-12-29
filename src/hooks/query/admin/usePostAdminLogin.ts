@@ -14,9 +14,22 @@ const usePostAdminLogin = () => {
   return useMutation({
     mutationKey: [QUERY_KEYS.SIGN_IN],
     mutationFn: postAdminLogin,
-    onSuccess: ({ accessToken }) => {
+    onSuccess: ({
+      accessToken,
+      adminInfo: { adminId, adminName, branchName },
+    }) => {
       const tokenName: AccessTokenNames = 'adminAccessToken';
       window.localStorage.setItem(tokenName, accessToken);
+
+      const adminInfo = {
+        storeName: branchName,
+        name: adminName,
+        position: '사원',
+        id: adminId.toString(),
+      };
+
+      window.localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+
       showToast(toast, '로그인에 성공하였습니다!');
       navigate(ADMIN_ROUTE.online.main);
       window.location.reload();

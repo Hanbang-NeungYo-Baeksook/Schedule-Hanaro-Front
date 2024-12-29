@@ -7,8 +7,16 @@ export type PostAdminLoginRequest = {
   password: string;
 };
 
+export type AdminInfo = {
+  adminId: number;
+  adminName: string;
+  branchName: string;
+};
+
 export type PostAdminLoginResponse = {
   accessToken: string;
+  refreshToken: string;
+  adminInfo: AdminInfo;
 };
 
 export const postAdminLogin = async ({
