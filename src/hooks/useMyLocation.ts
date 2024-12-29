@@ -7,6 +7,12 @@ type Geolocation = {
 
 type SetCoord = (latitude: number, longitude: number) => void;
 
+type GeolocationOptions = {
+  enableHighAccuracy?: boolean;
+  timeout?: number;
+  maximumAge?: number;
+};
+
 export function getMyLocation(setCoord: SetCoord) {
   const onSuccess = (position: Geolocation) => {
     const { latitude, longitude } = position.coords;
@@ -20,7 +26,10 @@ export function watchMyLocation(setCoord: SetCoord) {
     const { latitude, longitude } = position.coords;
     setCoord(latitude, longitude);
   };
-  return navigator.geolocation.watchPosition(onSuccess);
+  const option: GeolocationOptions = {
+    maximumAge: 30000,
+  };
+  return navigator.geolocation.watchPosition(onSuccess, () => {}, option);
 }
 
 export function cancelWatchMyLocation(watchId: number) {
