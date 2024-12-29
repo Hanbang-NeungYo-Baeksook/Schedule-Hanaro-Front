@@ -1,20 +1,18 @@
+import ArrowAi from '@/assets/icons/arrowAI.svg';
+import Loading from '@/components/Chat/Loading';
+import Header from '@/components/Header/Header';
 import Nav from '@/components/Nav/Nav';
 import { Button } from '@/components/ui/button';
+import useGetCustomerDetail from '@/hooks/query/customer/useGetCustomerDetail';
+import usePostRecommendList from '@/hooks/query/customer/usePostRecommendList';
 import { contentAtom, isLoadingAtom } from '@/stores';
 import { useAtom } from 'jotai';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ArrowAi from '@/assets/icons/arrowAI.svg';
-import usePostRecommendList from '@/hooks/query/customer/usePostRecommendList';
-import Loading from '@/components/Chat/Loading';
-import Header from '@/components/Header/Header';
-import useGetCustomerDetail from '@/hooks/query/customer/useGetCustomerDetail';
 
 const recommendedQuestions = [
-  '통장 비밀번호는 숫자만 사용할 수 있나요?',
-  '지방세 고지서를 모바일로 받기 위한 서비스 신청 절차는 어떻게 되나요?',
-  '미성년자인 경우에도 펀드에 가입할 수 있는지, 가능하다면 절차나 필요한 조건이 무엇인지 궁금합니다',
-  '인터넷으로 신용 대출 신청을 완료했는데, 결과를 확인할 수 있는 시점이 언제인지 알고 싶습니다.',
+  '노후 준비를 어떻게 시작해야할까요?',
+  '하나은행 신용대출 상품들을 비교해서 알려주세요. 직장인인데 받을 수 있는 한도가 궁금합니다.',
 ];
 
 export function AiQuestion() {
