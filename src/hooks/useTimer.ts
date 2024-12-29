@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 
 const useTimer = (startTime: string | Date) => {
@@ -6,18 +5,25 @@ const useTimer = (startTime: string | Date) => {
 
   useEffect(() => {
     const updateProgressTime = () => {
-      const diff = dayjs().diff(startTime, 'second');
-      const minutes = Math.floor(diff / 60)
+      const startDate = new Date(startTime);
+      const now = new Date();
+
+      const timeDiff = now.getTime() - startDate.getTime() + 9 * 60 * 60 * 1000;
+
+      const diffInSeconds = Math.floor(timeDiff / 1000);
+
+      const minutes = Math.floor(diffInSeconds / 60)
         .toString()
         .padStart(2, '0');
-      const seconds = (diff % 60).toString().padStart(2, '0');
+      const seconds = (diffInSeconds % 60).toString().padStart(2, '0');
+
       setProgressTime(`${minutes}:${seconds}`);
     };
 
-    updateProgressTime(); // 초기 값 설정
+    updateProgressTime();
     const interval = setInterval(updateProgressTime, 1000);
 
-    return () => clearInterval(interval); // 타이머 정리
+    return () => clearInterval(interval);
   }, [startTime]);
 
   return progressTime;
