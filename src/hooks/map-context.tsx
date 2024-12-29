@@ -145,6 +145,8 @@ export const MapProvider = ({
   const [automobilePolyline, setAutomobilePolyline] =
     useState<TMapPolyline | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const watchIdRef = useRef<number>(-1);
+  const initialRef = useRef<number>(-1);
 
   // Map 초기 설정
   useLayoutEffect(() => {
@@ -214,8 +216,11 @@ export const MapProvider = ({
 
   // 현위치 정보 받아오기 & 현위치 설정
   useEffect(() => {
-    const watchId = watchMyLocation(setCurrentCoord);
-    return () => cancelWatchMyLocation(watchId);
+    watchIdRef.current = watchMyLocation(setCurrentCoord);
+    return () => {
+      cancelWatchMyLocation(watchIdRef.current);
+      watchIdRef.current = -1;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapInstance]);
 
@@ -265,9 +270,10 @@ export const MapProvider = ({
     (latitude: number, longitude: number) => {
       const position = new Tmapv3.LatLng(latitude, longitude);
       setCoords((cur) => ({ ...cur, currentCoord: position }));
-      if (routesData.pathPedestrain.length == 0) {
+      if (routesData.pathPedestrain.length == 0 && initialRef.current === -1) {
         mapInstance?.setCenter(position);
       }
+      initialRef.current = 1;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [mapInstance]
