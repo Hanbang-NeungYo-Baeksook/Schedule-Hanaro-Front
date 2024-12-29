@@ -38,8 +38,7 @@ export function ReservationDetailVisitPage() {
     if (visit?.waiting_amount === 1) {
       showToast(toast, '곧 고객님의 상담이 시작됩니다. 대기해주세요');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [toast, visit?.waiting_amount]);
 
   if (isLoading || !visit) {
     return <LoadingBasic />;
