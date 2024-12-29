@@ -85,22 +85,42 @@ export default function BranchInfo({
   return (
     <>
       <div className='flex items-center justify-between'>
-        <div className='flex w-full flex-col items-start justify-center gap-1 pr-4'>
+        <div className='flex w-full flex-col items-start justify-center gap-1'>
           <div className='flex w-full justify-between gap-2'>
-            <div className='flex flex-col items-start justify-center pl-3'>
-              <div
-                className='flex items-center justify-center gap-2'
-                onClick={handlePage(`/branch/${branchId}`)}
-              >
-                <div className='flex w-fit flex-wrap justify-start gap-1'>
-                  <span className='flex text-2xl font-extrabold'>
-                    {topName}
-                  </span>
-                  <span className='flex text-2xl font-extrabold'>
-                    {bottomName}
-                  </span>
+            <div className='flex w-full flex-col items-start justify-center pl-3'>
+              <div className='flex w-full items-center justify-between'>
+                <div
+                  className='flex items-center justify-center gap-2'
+                  onClick={handlePage(`/branch/${branchId}`)}
+                >
+                  <div className='flex w-fit flex-wrap justify-start gap-1'>
+                    <span className='flex text-2xl font-extrabold'>
+                      {topName}
+                    </span>
+                    <span className='flex text-2xl font-extrabold'>
+                      {bottomName}
+                    </span>
+                  </div>
+                  <Hyperlink className='w-6' />
                 </div>
-                <Hyperlink />
+                {type === 'map' ? (
+                  <DirectionButton
+                    variant='square'
+                    onClick={handleDirection}
+                    className='self-start'
+                  />
+                ) : (
+                  <span className='mb-2 flex w-[6rem] self-start'>
+                    <ChangeToggle
+                      isOpen={isOpen}
+                      onToggle={() => {
+                        setIsOpen((cur) => !cur);
+                      }}
+                      selectedTab={selectedTab}
+                      onSelect={selectTab}
+                    />
+                  </span>
+                )}
               </div>
               <div className='flex flex-wrap items-center justify-center gap-2'>
                 <span className='text-[1rem] text-lightGrey'>
@@ -114,24 +134,6 @@ export default function BranchInfo({
                 </span>
               </div>
             </div>
-            {type === 'map' ? (
-              <DirectionButton
-                variant='square'
-                onClick={handleDirection}
-                className='self-start'
-              />
-            ) : (
-              <span className='mb-2 flex self-start'>
-                <ChangeToggle
-                  isOpen={isOpen}
-                  onToggle={() => {
-                    setIsOpen((cur) => !cur);
-                  }}
-                  selectedTab={selectedTab}
-                  onSelect={selectTab}
-                />
-              </span>
-            )}
           </div>
 
           <Separator className='my-2' />
