@@ -11,7 +11,7 @@ import { AdminVisitStatusUpdateResponse } from '@/types/Visit';
 import Next from '../../../components/Admin/Next';
 
 const ROTATE_ANGLE = 45;
-const SECTION_ID = 5;
+const SECTION_ID = 7;
 
 function VisitPage() {
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
@@ -25,32 +25,59 @@ function VisitPage() {
 
   const updateVisitMutation = useUpdateVisitStatusMutation();
 
-  const fetchInitialStatus = useCallback(async () => {
+  const fetchInitialData = useCallback(async () => {
     try {
-      console.log('초기 상태 조회 시작 - SECTION_ID:', SECTION_ID);
-      const response = await getVisitStatus(SECTION_ID);
-      console.log('초기 대기 현황 응답:', response);
+      console.log('초기 데이터 로드 시작');
+      const initialStatus = await getVisitStatus(SECTION_ID);
+      setWaitingInfo(initialStatus);
+      setSelectedIdx(initialStatus.current_num);
 
-      if (!response) {
-        console.log('응답이 없습니다.');
-        return;
-      }
-
-      setWaitingInfo(response);
-      setSelectedIdx(response.current_num);
-
+      // numbers 배열 업데이트
       const updatedNumbers = Array(8).fill(0);
       displayNum.forEach((index, i) => {
-        if (i === 0) updatedNumbers[index] = response.previous_num;
-        if (i === 1) updatedNumbers[index] = response.current_num;
-        if (i === 2) updatedNumbers[index] = response.next_num;
+        if (i === 0) updatedNumbers[index] = initialStatus.previous_num;
+        if (i === 1) updatedNumbers[index] = initialStatus.current_num;
+        if (i === 2) updatedNumbers[index] = initialStatus.next_num;
       });
-
       setNumbers(updatedNumbers);
+      console.log('초기 데이터 로드 완료:', initialStatus);
     } catch (error) {
-      console.error('초기 대기 현황 조회 실패:', error);
+      console.error('초기 데이터 로드 실패:', error);
     }
-  }, [displayNum]);
+  }, [SECTION_ID, displayNum]);
+
+  // 컴포넌트 마운트 시 초기 데이터 로드
+  useEffect(() => {
+    fetchInitialData();
+  }, [fetchInitialData]);
+
+  const handleWebSocketMessage = useCallback(
+    async (message: { type: 'UPDATE_NEEDED'; topicId: number }) => {
+      console.log('웹소켓 메시지 수신:', message);
+
+      if (message.type === 'UPDATE_NEEDED' && message.topicId === SECTION_ID) {
+        const newStatus = await getVisitStatus(SECTION_ID);
+        setWaitingInfo(newStatus);
+
+        // 현재 displayNum 위치 유지하면서 새로운 번호들 업데이트
+        const updatedNumbers = Array(8).fill(0);
+        displayNum.forEach((index, i) => {
+          if (i === 0) updatedNumbers[index] = newStatus.previous_num;
+          if (i === 1) updatedNumbers[index] = newStatus.current_num;
+          if (i === 2) updatedNumbers[index] = newStatus.next_num;
+        });
+
+        setNumbers(updatedNumbers);
+      }
+    },
+    [SECTION_ID, displayNum]
+  );
+
+  const { isConnected } = useWebSocket(
+    SECTION_ID,
+    'VISIT',
+    handleWebSocketMessage
+  );
 
   const handleNext = async () => {
     try {
@@ -63,62 +90,49 @@ function VisitPage() {
         return;
       }
 
+      // 웹소켓 연결 상태 확인
+      if (!isConnected) {
+        console.warn('웹소켓이 연결되지 않은 상태입니다.');
+        return;
+      }
+
       const response = await updateVisitMutation.mutateAsync(
         waitingInfo.next_num
       );
-      console.log('다음 번호 호출 결과:', response);
+      console.log('다음 번호 호출 결���:', response);
 
-      setSelectedIdx(response.current_num);
+      // 상태 업데이트를 한 번에 처리
       setWaitingInfo(response);
+      setSelectedIdx(response.current_num);
 
-      setNumbers(() => {
-        const updatedNumbers = Array(8).fill(0);
-        const newDisplayNum = displayNum.map((num) =>
-          num + 1 > 7 ? 0 : num + 1
-        );
+      const newDisplayNum = displayNum.map((num) =>
+        num + 1 > 7 ? 0 : num + 1
+      );
+      setDisplayNum(newDisplayNum);
 
-        newDisplayNum.forEach((index, i) => {
-          if (i === 0) updatedNumbers[index] = response.previous_num;
-          if (i === 1) updatedNumbers[index] = response.current_num;
-          if (i === 2) updatedNumbers[index] = response.next_num;
-        });
-
-        return updatedNumbers;
+      const updatedNumbers = Array(8).fill(0);
+      newDisplayNum.forEach((index, i) => {
+        if (i === 0) updatedNumbers[index] = response.previous_num;
+        if (i === 1) updatedNumbers[index] = response.current_num;
+        if (i === 2) updatedNumbers[index] = response.next_num;
       });
 
-      setAngle((prevAngle) => prevAngle + ROTATE_ANGLE);
-      setDisplayNum((prevDisplay) =>
-        prevDisplay.map((num) => (num + 1 > 7 ? 0 : num + 1))
-      );
+      setNumbers(updatedNumbers);
+      setAngle((prev) => prev + ROTATE_ANGLE);
     } catch (error) {
       console.error('다음 번호 호출 실패:', error);
     }
   };
 
-  const handleWebSocketMessage = useCallback(
-    (message: { type: 'UPDATE_NEEDED'; topicId: number }) => {
-      console.log('웹소켓 메시지 수신 - 상태 업데이트 필요:', message);
-
-      // 해당 섹션의 상태 업데이트가 필요한 경우에만 처리
-      if (message.type === 'UPDATE_NEEDED' && message.topicId === SECTION_ID) {
-        console.log(`섹션 ${SECTION_ID}의 상태 업데이트 시작`);
-        void fetchInitialStatus();
-      }
-    },
-    [fetchInitialStatus]
-  );
-
-  const { isConnected } = useWebSocket(
-    SECTION_ID,
-    'VISIT',
-    handleWebSocketMessage
-  );
-
-  // 초기 로드와 웹소켓 연결 상태 변경 시에만 실행
+  // 초소켓 연결 상태 모니터링을 위한 로그 추가
   useEffect(() => {
-    console.log('방문 페이지 마운트, 웹소켓 연결 상태:', isConnected);
-    void fetchInitialStatus();
-  }, [isConnected, fetchInitialStatus]);
+    console.log('웹소켓 연결 상태 변경:', isConnected);
+
+    // 연결이 끊어졌다가 다시 연결되는지 확인
+    if (!isConnected) {
+      console.log('웹소켓 연결이 끊어짐');
+    }
+  }, [isConnected]);
 
   useEffect(() => {
     if (waitingInfo) {
@@ -145,6 +159,11 @@ function VisitPage() {
       console.log(...newNumbers);
     }
   }, [waitingInfo, displayNum]);
+
+  // 수동으로 번호를 선택할 때만 CallInfoBox 업데이트
+  const handleSelectNumber = (number: number) => {
+    setSelectedIdx(number);
+  };
 
   return (
     <div className='relative mx-auto mt-[6.25rem] flex w-[98%] max-w-[1300px] justify-between'>
@@ -176,7 +195,7 @@ function VisitPage() {
               ? {
                   id: visitDetail.visit_id,
                   customer_id: visitDetail.customer_id,
-                  waiting_num: waitingInfo?.current_num || 0,
+                  waiting_num: selectedIdx || 0,
                   category: visitDetail.category,
                   tags: visitDetail.tags,
                   content: visitDetail.content,
@@ -185,8 +204,8 @@ function VisitPage() {
                 }
               : undefined
           }
-          currentIdx={waitingInfo?.current_num || 0}
-          changeIdx={setSelectedIdx}
+          currentIdx={selectedIdx || 0}
+          changeIdx={handleSelectNumber}
           toggleOpen={() => {}}
         />
       </div>
