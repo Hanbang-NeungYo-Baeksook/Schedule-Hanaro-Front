@@ -23,8 +23,6 @@ function CurrentBox({
     customer_id,
   } = progress;
 
-  console.log(progress);
-
   const { data: customerDetail } = useGetCustomerDetail(customer_id ?? 0);
   const { data: customerHistory } = useGetCustomerHistory(customer_id ?? 0);
 

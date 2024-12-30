@@ -3,8 +3,6 @@ type ReservationDetailTagProps = {
 };
 
 const ReservationDetailInquiryTags = ({ tags }: ReservationDetailTagProps) => {
-  console.log('🚀 ~ ReservationDetailInquiryTags ~ tags:', tags);
-
   return (
     <div className='flex w-full items-center'>
       <div className='flex space-x-2'>

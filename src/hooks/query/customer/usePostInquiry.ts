@@ -17,7 +17,7 @@ const usePostInquiry = () => {
     mutationKey: [QUERY_KEYS.INQUIRY_ADD],
     mutationFn: postInquiry,
     onSuccess: ({ inquiry_id }) => {
-      console.log(inquiry_id);
+      console.debug(inquiry_id);
       showToast(toast, '예약 완료되었습니다!');
       setContent('');
       setTimeout(() => {

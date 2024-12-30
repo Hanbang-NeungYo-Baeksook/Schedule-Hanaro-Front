@@ -18,21 +18,21 @@ export const useWebSocket = (
   const connect = useCallback(() => {
     try {
       if (isConnecting.current) {
-        console.log('연결 시도 중입니다...');
+        console.debug('연결 시도 중입니다...');
         return;
       }
 
       if (webSocket.current?.readyState === WebSocket.OPEN) {
-        console.log('이미 연결된 웹소켓이 있습니다.');
+        console.debug('이미 연결된 웹소켓이 있습니다.');
         return;
       }
 
       isConnecting.current = true;
-      console.log(`웹소켓 연결 시도... topicId: ${topicId}`);
+      console.debug(`웹소켓 연결 시도... topicId: ${topicId}`);
       webSocket.current = new WebSocket(`${BASE_URL}/ws/test`);
 
       webSocket.current.onopen = () => {
-        console.log('웹소켓 연결 성공!');
+        console.debug('웹소켓 연결 성공!');
         isConnecting.current = false;
 
         // 연결 직후 바로 구독 메시지 전송
@@ -42,7 +42,7 @@ export const useWebSocket = (
               action: 'subscribe',
               topicId: String(topicId),
             });
-            console.log('구독 메시지 전송:', subscribeMessage);
+            console.debug('구독 메시지 전송:', subscribeMessage);
             webSocket.current.send(subscribeMessage);
           } catch (error) {
             console.error('구독 메시지 전송 실패:', error);
@@ -51,14 +51,14 @@ export const useWebSocket = (
       };
 
       webSocket.current.onmessage = (event: MessageEvent) => {
-        console.log('웹소켓 메시지 원본:', event.data);
+        console.debug('웹소켓 메시지 원본:', event.data);
 
         try {
           if (
             event.data === '웹소켓 연결 성공' ||
             event.data.includes('구독 완료')
           ) {
-            console.log('시스템 메시지:', event.data);
+            console.debug('시스템 메시지:', event.data);
             return;
           }
 
@@ -73,7 +73,7 @@ export const useWebSocket = (
               topicId: sectionId,
             });
           } else {
-            console.log('알 수 없는 메시지 형식:', event.data);
+            console.debug('알 수 없는 메시지 형식:', event.data);
           }
         } catch (error) {
           console.error('메시지 처리 중 에러:', error);
@@ -81,7 +81,7 @@ export const useWebSocket = (
       };
 
       webSocket.current.onclose = (event) => {
-        console.log('웹소켓 연결 종료:', {
+        console.debug('웹소켓 연결 종료:', {
           code: event.code,
           reason: event.reason,
           wasClean: event.wasClean,
@@ -90,12 +90,12 @@ export const useWebSocket = (
         isConnecting.current = false;
 
         if (!event.wasClean) {
-          console.log('비정상 종료로 인한 재연결 시도 예정...');
+          console.debug('비정상 종료로 인한 재연결 시도 예정...');
           if (reconnectTimeoutRef.current) {
             window.clearTimeout(reconnectTimeoutRef.current);
           }
           reconnectTimeoutRef.current = window.setTimeout(() => {
-            console.log('웹소켓 재연결 시도...');
+            console.debug('웹소켓 재연결 시도...');
             connect();
           }, 3000);
         }
@@ -121,7 +121,7 @@ export const useWebSocket = (
         window.clearTimeout(reconnectTimeoutRef.current);
       }
       if (webSocket.current) {
-        console.log('웹소켓 연결 정리 중...');
+        console.debug('웹소켓 연결 정리 중...');
         webSocket.current.close(1000, '정상 종료');
         webSocket.current = null;
       }

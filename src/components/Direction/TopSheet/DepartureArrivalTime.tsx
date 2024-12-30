@@ -20,8 +20,6 @@ export default function DepartureArrivalTime() {
       departureTime.getSeconds() + +(totalTime / 60).toFixed(0) * 60
     );
     setArrivalTime(tmpTime);
-    console.log('🚀 ~ TopSheet ~ departureTime:', departureTime);
-    console.log('🚀 ~ TopSheet ~ arrivalTime:', arrivalTime);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routesPedestrainResponse, routesAutomobileResponse, routesType]);

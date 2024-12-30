@@ -171,7 +171,7 @@ export const MapProvider = ({
       return;
     }
     mapInstance.on('Click', () => {
-      console.log('Map Clicked!!!!');
+      console.debug('Map Clicked!!!!');
       setMapFocusOnly((cur) => !cur);
     });
   }, [mapInstance, setMapFocusOnly]);
@@ -229,10 +229,6 @@ export const MapProvider = ({
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [mapInstance]);
 
-  useEffect(() => {
-    console.log(coords);
-  }, [mapInstance, coords]);
-
   // 보행자 경로 및 시간, 거리 정보 설정하기
   useEffect(() => {
     if (!pedestrainResponse) {
@@ -285,7 +281,6 @@ export const MapProvider = ({
   );
 
   const setStartCoord = (latitude: number, longitude: number) => {
-    console.log('setStartCoord');
     dispatchRoutesData({
       type: 'setStartCoord',
       payload: new Tmapv3.LatLng(latitude, longitude),
@@ -293,7 +288,6 @@ export const MapProvider = ({
   };
 
   const setEndCoord = (latitude: number, longitude: number) => {
-    console.log('setEndCoord');
     dispatchRoutesData({
       type: 'setEndCoord',
       payload: new Tmapv3.LatLng(latitude, longitude),
@@ -397,7 +391,6 @@ export const MapProvider = ({
   // 은행 마커 생성
   useEffect(() => {
     const onClickMarker = (id: string) => {
-      console.log(id);
       if (selectedBranchId !== id) setSelectedBranchId(id);
     };
 
@@ -435,7 +428,6 @@ export const MapProvider = ({
         y_position: latitude,
       }) => {
         if (mapInstance && latitude && longitude) {
-          console.log(name);
           const position = new Tmapv3.LatLng(+latitude, +longitude);
           const marker = Marker({
             mapContent: mapInstance,
@@ -501,15 +493,6 @@ export const MapProvider = ({
     }, 1000);
 
     if (routesType === 'initial') {
-      const date = new Date();
-      console.log(
-        'SET TIMEOUT!!!!!!!!!',
-        date.getMinutes(),
-        date.getSeconds(),
-        date.getMilliseconds()
-      );
-      console.log(routesData);
-      console.log(mapInstance);
       setPolyline();
     }
 

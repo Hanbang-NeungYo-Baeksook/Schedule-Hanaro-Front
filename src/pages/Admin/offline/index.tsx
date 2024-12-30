@@ -27,7 +27,6 @@ function VisitPage() {
 
   const fetchInitialData = useCallback(async () => {
     try {
-      console.log('초기 데이터 로드 시작');
       const initialStatus = await getVisitStatus(SECTION_ID);
       setWaitingInfo(initialStatus);
       setSelectedIdx(initialStatus.current_num);
@@ -40,10 +39,10 @@ function VisitPage() {
         if (i === 2) updatedNumbers[index] = initialStatus.next_num;
       });
       setNumbers(updatedNumbers);
-      console.log('초기 데이터 로드 완료:', initialStatus);
     } catch (error) {
       console.error('초기 데이터 로드 실패:', error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [SECTION_ID, displayNum]);
 
   // 컴포넌트 마운트 시 초기 데이터 로드
@@ -53,7 +52,7 @@ function VisitPage() {
 
   const handleWebSocketMessage = useCallback(
     async (message: { type: 'UPDATE_NEEDED'; topicId: number }) => {
-      console.log('웹소켓 메시지 수신:', message);
+      console.debug('웹소켓 메시지 수신:', message);
 
       if (message.type === 'UPDATE_NEEDED' && message.topicId === SECTION_ID) {
         const newStatus = await getVisitStatus(SECTION_ID);
@@ -70,6 +69,7 @@ function VisitPage() {
         setNumbers(updatedNumbers);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [SECTION_ID, displayNum]
   );
 
@@ -81,9 +81,9 @@ function VisitPage() {
 
   const handleNext = async () => {
     try {
-      console.log('다음 버튼 클릭, waitingInfo:', waitingInfo);
+      console.debug('다음 버튼 클릭, waitingInfo:', waitingInfo);
       if (!waitingInfo?.next_num) {
-        console.log(
+        console.debug(
           '현재 대기중인 방문이 없습니다. next_num:',
           waitingInfo?.next_num
         );
@@ -99,7 +99,7 @@ function VisitPage() {
       const response = await updateVisitMutation.mutateAsync(
         waitingInfo.next_num
       );
-      console.log('다음 번호 호출 결���:', response);
+      console.debug('다음 번호 호출 결과:', response);
 
       // 상태 업데이트를 한 번에 처리
       setWaitingInfo(response);
@@ -126,11 +126,11 @@ function VisitPage() {
 
   // 초소켓 연결 상태 모니터링을 위한 로그 추가
   useEffect(() => {
-    console.log('웹소켓 연결 상태 변경:', isConnected);
+    console.debug('웹소켓 연결 상태 변경:', isConnected);
 
     // 연결이 끊어졌다가 다시 연결되는지 확인
     if (!isConnected) {
-      console.log('웹소켓 연결이 끊어짐');
+      console.debug('웹소켓 연결이 끊어짐');
     }
   }, [isConnected]);
 
@@ -156,7 +156,7 @@ function VisitPage() {
 
       setNumbers(newNumbers);
       setCategories(newCategories);
-      console.log(...newNumbers);
+      console.debug(...newNumbers);
     }
   }, [waitingInfo, displayNum]);
 
