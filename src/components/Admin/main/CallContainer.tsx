@@ -1,3 +1,4 @@
+import { getCallWaitList } from '@/api/admin/calls';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ADMIN_QUERY_KEYS } from '@/constants/queryKeys';
@@ -40,14 +41,19 @@ function CallContainer() {
 
   const handleWebSocketMessage = useCallback(
     (message: { type: 'UPDATE_NEEDED'; topicId: number }) => {
-      console.debug('웹소켓 메시지 수신 - 상태 업데이트 필요:', message);
+      console.log('웹소켓 메시지 수신 - 상태 업데이트 필요:', message);
 
       refetch();
       queryClient.invalidateQueries({
         queryKey: [ADMIN_QUERY_KEYS.CALL_WAIT_LIST],
       });
+      getCallWaitList({
+        date: dateValue && dayjs(dateValue).format('YYYY-MM-DD'),
+        time:
+          timeValue !== '전체 시간대' ? timeValue?.split('~')[0] : undefined,
+      });
     },
-    [queryClient, refetch]
+    [dateValue, queryClient, refetch, timeValue]
   );
 
   const { isConnected } = useWebSocket(1, 'CALL', handleWebSocketMessage);
