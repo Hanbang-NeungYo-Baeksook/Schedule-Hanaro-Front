@@ -19,10 +19,8 @@ export const getVisitDetail = async (visitId: number) => {
 export const updateVisitStatus = async (visitId: number) => {
   try {
     const fullUrl = `${BASE_URL}/${visitId}/status`;
-    console.log('전체 URL:', fullUrl);
 
     const response = await apiCall.patch(fullUrl);
-    console.log('상태 업데이트 응답:', response);
     return response as AdminVisitStatusUpdateResponse;
   } catch (error) {
     // AxiosError 타입으로 캐스팅
@@ -50,11 +48,9 @@ export const updateVisitStatus = async (visitId: number) => {
 // 현재 진행중인 상담 조회
 export const getVisitStatus = async (sectionId: number) => {
   try {
-    console.log('API 호출 시작:', `${BASE_URL}/sections/${sectionId}/current`);
     const response = await apiCall.get(
       `${BASE_URL}/sections/${sectionId}/current`
     );
-    console.log('API 응답:', response);
 
     // 응답이 비어있거나 next_num이 0인 경우, 대기 중인 첫 번째 방문을 조회
     if (!response.next_num) {
@@ -62,7 +58,6 @@ export const getVisitStatus = async (sectionId: number) => {
         const pendingVisit = await apiCall.get(
           `${BASE_URL}/sections/${sectionId}/current`
         );
-        console.log('대기 중인 첫 번째 방문:', pendingVisit);
 
         if (pendingVisit && pendingVisit.data) {
           // data 객체 확인

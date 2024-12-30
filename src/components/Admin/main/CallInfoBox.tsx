@@ -68,11 +68,7 @@ function CallInfoBox({
     );
   }
 
-  const { id, waiting_num, category, tags, content, memo } = selectedCall;
-
-  if (tags) {
-    console.log(tags);
-  }
+  const { id, waiting_num, category, content, memo } = selectedCall;
 
   const { auth_id, customer_name, phone_number, birth_date } = customerDetail;
 

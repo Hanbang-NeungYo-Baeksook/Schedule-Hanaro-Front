@@ -8,7 +8,6 @@ export default function TotalTime() {
     ? routesAutomobileResponse
     : routesPedestrainResponse) || { totalTime: 0 };
 
-  console.log(totalTime);
   return (
     <div className='flex items-end gap-3'>
       <div>소요시간</div>

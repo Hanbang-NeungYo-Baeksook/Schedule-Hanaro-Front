@@ -24,7 +24,6 @@ export const getInquiryList = async ({
   category,
   search_content,
 }: InquirySearchConditions) => {
-  console.log(category);
   return (await apiCall.get(
     BASE_URL +
       `?page=${page}&size=10${status ? `&status=` + InquiryStatusDetails[status] : ''}${category !== '전체' && category ? `&category=` + CategoryDetails[category] : ''}${search_content ? `&search_content=` + search_content : ''}`

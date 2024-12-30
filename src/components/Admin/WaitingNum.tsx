@@ -31,10 +31,6 @@ function WaitingNumber({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rotateAngle]);
 
-  useEffect(() => {
-    console.log(...numbers);
-  }, [numbers]);
-
   return (
     <div className='mt-10 flex w-full flex-col items-center rounded-lg bg-white pb-[4.25rem]'>
       <div className='mb-[-5rem] flex w-full max-w-xl justify-between px-2 md:px-8'>

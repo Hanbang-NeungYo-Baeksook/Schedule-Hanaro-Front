@@ -32,8 +32,6 @@ function SignInPage() {
   const { mutate: signin } = usePostSignIn();
 
   const handleLogin = async () => {
-    console.log('Handle Login!!');
-
     if (!idRef.current?.value || !passwordRef.current?.value) {
       toast({
         title: '로그인 실패',

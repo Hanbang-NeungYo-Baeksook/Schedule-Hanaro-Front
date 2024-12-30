@@ -35,7 +35,7 @@ function CallContainer() {
 
   const handleWebSocketMessage = useCallback(
     (message: { type: 'UPDATE_NEEDED'; topicId: number }) => {
-      console.log('웹소켓 메시지 수신 - 상태 업데이트 필요:', message);
+      console.debug('웹소켓 메시지 수신 - 상태 업데이트 필요:', message);
 
       refetch();
     },
@@ -45,7 +45,7 @@ function CallContainer() {
   const { isConnected } = useWebSocket(1, 'CALL', handleWebSocketMessage);
 
   useEffect(() => {
-    console.log('전화 페이지 마운트, 웹소켓 연결 상태:', isConnected);
+    console.debug('전화 페이지 마운트, 웹소켓 연결 상태:', isConnected);
     refetch();
   }, [isConnected, refetch]);
 
