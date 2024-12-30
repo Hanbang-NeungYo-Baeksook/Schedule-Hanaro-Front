@@ -17,7 +17,7 @@ const usePostCall = () => {
     mutationKey: [QUERY_KEYS.CALL_ADD],
     mutationFn: postCall,
     onSuccess: ({ call_id }) => {
-      console.log(call_id);
+      console.debug(call_id);
       showToast(toast, '예약 완료되었습니다!');
       setContent('');
       setTimeout(() => {

@@ -14,7 +14,7 @@ const useDeleteVisit = () => {
     mutationKey: [QUERY_KEYS.VISIT_DEL],
     mutationFn: deleteVisit,
     onSuccess: ({ visit_id }) => {
-      console.log(visit_id);
+      console.debug(visit_id);
       showToast(toast, '취소되었습니다.');
       setTimeout(() => {
         navigate(CUSTOMER_ROUTE.reservation.visit);

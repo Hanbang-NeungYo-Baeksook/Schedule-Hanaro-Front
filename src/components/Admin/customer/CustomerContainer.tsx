@@ -17,8 +17,6 @@ function CustomerContainer() {
     );
   }
 
-  console.log(customers.data);
-
   // 이전 페이지
   const onPrev = () => {
     const prevPage = currentPage - 1 > 0 ? currentPage - 1 : 1;

@@ -14,7 +14,7 @@ const useDeleteCall = () => {
     mutationKey: [QUERY_KEYS.CALL_DEL],
     mutationFn: deleteCall,
     onSuccess: ({ call_id }) => {
-      console.log(call_id);
+      console.debug(call_id);
       showToast(toast, '취소되었습니다.');
       setTimeout(() => {
         navigate(CUSTOMER_ROUTE.reservation.call);

@@ -14,7 +14,7 @@ const useDeleteInquiry = () => {
     mutationKey: [QUERY_KEYS.INQUIRY_DEL],
     mutationFn: deleteInquiry,
     onSuccess: ({ inquiry_id }) => {
-      console.log(inquiry_id);
+      console.debug(inquiry_id);
       showToast(toast, '취소되었습니다.');
       setTimeout(() => {
         navigate(CUSTOMER_ROUTE.reservation.inquiry);

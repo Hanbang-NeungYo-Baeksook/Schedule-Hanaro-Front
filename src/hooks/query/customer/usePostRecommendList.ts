@@ -20,7 +20,7 @@ const usePostRecommendList = () => {
     mutationKey: [QUERY_KEYS.RECOMMEND],
     mutationFn: PostRecommendList,
     onSuccess: ({ recommends, tags }: PostRecommendListResponse) => {
-      console.log(recommends);
+      console.debug(recommends);
       setRecommendList(recommends);
       setTagList(tags);
       setIsLoading(false);

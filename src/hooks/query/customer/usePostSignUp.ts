@@ -14,7 +14,7 @@ const usePostSignUp = () => {
     mutationKey: [QUERY_KEYS.SIGN_UP],
     mutationFn: postSignUp,
     onSuccess: ({ message }) => {
-      console.log(message);
+      console.debug(message);
       showToast(toast, '회원가입에 성공하였습니다!');
       navigate(CUSTOMER_ROUTE.signin);
     },
