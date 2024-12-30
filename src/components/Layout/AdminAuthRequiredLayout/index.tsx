@@ -14,7 +14,7 @@ export default function AdminAuthRequiredLayout() {
 
   return (
     <div className='flex'>
-      <Header storeName='하나은행 강남점' employeeName='강능요 사원 [10]' />
+      <Header storeName='하나은행 강남점' employeeName='문해빈 사원 [10]' />
       <div className='flex-1 pb-0 pt-[8rem]'>
         <Toaster />
         <Outlet />
