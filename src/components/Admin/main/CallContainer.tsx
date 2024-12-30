@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ADMIN_QUERY_KEYS } from '@/constants/queryKeys';
 import useGetCallWaitListQuery from '@/hooks/query/admin/useGetCallWaitList';
 import usePatchCallProgress from '@/hooks/query/admin/usePatchCallProgress';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { cn } from '@/lib/utils';
+import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useState } from 'react';
 import CallInfoBox from './CallInfoBox';
@@ -16,6 +18,7 @@ function CallContainer() {
   const [openCallMemo, setOpenCallMemo] = useState(false);
   const toggleOpenCallMemo = () => setOpenCallMemo((prev) => !prev);
   const closeCallMemo = () => setOpenCallMemo(false);
+  const queryClient = useQueryClient();
 
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const changeIdx = (idx: number) => setSelectedIdx(idx);
@@ -30,7 +33,9 @@ function CallContainer() {
   const { mutate: patchStart } = usePatchCallProgress();
 
   // const refetchList = useCallback(() => {
-  //   refetch();
+  //   queryClient.invalidateQueries({
+  //     queryKey: [ADMIN_QUERY_KEYS.CALL_WAIT_LIST],
+  //   });
   // }, [refetch]);
 
   const handleWebSocketMessage = useCallback(
@@ -38,8 +43,11 @@ function CallContainer() {
       console.debug('웹소켓 메시지 수신 - 상태 업데이트 필요:', message);
 
       refetch();
+      queryClient.invalidateQueries({
+        queryKey: [ADMIN_QUERY_KEYS.CALL_WAIT_LIST],
+      });
     },
-    [refetch]
+    [queryClient, refetch]
   );
 
   const { isConnected } = useWebSocket(1, 'CALL', handleWebSocketMessage);
@@ -47,7 +55,10 @@ function CallContainer() {
   useEffect(() => {
     console.debug('전화 페이지 마운트, 웹소켓 연결 상태:', isConnected);
     refetch();
-  }, [isConnected, refetch]);
+    queryClient.invalidateQueries({
+      queryKey: [ADMIN_QUERY_KEYS.CALL_WAIT_LIST],
+    });
+  }, [isConnected, queryClient, refetch]);
 
   useEffect(() => {
     if (waits) {
